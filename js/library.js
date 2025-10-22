@@ -13,7 +13,7 @@ var global_display_done = false;
 var global_half_tick = true;
 var global_bgchord = 0;
 var global_inhibit_bgchord = false;
-var tick = new Audio("./metronome.wav");
+var tick = new Audio("assets/metronome.wav");
 var lastnote;
 var lastfret;
 var lastnotecolor;
@@ -21,17 +21,17 @@ var lastnotetext = "";
 var lastfrettext = "";
 var global_RepeatMemorize_cnt = 0;
 var global_chordfiles = {
-	"C": new Audio("./C.wav"),
-	"Am": new Audio("./Am.wav"),
-	"Dm": new Audio("./Dm.wav"),
-	"Diszm": new Audio("./Diszm_low.wav"),
-	"Ebm": new Audio("./Diszm_low.wav"),
-	"Em": new Audio("./Em.wav"),
-	"Gb": new Audio("./Gb.wav"),
-	"G": new Audio("./G.wav"),
-	"H": new Audio("./H_2.wav"),
-	"F": new Audio("./F.wav"),
-	"Fisz": new Audio("./Gb.wav"),
+	"C": new Audio("assets/C.wav"),
+	"Am": new Audio("assets/Am.wav"),
+	"Dm": new Audio("assets/Dm.wav"),
+	"Diszm": new Audio("assets/Diszm_low.wav"),
+	"Ebm": new Audio("assets/Diszm_low.wav"),
+	"Em": new Audio("assets/Em.wav"),
+	"Gb": new Audio("assets/Gb.wav"),
+	"G": new Audio("assets/G.wav"),
+	"H": new Audio("assets/H_2.wav"),
+	"F": new Audio("assets/F.wav"),
+	"Fisz": new Audio("assets/Gb.wav"),
 };
 var Iba_Lesp = 24;
 var C, D, E, F, G, A, H = 0;
@@ -227,37 +227,37 @@ function drawString(string_id) {
 		td.setAttribute("rown", string.getAttribute("row") );
 		td.setAttribute("coln", index );
 		if ( ( [3,5,7,9,15,17,19,21,24].includes(index)) && string_id=="tr_string_G") {
-			td.style.backgroundImage = "url('bundpötty_TOP3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_TOP3.png')";
 			td.style.backgroundPosition = "center bottom";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ( ( [3,5,7,9,15,17,19,21,24].includes(index)) && string_id=="tr_string_D") {
-			td.style.backgroundImage = "url('bundpötty_BOTTOM3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3.png')";
 			td.style.backgroundPosition = "center top";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_A") {
-			td.style.backgroundImage = "url('bundpötty_TOP3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_TOP3.png')";
 			td.style.backgroundPosition = "center bottom";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_E6") {
-			td.style.backgroundImage = "url('bundpötty_BOTTOM3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3.png')";
 			td.style.backgroundPosition = "center top";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_E1") {
-			td.style.backgroundImage = "url('bundpötty_TOP3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_TOP3.png')";
 			td.style.backgroundPosition = "center bottom";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_H") {
-			td.style.backgroundImage = "url('bundpötty_BOTTOM3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3.png')";
 			td.style.backgroundPosition = "center top";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
