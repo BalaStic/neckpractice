@@ -1,4 +1,4 @@
-"# Neckpractice
+\# Neckpractice
 
 
 
@@ -10,5 +10,5 @@ Interactive web application for neck practice and exercises.
 
 
 
-Open in GitHub Codespaces and use Live Server to preview the site."
+Open in GitHub Codespaces and use Live Server to preview the site.
 
