@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+<script src="library.js"></script>
+<script>
+	const global_repeats = [10, 15, 20, 25];
+	const global_bpms = [120, 112, 105, 100, 90, 60, 30];
+	var global_mode;
+	var necknotes_sharp = new Array(6);
+	var necknotes_flat = new Array(6);	
+	var mode = 'test';
+	var practice_middlearea_state = 0;
+	var scale_note_counter = 1130;
+	
+	var neck = Array.from({ length: 6 }, () => new Array(25));
+	var necknotes_sharp = new Array(25);
+	var necknotes_flat = new Array(25);
+	var orig_neck_content;
+	
+	necknotes_sharp = [['E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E'],
+	['H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H' ],
+	['G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G' ],
+	['D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D'],
+	['A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G', 'G#', 'A' ],
+	['E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E', 'E#', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'H#', 'C#', 'D', 'D#', 'E']]
+		
+	
+	necknotes_flat = [['Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb'],
+	['Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'H'],
+	['G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G'],
+	['D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'H', 'C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'H', 'C', 'Db', 'D'],
+	['A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A'],
+	['Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'Fb', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'Cb', 'C', 'Db', 'D', 'Eb', 'E']]
+	
+	necknotes_main = [['E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E'],
+	['H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H'],
+	['G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G'],
+	['D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D'],
+	['A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A'],
+	['E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E']]
+
+	const neck_fretnum_tds_style = [
+				{ width: "15px", background: "white", fontWeight: "normal" },
+				{ width: "90px" }, 
+				{ width: "90px" }, 
+				{ width: "90px", background: "white" },
+				{ width: "90px" }, 
+				{ width: "90px", background: "white" }, 
+				{ width: "89px" },
+				{ width: "76px", background: "white" }, 
+				{ width: "77px" }, 
+				{ width: "72px", background: "white" },
+				{ width: "71px" }, 
+				{ width: "68px" }, 
+				{ width: "68px", background: "white" },
+				{ width: "64px" }, 
+				{ width: "64px" }, 
+				{ width: "64px", background: "white" },
+				{ width: "64px" }, 
+				{ width: "64px", background: "white" }, 
+				{ width: "64px" },
+				{ width: "64px", background: "white" }, 
+				{ width: "64px" }, 
+				{ width: "54px", background: "white" },
+				{ width: "54px" }, 
+				{ width: "54px" }, 
+				{ width: "54px", background: "white" }				
+	];
+
+	const neck_tds_style = [
+            { width: "15px", background: "#EAEAEA", fontWeight: "normal", textContent: "E1" },
+            { width: "90px", color: "white" }, 
+			{ width: "90px", color: "white" }, 
+			{ width: "90px", color: "white" },
+            { width: "90px", color: "white" }, 
+			{ width: "90px", color: "white" },
+			{ width: "80px", color: "white" },
+            { width: "76px", color: "white" },
+			{ width: "76px", color: "white" }, 
+			{ width: "72px", color: "white" },
+            { width: "72px", color: "white" }, 
+			{ width: "68px", color: "white" }, 
+			{ width: "68px", color: "white" },
+            { width: "64px", color: "white" }, 
+			{ width: "64px", color: "white" }, 
+			{ width: "64px", color: "white" },
+            { width: "64px", color: "white" }, 
+			{ width: "64px", color: "white" },
+			{ width: "64px", color: "white" },
+            { width: "64px", color: "white" },
+			{ width: "64px", color: "white" },
+			{ width: "54px", color: "white" },
+            { width: "54px", color: "white" }, 
+			{ width: "54px", color: "white" }, 
+			{ width: "54px", color: "white" } 
+	];
+	
+	$(document).ready(function() {
+		drawStrings();
+		orig_neck_content = document.getElementById('neck').innerHTML;
+
+		$('#div1').toggle();
+		$('#tr_H').toggle(); 
+		$('#tr_Db').toggle();
+		update_global_walking_repeat();
+		//update_global_frettimeout();
+		$( function() {
+			$( "input" ).checkboxradio();
+			$('input[name="radio-1"]').change(update_global_walking_repeat);
+			//$('input[name="radio-2"]').change(update_global_frettimeout);
+			$('input[name="radio-3"]').change(update_global_mode);	
+			$('input[name="radio-4"]').change(update_global_notegrade);	
+		} );					
+		
+    });	
+</script>
+<style>
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.table_learn td{
+	border-color:white;
+}
+ 
+.tr_elojegyzes > td {
+	font-weight: bold;
+}	
+
+#tr_fretnums > td {
+	text-align: center;
+	border-color:black;
+}	
+
+td {
+	padding:3px;
+}
+
+.table_learn_scale_notes_between_frets td {
+	padding:10px;
+}
+	
+#neck table, #neck th, #neck td {
+	 height: 44px;
+	 text-align: center;
+	 background:#6E260E;
+	 border-top: none;
+     border-bottom: none;		 
+}
+
+.aligned-fieldset {
+    display: inline-block; /* Allows the fieldset to align properly */
+    margin: 0; /* Remove default margin */
+    padding: 5px; /* Optional: Add padding for aesthetics */
+}
+
+.table_key_head {
+	border-collapse: collapse; /* Ensures that the borders between cells are collapsed */
+}
+
+.table_key_head, .table_key_head th, .table_key_head td {
+	border: none; /* Removes all borders */
+	padding: 0px;
+}
+
+#table_kvartegyenes td, #table_kvintegyenes td  {
+      width: 30px; /* Set the desired width here */
+      overflow: hidden; /* Optional: Hide any overflowing content */
+}
+
+</style>
+<title>neckpractice</title>
+</head>
+<body>
+	<table>
+		<tr style="font-size:15px;">
+			<td>
+				<button style="height:50px" onclick="stop_practice();">STOP</button>				
+			</td>
+			<td>
+				<button style="height:50px" onclick="redraw()">REDRAW</button>				
+			</td>			
+			<td style="width:50px;padding:10px;">
+				<span id="infobox" style="color: green;">infobox</span>
+				<br><br>
+				<span id="infobox3" style="color: green;">infobox3</span>
+				<br><br>
+				<span id="infobox4" style="color: green;">infobox4</span>
+			</td>			
+			<td style="width:340px;padding:10px;">repeat				
+				<fieldset class="aligned-fieldset">
+					<script>
+						global_repeats.forEach((repeat, index) => {
+							document.write(`<label style="font-size: 13px;" for="radio-${repeat}">${repeat}</label>`);
+							document.write(`<input type="radio" name="radio-1" id="radio-${repeat}" ${index === global_repeats.length - 1 ? 'checked' : ''}>`);
+						});
+					</script>
+				</fieldset>
+			</td>
+			<!--
+			<td style="width:250px;padding:10px">
+					bpm
+					<fieldset class="aligned-fieldset">
+						<script>							
+							global_bpms.forEach((bpm, index) => {
+								document.write(`<label style="font-size: 13px;" for="radio-${bpm}">${bpm}</label>`);
+								document.write(`<input type="radio" name="radio-2" id="radio-${bpm}" ${bpm === 100 ? 'checked' : ''}>`);
+							});
+						</script>
+					</fieldset>				
+			</td>-->
+			<td id="infobox2" >infobox2				
+			</td>
+			<td  style="width:300px">
+				mode
+				<fieldset class="aligned-fieldset">
+					<script>
+						const modes = ["learn", "half", "test"];
+						modes.forEach((mode, index) => {
+							document.write(`<label style="font-size: 13px;" for="radio-${mode}">${mode}</label>`);
+							document.write(`<input type="radio" name="radio-3" id="radio-${mode}" ${index === 0 ? 'checked' : ''}>`);							
+						});
+						global_mode = "learn"; // Default mode
+					</script>
+					<br><br>
+					<script>
+						const notesgrades = ["notes", "grades", "columns"];
+						notesgrades.forEach((notegrade, index) => {
+							document.write(`<label style="font-size: 13px;" for="radio-${notegrade}">${notegrade}</label>`);
+							document.write(`<input type="radio" name="radio-4" id="radio-${notegrade}" ${index === 0 ? 'checked' : ''}>`);							
+						});
+						global_notes_andor_grades = "notes_only"; // Default mode
+					</script>
+				</fieldset>
+			</td>
+			<td>
+				<button style="height:30px" onclick="metropractice([80, 1, 85, 1, 90, 1, 95, 1, 100, 1]);">wa 80-100 5p</button>
+				<br><button style="height:30px" onclick="metropractice([101, 1, 102, 1, 103, 1, 104, 1, 105, 1, 106, 1]);">váltott 101->106 6p</button>16
+				<br><button style="height:30px" onclick="metropractice([102, 1, 103, 1, 104, 1, 105, 1, 106, 1, 107, 1]);">váltott 102->107 6p</button>15
+				<br><button style="height:30px" onclick="metropractice([103, 1, 104, 1, 105, 1, 106, 1, 107, 1, 108, 1]);">váltott 103->108 6p</button>10
+				<br><button style="height:30px" onclick="metropractice([104, 1, 105, 1, 106, 1, 107, 1, 108, 1, 109, 1]);">váltott 104->109 6p</button>5
+				<button style="height:30px" onclick="metropractice([108, 1, 109, 1, 110, 1, 111, 1, 112, 1, 113, 1]);">108->113 6p</button>
+				<button style="height:30px" onclick="metropractice([113, 4]);">113</button>
+			</td>						
+			<td style="vertical-align: top;">
+				<button style="height:30px" onclick="metropractice([80, 10]);">80 10p</button>
+				<br><br><button style="height:30px" onclick="metropractice([100, 10]);">100 10p</button>
+				<br><br><button style="height:30px" onclick="metropractice([120, 10]);">120 10p</button>
+			</td>
+		</tr>
+	</table>
+	<br>	
+	<table id="table_fretnums">
+		<tbody>		
+		<tr id="tr_fretnums">
+			<script>
+				const tr = document.getElementById("tr_fretnums");
+				neck_fretnum_tds_style.forEach((style, index) => {
+					const td = document.createElement("td");
+					td.textContent = index;
+					td.setAttribute("fretnum", index);
+					Object.assign(td.style, style);
+					tr.appendChild(td);
+				});
+			</script>
+		</tr>
+		</tbody>
+	</table>
+	<table id="neck">
+		<tbody>
+		<tr id="tr_string_E1" row="1"></tr>
+		<tr id="tr_string_H" row="2"></tr>
+		<tr id="tr_string_G" row="3"></tr>
+		<tr id="tr_string_D" row="4"></tr> 
+		<tr id="tr_string_A" row="5"></tr>
+		<tr id="tr_string_E6" row="6"></tr>
+		<script>
+			drawString("tr_string_E1");
+			drawString("tr_string_H");
+			drawString("tr_string_G");
+			drawString("tr_string_D");
+			drawString("tr_string_A");
+			drawString("tr_string_E6");
+		</script>
+	</tbody>
+	</table>
+	<br>	
+	<!-- <table id="table_fullscale">
+		<tbody>
+		<tr id="tr_fullscale">
+			<script>
+				const tr_fullscale = $('#tr_fullscale');
+				for (let i = 0; i <= 48; i++) {
+					const td = $('<td>'); //.text(' '); // Create a new <td> element with text					
+					if ( i % 12 == 0 ) td.attr("def", "E");
+					else td.attr("def", " ");
+					td.text(td.attr("def"));
+					tr_fullscale.append(td); // Append the <td> to the <tr>
+				}
+				$("#tr_fullscale td").css({
+					width: "25px",
+					height: "25px"
+				});
+			</script>			
+		</tr>
+		</tbody>		 
+	</table> -->
+	<br>
+	<a href="https://tuner-online.com/">tuner |</a>
+	<a href="https://hu.pinterest.com/pin/734086807999383137/">minor scale boxes</a> 
+	<a href="https://appliedguitartheory.com/wp-content/uploads/2020/03/5-major-scale-patterns-positions-connected.jpg">| major scale boxes</a> | 
+	<a href="https://www.metronomeonline.com/">metronome</a> | <a href="https://onlineora.hu/stopper/#">stopper</a> | 
+	<table>
+		<tr>
+			<td style="padding:10px"><textarea id="textbox1" rows="6" placeholder="Enter text here" style="width: 300px;font-size:12pt"></textarea></td>
+			<td style="padding:10px">
+				<button onclick="exec_textbox1_line(0)" style="width: 100px">1</button>
+				<br><br><button onclick="exec_textbox1_line(1)" style="width: 100px">2</button>
+				<br><br><button onclick="exec_textbox1_line(2)" style="width: 100px">3</button>
+				<br><br><button onclick="exec_textbox1_line(3)" style="width: 100px">4</button>
+			</td>
+			<td style="padding:10px">
+				<button style="height:50px; width:100px" onclick="stop_practice();">STOP</button>
+				<br><br><button style="height:50px; width:100px" onclick="redraw()">REDRAW</button>				
+			
+			</td>
+			<td style="vertical-align: top;"><b style="color:blue">SCALE NOTE-GRADE</b>
+				<br><br>
+				<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 175, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])">Gb 0-24</button> 1-1
+				<br><br>
+				<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 170, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])"> D#mp 0-24</button> 1-1
+				<br><br>
+				<button onclick="practice_scale16_C([0, Iba_Lesp], 170, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])"> C 0-24</button> 1-1
+			</td>
+			<td style="vertical-align: top;"><b style="color:blue">RANDOM COMBINED</b>
+				<br><br><button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Gbp, majp_grades, 0, 12, 1, 6);">Gbp 0-12</button> 1
+				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Gbp, majp_grades, 12, Iba_Lesp, 1, 6);">12-24</button> 1
+				<br><br>
+				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Diszmp, minp_grades, 0, 12, 1, 6);">D#mp 0-12</button> 1
+				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Diszmp, minp_grades, 12, Iba_Lesp, 1, 6);">D#mp 12-24</button> 1
+				
+				<br><br><button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, C, maj_grades, 0, 12, 1, 6);">C 0-12</button> 1
+				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, C, maj_grades, 12, Iba_Lesp, 1, 6);">12-24</button>
+				
+				
+			</td>
+			<td style="vertical-align: top;"><b style="color:blue">RANDOM COLUMN</b>
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Gb_only, 'coln', 0, 12, 1, 6);">Gb only</button> 
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Disz_only, 'coln', 12, 24, 1, 6);">D# only</button>
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Gbp, 'coln', 0, 12, 1, 6);">Gbp 0-12</button>  
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Gbp, 'coln', 12, Iba_Lesp, 1, 6);">12-24</button> 
+				    
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Diszmp, 'coln', 0, 12, 1, 6);">D#mp 0-12</button> 
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Diszmp, 'coln', 12, Iba_Lesp, 1, 6);">12-24</button> 
+
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, C, 'coln', 0, 12, 1, 6);">C 0-12</button> 
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, C, 'coln', 12, Iba_Lesp, 1, 6);">12-24</button> 
+				
+			</td>
+			
+			<tr>
+				<td style="font-family: 'Courier New', Courier, monospace;">
+					1-5: 102/7 9: 102/7 13-18: 102/7
+					<br>1-5: 102/7 9: 102/7 13-18: 102/7
+					<br>1-5: 102/7 9: 102/7 13-18: 102/7
+					<br>1-5: 102/7 9: 102/7 13-18: 102/7
+					<br>1-5: 102/7 9: 102/7 13-18: 102/7
+					<br>1-5: 102/7 9: 102/7 13-18: 102/7
+				</td>
+				<td>Gyakorlás fejből a teljes nyakon,<br>amíg 0 tévesztéssel nem megy:<br>
+					<br>Gbp 80bpm-10p
+					<br>D#mp 
+					<br>C
+					<br>Ebmp
+					<br>F#p 
+					<br>Am
+				</td>
+				<td style="width: 240px">
+					<a href="https://www.youtube.com/watch?v=dE6w7PLty3E">How to start a guitar solo?</a>
+				</td>
+				<td style="width: 240px">
+					
+				</td>
+				<td style="width: 240px">
+					hotel california orion
+					road to hell
+					save your tears
+					sweet child
+					don't cry
+					tükör
+					canon rock
+					Empty rooms
+					Time
+					doom
+					We will rock you
+					Just got paid
+					Wind of change
+					coast to coast
+					fonográf
+					mr crowley aint fun
+				</td>
+				<td style="width: 240px">
+					
+					felskálázunk, leskálázunk.<br>
+					1 húron felskálázunk, leskálázunk<br>	
+				</td>
+			</tr>
+	</table>	
+	<div id="div1" style="display:none">
+		<table>			
+			<tr>
+				<td>Em</td>
+				<td><a href="https://www.youtube.com/watch?v=rd_dQ8IJOuI">bt_1</a></td>
+				<td><a href="https://www.youtube.com/watch?v=p6nexl_naS8">bt_2</a></td>
+			</tr>
+			<tr>
+				<td>Dm<br>
+				</td>
+				<td><a href="https://www.youtube.com/watch?v=sD_bJGJd1_k">bt_1</a></td>
+				<td><a href="https://www.youtube.com/watch?v=iHW82BDu_sU">bt_2</a> 3-11</td>
+			</tr>
+			<tr>
+				<td>C</td>				
+					<td><a href="https://www.youtube.com/watch?v=3_ars7-5Z8A">bt single C</a><br>2</td>
+					<td><a href="https://www.youtube.com/watch?v=4q7h2SwIyLg">bt 1</a><br>2</td>
+					<td><a href="https://www.youtube.com/watch?v=3sCITH860uw">bt 2</a><br>:) 2 8-9!</td>
+					<td><a href="https://www.youtube.com/watch?v=q1zZw6PbfNY">bt_3</a><br>:( 2</td>
+					<td><a href="https://youtu.be/q1zZw6PbfNY?t=1667&si=x-q5eo_4t5DXKbnj">bt_3/5</a><br>:) 2</td>
+					<td><a href="https://youtu.be/xHGKersPg38?t=2747&si=D-8AZ7sSn89AcBUT">bt_4/10</a><br>1</td>
+					<td><a href="https://www.youtube.com/watch?v=xHGKersPg38">bt_5</a><br>agyatlan impro mehetne</td>
+				
+			</tr>
+			<tr>
+				<td>Cb</td>				
+				<td><a href="https://www.youtube.com/watch?v=o86XsPtpY5I">bt_1</a></td>
+			</tr>
+			<tr>
+				<td>Gb</td>
+				<td>
+				<a href="https://www.youtube.com/watch?v=FKnP9v_HvLk">bt_1</a>
+				</td>
+			</tr>
+			<tr>
+				<td>F</td>
+				<td><a href="https://www.youtube.com/watch?v=wKbg6iDSXJQ">bt_1</a></td>
+				<td><a href="https://www.youtube.com/watch?v=udZc7baNPUM">bt_2</a></td>
+			</tr>
+			<tr>
+				<td>Dm</td>
+				<td><a href="https://www.youtube.com/watch?v=YxiJGc02Z_s">bt_1</a> 1-7 3-9 5-6 3-6</td>
+				<td><a href="https://www.youtube.com/watch?v=Dkf512kNQBg">bt_2</a> 4-3</td>
+			</tr>			
+			<tr>
+				<td>Am</td>				
+				<td><a href="https://www.youtube.com/watch?v=KtiA-8FRroU">bt 1</a></td> 
+				<td><a href="https://www.youtube.com/watch?v=Jkn-Bg_9qrE">bt 2</a></td>				
+			</tr>
+			<tr>
+				<td>G</td>
+				<td><a href="https://www.youtube.com/watch?v=sZsAlfJIWz0">bt_1</a></td>
+				<td><a href="https://www.youtube.com/watch?v=sZsAlfJIWz0">bt_2</a></td>
+				<td><a href="https://www.youtube.com/watch?v=3stpZKNF_jQ">bt 3 70bpm</a></td>
+				<td><a href="https://www.youtube.com/watch?v=yoehfjgEDps">bt 4 100bpm</a></td>				
+			</tr>			
+			<tr>
+				<td>H</td>				
+				<td>
+					<a href="https://www.youtube.com/watch?v=b6Ebc9uqNKY">bt</a>		
+				</td>
+			</tr>
+									
+			<tr>
+				<td>F#</td>
+				<td>
+					<a href="https://www.youtube.com/watch?v=BRarPwy0O-U">bt_1</a>
+				</td>
+				<td>
+					<a href="https://www.youtube.com/watch?v=OcxNKI2rfiw">bt_2</a>
+				</td>
+			</tr> 
+		</table>
+	</div>
+	<br>
+	<table>
+		<tr>
+			<td style="width:18%">
+				<br>0:   ---I       1: --I-      2: -I--      3: I---      4: --II
+				<br><br>5:   -I-I       6: I--I      7: -II-      8: I-I-      9: II--
+				<br><br>10: -III     11: I-II    12: II-I    13: III-    14: IIII
+			</td>
+			<td style="width:10%">favorites:
+				<section style="font-family: 'Courier New', Courier, monospace;">
+				04-12  --II II-I 
+				<br>07-06  -II- I--I
+				<br>07-11  -II- I-II
+				<br>07-14  -II- IIII
+				<br>08-07  I-I- -II-
+				</section>
+			</td>
+			<td style="width:10%"><section style="font-family: 'Courier New', Courier, monospace;">
+				<br>08-04  I-I- --II
+				<br>09-07  II-- -II-
+				<br>08-14  I-I- IIII
+				<br>13-07  III- -II-
+				</section>
+			</td>
+			<td style="width:20%">
+				<b>Hangok</b> gyakorlása: Először pontosan lokalizáld a bundot, másodszor vetítsd rá a hangot, harmadszor fogd le. Tanulás = ( memorizálás + felidézés (tesztelés) ) * endless iteration. 
+				<b>Dallam memorizálása</b>: ne arra gondolj, hogy most ugrok egy kvartot, hanem, hogy a 2. fokról ugrok az 5-re.
+			</td>
+			<td style="width:20%">A cél a fokok és a hangok GYORS megtalálása a nyakon egy adott hangnemben.
+			Nem baj, ha még nem látom egy-az-egyben rávetítve őket, a lényeg, hogy a szekvencia gyakorlás által napról napra gyorsabban találjam meg őket.
+			</td>			
+			<td style="width:??%">
+			</td>
+		</tr>
+	</table>
+</body>
+</html>	
