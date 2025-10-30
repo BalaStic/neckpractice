@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
-<script src="js/library.js"></script>
+<script src="library.js"></script>
 <script>
 	const global_repeats = [10, 15, 20, 25];
 	const global_bpms = [120, 112, 105, 100, 90, 60, 30];
@@ -254,6 +254,7 @@ td {
 			</td>						
 			<td style="vertical-align: top;">
 				<button style="height:30px" onclick="metropractice([80, 10]);">80 10p</button>
+				<button style="height:30px" onclick="metropractice([90, 10]);">90 10p</button>
 				<br><br><button style="height:30px" onclick="metropractice([100, 10]);">100 10p</button>
 				<br><br><button style="height:30px" onclick="metropractice([120, 10]);">120 10p</button>
 			</td>
@@ -336,11 +337,11 @@ td {
 			</td>
 			<td style="vertical-align: top;"><b style="color:blue">SCALE NOTE-GRADE</b>
 				<br><br>
-				<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 175, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])">Gb 0-24</button> 1-1
+				<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 180, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])">Gb 0-24</button> 1-1
 				<br><br>
-				<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 170, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])"> D#mp 0-24</button> 1-1
+				<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 180, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])"> D#mp 0-24</button> 1-1
 				<br><br>
-				<button onclick="practice_scale16_C([0, Iba_Lesp], 170, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])"> C 0-24</button> 1-1
+				<button onclick="practice_scale16_C([0, Iba_Lesp], 200, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])"> C 0-24</button> 1-1
 			</td>
 			<td style="vertical-align: top;"><b style="color:blue">RANDOM COMBINED</b>
 				<br><br><button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Gbp, majp_grades, 0, 12, 1, 6);">Gbp 0-12</button> 1
@@ -377,6 +378,16 @@ td {
 					<br>1-5: 102/7 9: 102/7 13-18: 102/7
 					<br>1-5: 102/7 9: 102/7 13-18: 102/7
 				</td>
+				<td style="width: 240px">
+					<br>9: ___
+					<br>9: ___
+					<br>9: ___
+					<br>9: 100
+					<br>9: 100
+					<br>9: 100
+				</td>legato 5px
+				
+
 				<td>Gyakorlás fejből a teljes nyakon,<br>amíg 0 tévesztéssel nem megy:<br>
 					<br>Gbp 80bpm-10p
 					<br>D#mp 
@@ -388,10 +399,7 @@ td {
 				<td style="width: 240px">
 					<a href="https://www.youtube.com/watch?v=dE6w7PLty3E">How to start a guitar solo?</a>
 				</td>
-				<td style="width: 240px">
-					
-				</td>
-				<td style="width: 240px">
+								<td style="width: 240px">
 					hotel california orion
 					road to hell
 					save your tears
@@ -515,7 +523,8 @@ td {
 				</section>
 			</td>
 			<td style="width:20%">
-				
+				<b>Hangok</b> gyakorlása: Először pontosan lokalizáld a bundot, másodszor vetítsd rá a hangot, harmadszor fogd le. Tanulás = ( memorizálás + felidézés (tesztelés) ) * endless iteration. 
+				<b>Dallam memorizálása</b>: ne arra gondolj, hogy most ugrok egy kvartot, hanem, hogy a 2. fokról ugrok az 5-re.
 			</td>
 			<td style="width:20%">A cél a fokok és a hangok GYORS megtalálása a nyakon egy adott hangnemben.
 			Nem baj, ha még nem látom egy-az-egyben rávetítve őket, a lényeg, hogy a szekvencia gyakorlás által napról napra gyorsabban találjam meg őket.
