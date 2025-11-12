@@ -883,14 +883,16 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 	global_mode = "learn";
 
 	redraw();
-	if ( majp_list.includes(scale)) {
-		scale2 = maj_list[majp_list.indexOf(scale)];
-		gradescale2 = maj_grades;
-	}
-	if ( minp_list.includes(scale)) {
-		scale2 = min_list[minp_list.indexOf(scale)];
-		gradescale2 = min_grades;
-	}
+	if ( global_notes_andor_grades != "columns" ) {
+		if ( majp_list.includes(scale)) {
+			scale2 = maj_list[majp_list.indexOf(scale)];
+			gradescale2 = maj_grades;
+		}
+		if ( minp_list.includes(scale)) {
+			scale2 = min_list[minp_list.indexOf(scale)];
+			gradescale2 = min_grades;
+		}
+	}	
 	displaynotes(scale2, gradescale2);
 		
 	function prepareNotes(scale, fret, index) {
