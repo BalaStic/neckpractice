@@ -713,8 +713,8 @@ function getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, st
 
 
 function practice_scale16_C(fret, bpm, repeat) {
-	let frets = [0, 0, 3, 5, 5, 8, 10, 12, 12, 15, 17, 17, 20, 22];
-	let startindex = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0];
+	let frets = [0, 0, 3, 5, 8, 8, 10, 12, 12, 15, 17, 20, 20, 22];
+	let startindex = [0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0];
 	set_gbgchord("C");
 	practice_scale16(C, maj_grades, fret, frets, startindex, bpm, repeat);	
 }
@@ -781,9 +781,9 @@ function practice_scale16_Db(fret, bpm, repeat) {
 }
 
 function practice_scale16_Am(fret, bpm, repeat) {
-	let frets = [0, 0, 0, 3, 3, 5, 5, 5, 8, 8, 8, 10, 10, 10, 12, 12, 12, 15, 15, 17, 17, 17, 20, 20, 20, 22, 22, 22];
-	let startindex = [0, 1, 2, 0, 1, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 0, 1, 2, 0, 1, 2, 0, 1, 2];
-	//set_gbgchord("Am");
+	let frets = [0, 0, 3, 5, 8, 8, 10, 12, 12, 15, 17, 20, 20, 22];
+	let startindex = [0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0];
+	set_gbgchord("Am");
 	practice_scale16(Am, min_grades, fret, frets, startindex, bpm, repeat);
 }
 
@@ -1088,7 +1088,10 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 			fret_from2 = fret_from - 2 ;
 		}
 		else if (fret_to > 24 && fret_from >= 21 && (scale == Amp || scale == Am) && (i==0)) {
-			fret_from2 = fret_from - 2 ;
+			fret_from2 = fret_from - 1 ;
+		}
+		else if (fret_to > 24 && fret_from >= 21 && (scale == Amp || scale == Am) && (i==4)) {
+			fret_from2 = fret_from - 1 ;
 		}		
 		else fret_from2 = fret_from;
 		
@@ -1099,7 +1102,7 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 			else fret_to2 = fret_to+1;
 		}
 		else fret_to2 = fret_to;
-		console.log("DEBUG#2", fret_from2);
+		
 		for(var j=fret_from2; j<=fret_to2; j++) {			
 			for(var k=0; k<scale.length; k++) {
 				if (necknotes_sharp[i][j] == scale[k]) {
