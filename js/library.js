@@ -103,6 +103,9 @@ var Fiszmp= ['F#', 'A', 'H', 'C#', 'E'];
 var Fm = ['F', 'G', 'Ab', 'Bb', 'C', 'Db', 'Eb'];
 var Gb = ['Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb', 'F'];
 var Gb_only = ['Gb'];
+var Gb_Ab_only = ['Gb', 'Ab'];
+var Gb_Ab_Bb_only = ['Gb', 'Ab', 'Bb'];
+var Gb_Ab_Bb_Db_only = ['Gb', 'Ab', 'Bb', 'Db'];
 var Gbp = ['Gb', 'Ab', 'Bb', 'Db', 'Eb'];
 var G = ['G', 'A', 'H', 'C', 'D', 'E', 'F#'];
 var Gp = ['G', 'A', 'H', 'D', 'E'];
@@ -1177,7 +1180,7 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 	tick_bpm = 16 * bpm;
 	tick_ms = 60 / tick_bpm * 1000;
 	$("#infobox3").html(bpm + " beat bpm");
-	$("#infobox4").html(tick_bpm + " tick bpm");
+	$("#infobox4").html(tick_bpm / 4 + " tick bpm");
 	const now = new Date();
 	const formattedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
 	//console.log(formattedTime);
@@ -1188,8 +1191,9 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 	let currentInterval = mysetInterval(practiceFunction, interval, scale, gradescale, fret1, fret2, string_from, string_to);
     //let currentInterval2 = mysetInterval(metronome_tick, interval);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I- IIII II--", "", tick_ms);
-	let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II", "", 60 / bpm * 125);
+	let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I", "", 60 / bpm * 125);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
@@ -1253,65 +1257,37 @@ function schedule_scale_quiz(elojegyzes, array, interval, iteration, span) {
 		mysetTimeout(random_scale_quiz, interval*i, array, span);
 	}
 }
+
 function set_gbgchord(scale, force = false) {
 	if ( force ) global_bgchord = chord;	
 	else {
-		switch ( scale ) {
-			case Am:
-			case Amp:
-			case "Am":			
-			case "Amp": global_bgchord = "Am"; break;
-			
-			case C:
-			case Cp:
-			case "C":
-			case "Cp": global_bgchord = "C"; break;			
-			
-			case Dm:
-			case Dmp:
-			case "Dm": 
-			case "Dmp": global_bgchord = "Dm"; break;
-			
-			case Diszm:
-			case Diszmp:
-			case "Diszm":
-			case "Diszmp": global_bgchord = "Diszm"; break;
-			
-			case H:
-			case Hp:
-			case "H":
-			case "Hp": global_bgchord = "H"; break;
-			
-			case Ebm:
-			case Ebmp:
-			case "Ebm":
-			case "Ebmp": global_bgchord = "Ebm"; break;
-			
-			case F:
-			case Fp:
-			case "F":
-			case "Fp": global_bgchord = "F"; break;
-			
-			case Gb:
-			case Gbp:
-			case "Gb":
-			case "Gbp": global_bgchord = "Gb"; break;
-			
-			case G:
-			case Gp:
-			case "G":
-			case "Gp": global_bgchord = "G"; break;
-			
-			case Fisz:
-			case Fiszp:
-			case "Fiszp":
-			case "Fisz": global_bgchord = "Gb"; break;
-			
-			case "flats": global_bgchord = "Gb"; break;
-			case "sharps": global_bgchord = "Diszm"; break;
-			default: global_bgchord = 0; break;
+		if ([Am, Amp, "Am", "Amp"].includes(scale)) {
+			global_bgchord = "Am";
+		} else if ([C, Cp, "C", "Cp"].includes(scale)) {
+			global_bgchord = "C";
+		} else if ([Dm, Dmp, "Dm", "Dmp"].includes(scale)) {
+			global_bgchord = "Dm";
+		} else if ([Diszm, Diszmp, "Diszm", "Diszmp"].includes(scale)) {
+			global_bgchord = "Diszm";
+		} else if ([H, Hp, "H", "Hp"].includes(scale)) {
+			global_bgchord = "H";
+		} else if ([Ebm, Ebmp, "Ebm", "Ebmp"].includes(scale)) {
+			global_bgchord = "Ebm";
+		} else if ([F, Fp, "F", "Fp"].includes(scale)) {
+			global_bgchord = "F";
+		} else if ([Gb, Gbp, Gb_only, Gb_Ab_only, Gb_Ab_Bb_only, Gb_Ab_Bb_Db_only, "Gb", "Gbp"].includes(scale)) {
+			global_bgchord = "Gb";
+		} else if ([G, Gp, "G", "Gp"].includes(scale)) {
+			global_bgchord = "G";
+		} else if ([Fisz, Fiszp, "Fiszp", "Fisz"].includes(scale)) {
+			global_bgchord = "Gb";
+		} else if (scale === "flats") {
+			global_bgchord = "Gb";
+		} else if (scale === "sharps") {
+			global_bgchord = "Diszm";
+		} else {
+			global_bgchord = 0;
 		}
-
 	}
 }
 
