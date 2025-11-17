@@ -102,10 +102,9 @@ var Fiszm = ['F#', 'G#', 'A', 'H', 'C#', 'D', 'E'];
 var Fiszmp= ['F#', 'A', 'H', 'C#', 'E'];
 var Fm = ['F', 'G', 'Ab', 'Bb', 'C', 'Db', 'Eb'];
 var Gb = ['Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb', 'F'];
-var Gb_only = ['Gb'];
-var Gb_Ab_only = ['Gb', 'Ab'];
-var Gb_Ab_Bb_only = ['Gb', 'Ab', 'Bb'];
-var Gb_Ab_Bb_Db_only = ['Gb', 'Ab', 'Bb', 'Db'];
+var Gb_special = ['Gb', 'Ab', 'Bb', 'Db'];
+var Gb_triad = ['Gb', 'Bb', 'Db']
+var Gbmaj7 = ['Gb', 'Bb', 'Db', 'F'];
 var Gbp = ['Gb', 'Ab', 'Bb', 'Db', 'Eb'];
 var G = ['G', 'A', 'H', 'C', 'D', 'E', 'F#'];
 var Gp = ['G', 'A', 'H', 'D', 'E'];
@@ -1275,7 +1274,7 @@ function set_gbgchord(scale, force = false) {
 			global_bgchord = "Ebm";
 		} else if ([F, Fp, "F", "Fp"].includes(scale)) {
 			global_bgchord = "F";
-		} else if ([Gb, Gbp, Gb_only, Gb_Ab_only, Gb_Ab_Bb_only, Gb_Ab_Bb_Db_only, "Gb", "Gbp"].includes(scale)) {
+		} else if ([Gb, Gb_special, Gb_triad, Gbp, "Gb", "Gbp"].includes(scale)) {
 			global_bgchord = "Gb";
 		} else if ([G, Gp, "G", "Gp"].includes(scale)) {
 			global_bgchord = "G";
