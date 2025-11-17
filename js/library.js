@@ -1495,3 +1495,4 @@ function walkn(notes, repeat = global_walking_repeat, reverse = true, half_tick 
 		}, to*j+(global_intro_repeat-1)*global_frettimeout);	
 	}
 }
+//proba
