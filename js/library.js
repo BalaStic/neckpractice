@@ -60,6 +60,7 @@ var C_F_Bb_Eb_Ab_Db = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb
 var noteDict = { "C": ['C'], "D": ['D'], "E": ['E'], "F": ['F'], "G": ['G'], "A": ['A'], "H": ['H'] };
 
 var Cp = ['C', 'D', 'E', 'G', 'A'];
+var C_triad = ['C', 'E', 'G']
 var C145 = ['C', 'F', 'G'];
 var CCm = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'H'];
 var maj_grades = ['1', '2', '3', '4', '5', '6', 'maj7'];
@@ -81,6 +82,7 @@ var Dm = ['D', 'E', 'F', 'G', 'A', 'Bb', 'C'];
 var Dmp = ['D', 'F', 'G', 'A', 'C'];
 var Disz_only = ['D#'];
 var Diszm = ['D#', 'E#', 'F#', 'G#', 'A#', 'H', 'C#'];
+var Diszm_triad = ['D#', 'F#', 'A#'];
 var Diszmp = ['D#', 'F#', 'G#', 'A#', 'C#'];
 var DmU = ['D', 'E', 'F', 'G', 'Ab', 'A', 'Bb', 'C'];
 var DDm = ['D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'H', 'C', 'C#'];
@@ -102,7 +104,7 @@ var Fiszm = ['F#', 'G#', 'A', 'H', 'C#', 'D', 'E'];
 var Fiszmp= ['F#', 'A', 'H', 'C#', 'E'];
 var Fm = ['F', 'G', 'Ab', 'Bb', 'C', 'Db', 'Eb'];
 var Gb = ['Gb', 'Ab', 'Bb', 'Cb', 'Db', 'Eb', 'F'];
-var Gb_special = ['Gb', 'Ab', 'Bb', 'Db'];
+var Gb_special = ['Gb', 'Ab', 'Bb', 'Db', 'Eb'];
 var Gb_triad = ['Gb', 'Bb', 'Db']
 var Gbmaj7 = ['Gb', 'Bb', 'Db', 'F'];
 var Gbp = ['Gb', 'Ab', 'Bb', 'Db', 'Eb'];
@@ -1192,7 +1194,8 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I- IIII II--", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II", "", 60 / bpm * 125);
-	let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I", "", 60 / bpm * 125);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I", "", 60 / bpm * 125);
+	let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I---", "", 60 / bpm * 125);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
@@ -1262,7 +1265,7 @@ function set_gbgchord(scale, force = false) {
 	else {
 		if ([Am, Amp, "Am", "Amp"].includes(scale)) {
 			global_bgchord = "Am";
-		} else if ([C, Cp, "C", "Cp"].includes(scale)) {
+		} else if ([C, C_triad, Cp, "C", "Cp"].includes(scale)) {
 			global_bgchord = "C";
 		} else if ([Dm, Dmp, "Dm", "Dmp"].includes(scale)) {
 			global_bgchord = "Dm";

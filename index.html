@@ -360,41 +360,62 @@ td {
 				
 			</td>
 			<td style="vertical-align: top;"><b style="color:blue">TEST: RANDOM COLUMN</b>
-				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 98, Gb_special, 'coln', 0, 12, 1, 6);">Gb Ab Bb Db Eb</button>
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, Gbp, 'coln', 0, 12, 1, 6);">Gb Ab Bb Db Eb</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, Gbp, 'coln', 13, 24, 1, 6);">13-24</button>
 				<!-- 
 														0-12		13-24
 				Gb 									: 	4p			4p
 				Gb Ab 								: 	4p 			4p
 				Gb Ab Bb 							: 	12p			12p
-				Gb Ab Bb Db 						: 	8p			12p
-
-
+				Gb Ab Bb Db 						: 	12p			12p
+				Gb Ab Bb Db Eb 						: 	17p			17p
+				-->
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, C, 'coln', 13, 24, 1, 6);">C ...</button> 
+				<!-- 
+														0-12		13-24
+				C D E F G A H C						: 	4p			4p
 				-->
 				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Disz_only, 'coln', 0, 12, 1, 6);">D#m ...</button> 
-
+				
 
 				
 			</td>
 			<td style="vertical-align: top;"><b style="color:blue">TEST: RANDOM CHORD NOTES</b>
-				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 98, Gb_triad, 'coln', 0, 12, 1, 6);">Gb</button>
+				<br><br>
+				<button onclick="displaynotes(G	b_triad, 0, 'notes')">+</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, Gb_triad, 'coln', 0, 12, 1, 6);">Gb</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, Gb_triad, 'coln', 13, 24, 1, 6);">13-24</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, Gb_triad, 'coln', 0, 24, 1, 6);">0-24</button>
+				<br><br><button onclick="displaynotes(C_triad, 0, 'notes')">+</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, C_triad, 'coln', 0, 12, 1, 6);">C</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, C_triad, 'coln', 13, 24, 1, 6);">13-24</button>
+				<br><br><button onclick="displaynotes(Diszm_triad, 0, 'notes')">+</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 98, Diszm_triad, 'coln', 0, 12, 1, 6);">D#m</button>
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 98, Diszm_triad, 'coln', 13, 24, 1, 6);">13-24</button>
+				
+				<!-- 										0-12		13-24	0-24
+				Gb 									: 		20p			20p		4p
+				C 									: 		12p			12p	
+				D#m 								: 		0p 			0p
+				-->
 
 			</td>
 			<tr>
 				<td style="font-family: 'Courier New', Courier, monospace;">
 					9-8: _____ 13-19: _____
-					<br>9-8: _____ 13-19: _____
-					<br>9-8: _____ 13-19: 102/7
+					<br>9-8: 103/8 13-19: _____
+					<br>9-8: 103/8 13-19: 102/7
 					<br>9-8: 103/8 13-19: 102/7
 					<br>9-8: 103/8 13-19: 102/7
 					<br>9-8: 103/8 13-19: 102/7
 				</td>
 				<td style="width: 240px">legato
-					<br>9-8: 101/6
-					<br>9-8: 101/6
-					<br>9-8: 101/6
-					<br>9-8: 101/6
-					<br>9-8: 101/6
-					<br>9-8: 101/6
+					<br>9-7: _____
+					<br>9-7: _____
+					<br>9-7: _____
+					<br>9-7: _____
+					<br>9-7: _____
+					<br>9-7: 101/6
 				</td>
 				
 
