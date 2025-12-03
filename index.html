@@ -338,90 +338,87 @@ td {
 			</td>
 			<td style="vertical-align: top;"><b style="color:blue">NOTE-GRADE-COLUMN</b>
 				<br><br>
-				<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 180, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])">Gb 0-24</button> 1-1-6				
-				<br><br>
-				<button onclick="practice_scale16_C([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])"> C 0-24</button> 1-2-3
-				<br><br>
-				<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 180, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])"> D#mp 0-24</button> 0-0-2
-				<br><br>
-				<button onclick="practice_scale16_Am([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])"> Am 0-24</button> 2-2-3
+				<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Gb   </button> 3-1-6				
+				       
+				<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   D#m   </button> 2-2-4
+				<br><br>				
+				<button onclick="practice_scale16_C([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   C   </button> 3-3-4
+				       
+				<button onclick="practice_scale16_Am([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Am   </button> 4-4-6
+				<br><br>				
+				<button onclick="practice_scale16_G([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   G   </button> 4-4-4
+				       
+				<button onclick="practice_scale16_Em([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Em   </button> 4-4-6
+				<br><br>				
+				<button onclick="practice_scale16_D([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   D   </button> 4-4-4	
+				       
 			</td>
-			<td style="vertical-align: top;"><b style="color:blue">RANDOM COMBINED</b>
-				<br><br><button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Gbp, majp_grades, 0, 12, 1, 6);">Gbp 0-12</button> 1
-				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Gbp, majp_grades, 12, Iba_Lesp, 1, 6);">12-24</button> 1
+			<td style="vertical-align: top;"><b style="color:blue">LEARN BY RANDOM</b>
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Gbp, majp_grades, 0, 12, 1, 6);">Gbp 0-12</button> 1
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Gbp, majp_grades, 12, Iba_Lesp, 1, 6);">12-24</button> 1
 				
-				<br><br><button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, C, maj_grades, 0, 12, 1, 6);">C 0-12</button> 1
-				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, C, maj_grades, 12, Iba_Lesp, 1, 6);">12-24</button>
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, C, maj_grades, 0, 12, 1, 6);">C 0-12</button> 1
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, C, maj_grades, 12, Iba_Lesp, 1, 6);">12-24</button>
 				<br><br>
-				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Diszmp, minp_grades, 0, 12, 1, 6);">D#mp 0-12</button> 1
-				<button onclick="schedule_practice_ScaleRandomCombined(1000 / 2500 * 60, 145, Diszmp, minp_grades, 12, Iba_Lesp, 1, 6);">D#mp 12-24</button> 1
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Diszmp, minp_grades, 0, 12, 1, 6);">D#mp 0-12</button> 1
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Diszmp, minp_grades, 12, Iba_Lesp, 1, 6);">D#mp 12-24</button> 1
 				
 				
 				
 			</td>
 			<td style="vertical-align: top;"><b style="color:blue">TEST: RANDOM COLUMN</b>
-				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, Gbp, 'coln', 0, 12, 1, 6);">Gb Ab Bb Db Eb</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, Gbp, 'coln', 13, 24, 1, 6);">13-24</button>
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, Gbp, 'coln', 0, 24, 1, 6);">   Gb   </button> 20p
+				     
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, Diszmp, 'coln', 0, 24, 1, 6);">   D#mp   </button> 5p
 				<!-- 
-														0-12		13-24
+														0-12		13-24		0-24
 				Gb 									: 	4p			4p
 				Gb Ab 								: 	4p 			4p
 				Gb Ab Bb 							: 	12p			12p
 				Gb Ab Bb Db 						: 	12p			12p
-				Gb Ab Bb Db Eb 						: 	17p			17p
+				Gb Ab Bb Db Eb 						: 	17p			22p			20p
 				-->
-				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, C, 'coln', 13, 24, 1, 6);">C ...</button> 
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, C, 'coln', 0, 24, 1, 6);">   C   </button> 5p
 				<!-- 
-														0-12		13-24
-				C D E F G A H C						: 	4p			4p
+														0-12		13-24	0-24
+				C D E F G A H C						: 	9p			9p		10p
 				-->
-				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Disz_only, 'coln', 0, 12, 1, 6);">D#m ...</button> 
+				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, G, 'coln', 0, 24, 1, 6);">   G   </button> 5p 
+				     
+				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 150, Em, 'coln', 0, 24, 1, 6);">   Em   </button> 10p 
 				
 
 				
 			</td>
-			<td style="vertical-align: top;"><b style="color:blue">TEST: RANDOM CHORD NOTES</b>
+			<td style="vertical-align: top;"><b style="color:blue">CHORDS</b>
 				<br><br>
-				<button onclick="displaynotes(G	b_triad, 0, 'notes')">+</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, Gb_triad, 'coln', 0, 12, 1, 6);">Gb</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, Gb_triad, 'coln', 13, 24, 1, 6);">13-24</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, Gb_triad, 'coln', 0, 24, 1, 6);">0-24</button>
-				<br><br><button onclick="displaynotes(C_triad, 0, 'notes')">+</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, C_triad, 'coln', 0, 12, 1, 6);">C</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2000 * 60, 120, C_triad, 'coln', 13, 24, 1, 6);">13-24</button>
-				<br><br><button onclick="displaynotes(Diszm_triad, 0, 'notes')">+</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 98, Diszm_triad, 'coln', 0, 12, 1, 6);">D#m</button>
-				<button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 98, Diszm_triad, 'coln', 13, 24, 1, 6);">13-24</button>
+				<button onclick="displaynotes(Gb_triad, 0, 'notes')">Gb</button>
+				<br><br><button onclick="displaynotes(C_triad, 0, 'notes')">C</button>
+				<br><br><button onclick="displaynotes(Diszm_triad, 0, 'notes')">D#m</button>
 				
-				<!-- 										0-12		13-24	0-24
-				Gb 									: 		20p			20p		4p
-				C 									: 		12p			12p	
-				D#m 								: 		0p 			0p
-				-->
-
 			</td>
 			<tr>
 				<td style="font-family: 'Courier New', Courier, monospace;">
-					9-8: _____ 13-19: _____
-					<br>9-8: 103/8 13-19: _____
-					<br>9-8: 103/8 13-19: 102/7
-					<br>9-8: 103/8 13-19: 102/7
-					<br>9-8: 103/8 13-19: 102/7
-					<br>9-8: 103/8 13-19: 102/7
+					9-7: _____ 13-19: 102/7
+					<br>9-7: _____ 13-19: 102/7
+					<br>9-7: _____ 13-19: 102/7
+					<br>9-7: _____ 13-19: 102/7
+					<br>9-7: 103/8 13-19: 102/7
+					<br>9-7: 103/8 13-19: 102/7
 				</td>
 				<td style="width: 240px">legato
-					<br>9-7: _____
-					<br>9-7: _____
-					<br>9-7: _____
-					<br>9-7: _____
-					<br>9-7: _____
-					<br>9-7: 101/6
+					<br>9-6: _____
+					<br>9-6: _____
+					<br>9-6: _____
+					<br>9-6: 101/6
+					<br>9-6: 101/6
+					<br>9-6: 101/6
 				</td>
 				
 
-				<td>Gyakorlás fejből a teljes nyakon,<br>amíg 0 tévesztéssel nem megy:<br>
-					<br>Gbp 80bpm-23p
-					<br>C 170bpm-10p					
+				<td>Gyakorlás fejből a teljes nyakon,<br>amígtévesztés nélkül nem megy:<br>
+					<br>Gbp 80bpm-33p
+					<br>C 170bpm-20p					
 					<br>D#mp 					
 					<br>Ebmp
 					<br>F#p 
