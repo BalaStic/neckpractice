@@ -1,7 +1,8 @@
 var global_intro_repeat = 2;
 var global_walking_repeat;
 var global_frettimeout;
-var global_gradescale = 0;
+var saved_scale = 0;
+var saved_gradescale = 0;
 var global_walkcounter = 1;
 var global_previous = "";
 let global_functions_settimeout = [];
@@ -17,7 +18,6 @@ var tick = new Audio("assets/metronome.wav");
 var lastnote;
 var lastfret;
 var lastnotecolor;
-var lastnotetext = "";
 var lastfrettext = "";
 var global_RepeatMemorize_cnt = 0;
 var global_chordfiles = {
@@ -31,6 +31,7 @@ var global_chordfiles = {
 	"Gb": new Audio("assets/Gb.wav"),
 	"G": new Audio("assets/G.wav"),
 	"H": new Audio("assets/H_2.wav"),
+	"Hm": new Audio("assets/Hm.wav"),
 	"F": new Audio("assets/F.wav"),
 	"Fisz": new Audio("assets/Gb.wav"),
 };
@@ -170,7 +171,6 @@ function convertCssPxToInt(cssPxValue) {
 }
 
 function displaynotes(scale, gradescale = 0, notes_andor_grades = global_notes_andor_grades) {
-	global_gradescale = gradescale;
 	drawStrings();
 	
 	$.each(scale_on_fret2fret(scale, gradescale, 0, 24), function(i, note) { 
@@ -212,7 +212,7 @@ function displaynotes(scale, gradescale = 0, notes_andor_grades = global_notes_a
 		}
 				
 	});
-	global_necktoggle = 1;
+	
 }
 
 
@@ -522,12 +522,12 @@ function move_up(tr_id) {
     tbody.insertBefore(row, tbody.firstChild);
 }
 
-function mysetTimeout(callback, delay) {
+function mysetTimeout(callback, delay, ...args) {
     // Log a message to the console
     //console.log(`Setting a timeout for ${delay} milliseconds`);
 
     // Use the native mysetTimeout to execute the callback after the specified delay
-    func = setTimeout(callback, delay);
+    func = setTimeout(() => callback(...args), delay);
 	global_functions_settimeout.push(func);
 	return func;
 }
@@ -793,6 +793,14 @@ function practice_scale16_H(fret, bpm, repeat) {
 	practice_scale16(H, maj_grades, fret, frets, startindex, bpm, repeat);
 }
 
+function practice_scale16_Hm(fret, bpm, repeat) {
+	let frets = [0, 2, 2, 5, 7, 10, 10, 12, 14, 14, 17, 19, 22, 22, 24];
+	let startindex = [0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0];
+	set_gbgchord("Hm");
+	practice_scale16(Hm, min_grades, fret, frets, startindex, bpm, repeat);	
+}
+
+
 function practice_scale16_Db(fret, bpm, repeat) {
 	let frets = [2, 2, 2, 4, 4, 6, 6, 6, 9, 9, 9, 11, 11, 11, 14, 14, 14, 16, 16, 18, 18, 18, 21, 21, 21];
 	let startindex = [0, 1, 2, 0, 1, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 0, 1, 2, 0, 1, 2];
@@ -910,11 +918,11 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 	let gradescale2 = gradescale;
 	let scale2 = scale;
 	global_frettimeout = (60 / bpm) * 1000 ;
-	global_inhibit_bgchord = false;
+	//global_inhibit_bgchord = false;
 	//global_walking_repeat = repeat;
 	global_mode = "learn";
 
-	redraw();
+	//redraw();
 	if ( global_notes_andor_grades != "columns" ) {
 		if ( majp_list.includes(scale)) {
 			scale2 = maj_list[majp_list.indexOf(scale)];
@@ -925,6 +933,8 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 			gradescale2 = min_grades;
 		}
 	}	
+	saved_scale = scale;
+	saved_gradescale = gradescale;
 	displaynotes(scale2, gradescale2);
 		
 	function prepareNotes(scale, fret, index) {
@@ -948,14 +958,14 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 		return prepare_walking_seq_0(selectedNotes);
 	}
 	
-	filtered_frets.forEach( (fret,i) =>{
+	filtered_frets.forEach( (fret,i) => {
 		let notes = prepareNotes(scale, fret, i);				
 		let repeat_i = repeat;
 		if ( Array.isArray(repeat) ) {
 			repeat_i = repeat[i];
-		}
+		}		
 		mysetTimeout(function() {
-			walkn(notes, repeat_i);			
+			walkn(notes, repeat_i);					
  		}, nextstart);
 		nextstart += calc_to_walkn(notes, repeat_i);
 	});
@@ -1322,6 +1332,9 @@ function set_gbgchord(scale, force = false) {
 			global_bgchord = "Gb";
 		} else if (scale === "sharps") {
 			global_bgchord = "Diszm";
+		} else if ([Hm, "Hm"].includes(scale)) {
+			global_bgchord = "Hm";
+		
 		} else {
 			global_bgchord = 0;
 		}
@@ -1373,7 +1386,7 @@ function stop_practice() {
 
 function updateFretboard(note, newcontent, play = true) {
 	if (lastnote) {
-			lastnote.text(lastnotetext);
+			updateNoteText(lastnote, lastnote.attr("actual"));
 			lastnote.css("color", lastnotecolor);
 			lastfret.text(lastfrettext);
 			lastfret.css("color", lastfretcolor);
@@ -1386,8 +1399,10 @@ function updateFretboard(note, newcontent, play = true) {
 	lastnotecolor = note.css("color");
 	lastfretcolor = lastfret.css("color");
 	
-	lastnotetext = note.text();	
+	note.attr("actual", newcontent);
 	lastfrettext = lastfret.text();
+
+	//lastnote.attr("actual", note.text());
 
 	note.css("color", "red");
 	fret.css("color", "red");
@@ -1423,7 +1438,7 @@ function updateFretboard(note, newcontent, play = true) {
 		updateNoteText(note, newcontent);
 	}
 
-	if (play) play_chord(global_bgchord);	
+	if (play) play_chord(global_bgchord);		
 }
 
 function updateNoteText(note, newcontent) {    
@@ -1478,14 +1493,14 @@ function update_global_walking_repeat() {
     });
 }
 
-function updateNoteContent(note, delay, half_tick = global_half_tick, tickcounter) {
+function updateNoteContent(note, delay, half_tick = global_half_tick, tickcounter, inhibit_bgchord = false) {
 	mysetTimeout(function () {
-		content = note.attr('actual');
+		content = note.attr('actual');		
 		updateFretboard(note, content, false);
 		if (!half_tick || tickcounter % 4 === 0) {
 			metronome_tick();
 			if ( tickcounter % 4 === 0 ) {
-				if ( global_bgchord != 0) play_chord(global_bgchord);						
+				if ( global_bgchord != 0 && !inhibit_bgchord) play_chord(global_bgchord);
 			}
 		}
 		//console.log(tickcounter);
@@ -1517,20 +1532,20 @@ function walkn(notes, repeat = global_walking_repeat, reverse = true, half_tick 
 		to = global_frettimeout + global_frettimeout * (notes.length-1);
 	}
 	
-	let tmp = global_bgchord;
-	global_bgchord = 0;
+	//let tmp = global_bgchord;
+	//global_bgchord = 0;
 	if ( repeat != 0) 
 	for (i = 0; i < global_intro_repeat; i++) {
-		updateNoteContent(notes[0], i * global_frettimeout, half_tick = false, i);		
+		updateNoteContent(notes[0], i * global_frettimeout, half_tick = false, i, inhhibit_bgchord = true);		
 	}
 	tickcounter = 0;
-				
+	
 	for(j=0; j<repeat; j++) {
-		mysetTimeout(function() { 
-			
-			global_bgchord = tmp;
+		mysetTimeout(function(j) { 
+			displaynotes(saved_scale, saved_gradescale, j % 2 == 0 ? "notes_only" : "grades_only");				
+			//global_bgchord = tmp;			
 			walk(global_frettimeout, notes, repeat, reverse=reverse, half_tick=global_half_tick);			
-		}, to*j+(global_intro_repeat-1)*global_frettimeout);	
+		}, to*j+(global_intro_repeat-1)*global_frettimeout, j);	
 	}
 }
 //proba
