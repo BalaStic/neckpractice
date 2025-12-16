@@ -1,4 +1,4 @@
-var global_intro_repeat = 2;
+var global_intro_repeat = 4;
 var global_walking_repeat;
 var global_frettimeout;
 var saved_scale = 0;
@@ -67,13 +67,14 @@ var C145 = ['C', 'F', 'G'];
 var CCm = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'H'];
 var maj_grades = ['1', '2', '3', '4', '5', '6', 'maj7'];
 var maj_grades = ['1', '2', '3', '4', '5', '6', 'maj7'];
+var maj_grades_1_3_5_7 = ['1', '3', '5', 'maj7']; 	
 var empty_grades = [ "", "", "", "", "", "", ""]
 var CH = ['C', "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"];
 var CDb = ['C', "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "H"];
 var minU_grades = ['1', '2', 'b3', '4', 'U', '5', 'b6', 'b7'];
 var min_grades = ['1', '2', '3b', '4', '5', '6b', '7'];
 var minp_grades = ['1', '3b', '4', '5', '7'];
-var majp_grades = ['1', '2', '3', '5', '6'];	
+var majp_grades = ['1', '2', '3', '5', '6'];
 var majmin_grades = ['1', 'b2', '2', 'b3', '3',' 4', 'U', '5', 'm6', '6', '7', 'maj7'];
 var Cm = ['C', 'D', 'Eb', 'F', 'G', 'Ab', 'Bb'];
 var CmU = ['C', 'D', 'Eb', 'F', 'Gb', 'G', 'Ab', 'Bb'];
@@ -99,6 +100,7 @@ var Emp = ['E', 'G', 'A', 'H', 'D'];
 var EEm = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'H', 'C', 'C#', 'D', 'D#'];
 var F = ['F', 'G', 'A', 'Bb', 'C', 'D', 'E'];
 var Fp = ['F', 'G', 'A', 'C', 'D'];
+var F_1_3_5_7 = ['F', 'A', 'C', 'E'];
 var FFm = ['F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'H', 'C', 'Db', 'D', 'Eb', 'E'];
 var Fisz = ['F#', 'G#', 'A#', 'H', 'C#', 'D#', 'E#'];
 var Fiszp = ['F#', 'G#', 'A#', 'C#', 'D#'];
@@ -739,6 +741,13 @@ function practice_scale16_D(fret, bpm, repeat) {
 	practice_scale16(D, maj_grades, fret, frets, startindex, bpm, repeat);	
 }
 
+function practice_scale16_F(fret, bpm, repeat) {
+	let frets = [1, 1, 3, 5, 5, 8, 10, 13, 13, 15, 17, 17, 20, 22, 22];
+	let startindex = [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1];
+	set_gbgchord("F");
+	practice_scale16(F, maj_grades, fret, frets, startindex, bpm, repeat);	
+}
+
 
 function practice_scale16_Fp(fret, bpm, repeat) {
 	let frets = [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22, 22, 24];
@@ -1123,8 +1132,12 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 		else if (fret_to > 24 && fret_from >= 21 && (scale == Cp || scale == C) && (i==4)) {
 			fret_from2 = fret_from - 1  ;
 		}
-		else if (fret_to > 24 && fret_from >= 21 && (scale == Fp || scale == F) && (i==4 || i==0)) {
-			fret_from2 = fret_from - 2 ;
+		else if (fret_to > 24 && fret_from >= 21 && (scale == Fp || scale == F) && (i==4 || i==0) ) {
+			fret_from2 = fret_from - 1 ;
+			fret_to2 = fret_to - 1 ;
+		}
+		else if (fret_to > 24 && fret_from >= 21 && (scale == Fp || scale == F) && (i==3) ) {
+			fret_from2 = fret_from -1 ;
 		} 
 		else if (fret_to > 24 && fret_from >= 21 && (scale == Dmp || scale == Dm) && (i==4 || i==0)) {
 			fret_from2 = fret_from - 2 ;
@@ -1320,7 +1333,7 @@ function set_gbgchord(scale, force = false) {
 			global_bgchord = "Em";		
 		} else if ([Ebm, Ebmp, "Ebm", "Ebmp"].includes(scale)) {
 			global_bgchord = "Ebm";
-		} else if ([F, Fp, "F", "Fp"].includes(scale)) {
+		} else if ([F, Fp, F_1_3_5_7, "F", "Fp"].includes(scale)) {
 			global_bgchord = "F";
 		} else if ([Gb, Gb_special, Gb_triad, Gbp, "Gb", "Gbp"].includes(scale)) {
 			global_bgchord = "Gb";
