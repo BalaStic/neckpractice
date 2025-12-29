@@ -14,6 +14,7 @@ var global_display_done = false;
 var global_half_tick = true;
 var global_bgchord = 0;
 var global_inhibit_bgchord = false;
+var global_tickdiv = 4;
 var tick = new Audio("assets/metronome.wav");
 var lastnote;
 var lastfret;
@@ -193,21 +194,7 @@ function displaynotes(scale, gradescale = 0, notes_andor_grades = global_notes_a
 
 				note.attr('actual', to_display_as_note);
 		}
-		switch (note.text()) {
-			case "───────": 
-			case "──────": 
-				note.text("── " + to_display_as_note + " ──");				
-				break;
-			case "─────": 
-				note.text("──" + to_display_as_note + "──");				
-				break;
-			case "────": 
-				note.text("─ " + to_display_as_note + " ─");				
-				break;
-			default:
-				note.text(to_display_as_note);				
-				break;
-		}
+		note.text("──── " + to_display_as_note + " ────");
 
 		if ( note.attr('grade') == 1 ) { 
 				note.css('color', 'lightgreen');
@@ -225,6 +212,22 @@ function drawString(string_id) {
 		if (style.textContent) {
 			td.textContent = style.textContent;
 		}
+
+		const div = document.createElement("div");
+		
+		// Set div width equal to the td's width if defined in neck_tds_style
+		if (style.width) {
+			div.style.width = style.width;
+		}
+		div.style.overflow = "hidden";
+		div.style.whiteSpace = "nowrap";
+		div.style.display = "flex";
+		div.style.justifyContent = "center";
+		div.style.margin = "1px 1px 1px 1px";
+		div.style.padding = "0px";
+		div.style.border = "0px";
+		td.appendChild(div);
+		
 		string = document.getElementById(string_id);
 		string.appendChild(td);
 		if (index == 0) {
@@ -276,8 +279,10 @@ function drawString(string_id) {
 function drawStrings() {
 	for (var row=0; row<6; row++)
 		for (var col=0; col<25; col++) {
-			neck[row][col] = $("#neck tr:eq(" + row + ") td:eq(" + col + ")");
+			
+			neck[row][col] = $("#neck tr:eq(" + row + ") td:eq(" + col + ") > div");
 			note = neck[row][col];
+			
 			if (note) {
 				// Standard guitar tuning: E2, A2, D3, G3, B3, E4
 				// String numbers: 1 (high E) to 6 (low E)
@@ -294,23 +299,12 @@ function drawStrings() {
 			}
 			note.text("");
 			const width = convertCssPxToInt(note.css("width"));
-			if (width > 76) {
-				note.text("───────");				
-				
-			} else if (width <= 76 && width >= 72) {
-				note.text("──────");				
-			} else if (width <= 71 && width > 54) {
-				note.text("─────");				
-			} else if (width <= 54) {
-				note.text("────");				
-			}
-			if ( note.attr("is_zerofret") )
-				note.text("─");
-			note.css('font-size', '18px');
+			note.text("───────");
 			
+			note.css('font-size', '18px');
+						
 		}	
 }
-
 
 function getTextboxlines(textboxid) {
     // Get the textarea element
@@ -459,7 +453,7 @@ function lastnote_displayed(note_){
 		fontWeight: "normal"
 	});
 
-	removenote_fullscale(note_);
+	//removenote_fullscale(note_);
 }
 
 
@@ -769,6 +763,13 @@ function practice_scale16_F(fret, bpm, repeat) {
 	practice_scale16(F, maj_grades, fret, frets, startindex, bpm, repeat);	
 }
 
+function practice_scale_3_notes_by_string_F(fret, bpm, repeat) {
+	let frets = [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18];
+	let startindex = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];	
+	set_gbgchord("F");
+	practice_scale_3_notes_by_string(F, maj_grades, fret, frets, startindex, bpm, repeat);
+}
+
 
 function practice_scale16_Fp(fret, bpm, repeat) {
 	let frets = [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22, 22, 24];
@@ -844,6 +845,14 @@ function practice_scale16_Am(fret, bpm, repeat) {
 	set_gbgchord("Am");
 	practice_scale16(Am, min_grades, fret, frets, startindex, bpm, repeat);
 }
+
+function practice_scale_3_notes_by_string_Am(fret, bpm, repeat) {
+	let frets = [0, 1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19];
+	let startindex = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];	
+	set_gbgchord("Am");
+	practice_scale_3_notes_by_string(Am, min_grades, fret, frets, startindex, bpm, repeat);
+}
+
 
 function practice_scale16_Amp(fret, bpm, repeat) {
 	let frets = [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22];
@@ -969,7 +978,7 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 		
 	function prepareNotes(scale, fret, index) {
 		
-		/*let notes1 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 4, 6);
+		let notes1 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 4, 6);
 		let notes2 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 1, 3);
 		if (filtered_startindex[index] == 1) {
 			notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
@@ -978,8 +987,8 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 			notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
 		}
 		const notes3 = jQuery.merge(notes1, notes2);
-		*/
-		const notes3 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 6);
+		
+		//const notes3 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 6);
 		//const notes3 = scale_3_notes_by_string(scale, gradescale, fret, fret + 5, 1, 6);
 
 		let selectedNotes = [];
@@ -1004,7 +1013,7 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 		nextstart += calc_to_walkn(notes, repeat_i);
 	});
 	timerWatch((nextstart)/1000);
-
+	global_tickdiv = 4;
 }
 
 function practice_scale_3_notes_by_string(scale, gradescale, fret, frets, startindex, bpm, repeat) {
@@ -1103,6 +1112,7 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, frets, starti
 	});
 	console.log("nextstart:", nextstart);
 	timerWatch((nextstart)/1000);
+	global_tickdiv = 6;
 }
 
 function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1589,7 +1599,7 @@ function updateFretboard(note, newcontent, play = true) {
 			lastfret.css("color", lastfretcolor);
 			lastnote_displayed(lastnote);
 	}
-	let fret = $("td[fretnum=" + note.attr("coln") + "]");
+	let fret = $("td[fretnum=" + note.attr("coln") + "] > div");
 	lastfret = fret;
 	lastnote = note;		
 	
@@ -1603,21 +1613,8 @@ function updateFretboard(note, newcontent, play = true) {
 
 	note.css("color", "red");
 	fret.css("color", "red");
-
-	let width = convertCssPxToInt(note.css("width"));
 	
-	if ( width > 76) {
-		content_x = '───X───';
-	}
-	if ( width <= 76  ) {
-        content_x = '──X──';
-    }
-	if ( width <= 54 ) {        
-		content_x = '─X─';
-    }
-    if (note.attr("is_zerofret") === "yes") {
-        content_x = 'X';
-    }
+	content_x = '───X───';
 	
 	if (newcontent == 'done') {
 		note.text("done");
@@ -1640,17 +1637,7 @@ function updateFretboard(note, newcontent, play = true) {
 
 function updateNoteText(note, newcontent) {    
     let width = convertCssPxToInt(note.css("width"));
-	//console.log(note.attr("id"), " ", width);
-	
-	if ( width >= 76) {
-		note.text("──" + newcontent + "──");
-	}
-	if ( width < 76  ) {
-        note.text("─" + newcontent + "─");
-    }
-	if ( width <= 54 ) {        
-		note.text("─" + newcontent + "─");
-    }
+	note.text("───" + newcontent + "───");
     if (note.attr("is_zerofret") === "yes") {
         note.text(newcontent);
 	 	//note_displayed(note);
@@ -1694,9 +1681,9 @@ function updateNoteContent(note, delay, half_tick = global_half_tick, tickcounte
 	mysetTimeout(function () {
 		content = note.attr('actual');		
 		updateFretboard(note, content, false);
-		if (!half_tick || tickcounter % 6 === 0) {
+		if (!half_tick || tickcounter % global_tickdiv === 0) {
 			metronome_tick();
-			if ( tickcounter % 6 === 0 ) {
+			if ( tickcounter % global_tickdiv === 0 ) {
 				if ( global_bgchord != 0 && !inhibit_bgchord) play_chord(global_bgchord);
 			}
 		}
@@ -1745,4 +1732,3 @@ function walkn(notes, repeat = global_walking_repeat, reverse = true, half_tick 
 		}, to*j+(global_intro_repeat-1)*global_frettimeout, j);	
 	}
 }
-//proba
