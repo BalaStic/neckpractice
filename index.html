@@ -42,35 +42,7 @@
 	['D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D'],
 	['A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A'],
 	['E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E', 'F', 'x', 'G', 'x', 'A', 'x', 'H', 'C', 'x', 'D', 'x', 'E']]
-
-	const neck_fretnum_tds_style = [
-				{ width: "17px", background: "white", fontWeight: "normal" },
-				{ width: "92px" }, 
-				{ width: "92px" }, 
-				{ width: "92px", background: "white" },
-				{ width: "92px" }, 
-				{ width: "92px", background: "white" }, 
-				{ width: "82px" },
-				{ width: "78px", background: "white" }, 
-				{ width: "78px" }, 
-				{ width: "74px", background: "white" },
-				{ width: "74px" }, 
-				{ width: "70px" }, 
-				{ width: "69px", background: "white" },
-				{ width: "66px" }, 
-				{ width: "66px" }, 
-				{ width: "66px", background: "white" },
-				{ width: "66px" }, 
-				{ width: "66px", background: "white" }, 
-				{ width: "66px" },
-				{ width: "67px", background: "white" }, 
-				{ width: "65px" }, 
-				{ width: "56px", background: "white" },
-				{ width: "57px" }, 
-				{ width: "56px" }, 
-				{ width: "55px", background: "white" }				
-	];
-
+	
 	const neck_tds_style = [
             { width: "15px", background: "#EAEAEA", fontWeight: "normal" },
             { width: "90px", color: "white" }, 
@@ -83,9 +55,9 @@
 			{ width: "76px", color: "white" }, 
 			{ width: "72px", color: "white" },
             { width: "72px", color: "white" }, 
-			{ width: "68px", color: "white" }, 
+			{ width: "72px", color: "white" }, 
 			{ width: "68px", color: "white" },
-            { width: "64px", color: "white" }, 
+            { width: "68px", color: "white" }, 
 			{ width: "64px", color: "white" }, 
 			{ width: "64px", color: "white" },
             { width: "64px", color: "white" }, 
@@ -120,7 +92,7 @@
 </script>
 <style>
 body {
-  zoom: 0.95; /* Scales the entire page to 150% */
+  zoom: 0.92; /* Scales the entire page to 150% */
 }
 
 table {
@@ -271,12 +243,25 @@ td {
 		<tr id="tr_fretnums">
 			<script>
 				const tr = document.getElementById("tr_fretnums");
-				neck_fretnum_tds_style.forEach((style, index) => {
-					const td = document.createElement("td");
-					td.textContent = index;
+				neck_tds_style.forEach((style, index) => {
+					const td = document.createElement("td");					
+					//td.textContent = index;
 					td.setAttribute("fretnum", index);
-					Object.assign(td.style, style);
+					//Object.assign(td.style, style);
 					tr.appendChild(td);
+					const div = document.createElement("div");
+					Object.assign(div.style, style);
+					//div.style.width=td.style.width;
+					div.textContent = index
+					div.style.overflow = "hidden";
+					div.style.whiteSpace = "nowrap";
+					div.style.display = "flex";
+					div.style.justifyContent = "center";
+					div.style.margin = "1px 1px 1px 1px";
+					div.style.padding = "0px";
+					div.style.border = "0px";
+					div.style.color = "black";
+					td.appendChild(div);
 				});
 			</script>
 		</tr>
@@ -353,17 +338,17 @@ td {
 				<button onclick="practice_scale16_C([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   C   </button> 3-3-4
 				       
 				<br>
-				<br><button onclick="practice_scale16_Am([0, Iba_Lesp], 240, [11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])">   Am /4   </button>
+				<br><button onclick="practice_scale16_Am([0, Iba_Lesp], 240, [0, 0, 0, 0, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0])">   Am /4   </button> 11.8p 5.9p 
 				<br>
-				<button onclick="practice_scale_3_notes_by_string_Am([0, Iba_Lesp], 220, [12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0])">   Am /6   </button> 5.9p
+				<button onclick="practice_scale_3_notes_by_string_Am([0, Iba_Lesp], 220, [0, 0, 0, 12, 12, 12, 0, 0, 0, 0, 0, 0])">   Am /6   </button> 11.8p 5.9p
 				<br><br>				
 				<button onclick="practice_scale16_G([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   G   </button> 4-4-4
 				       
 				<button onclick="practice_scale16_Em([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Em   </button> 4-4-6
 				<br><br>				
-				<button onclick="practice_scale16_D([0, Iba_Lesp], 240, [0, 0, 0, 0, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0])">   D /4   </button> 28.4p 29.2p 				
+				<button onclick="practice_scale16_D([0, Iba_Lesp], 240, [0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 0, 0, 0, 0])">   D /4   </button> 34.3p 35.1p 5.9p				
 				<br>
-				<button onclick="practice_scale_3_notes_by_string_D([0, Iba_Lesp], 220, [0, 0, 0, 12, 12, 12, 0, 0, 0, 0, 0, 0])">   D /6   </button> 30.5p 35.4p
+				<button onclick="practice_scale_3_notes_by_string_D([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 12, 12, 12, 0, 0, 0])">   D /6   </button> 36.4p 35.4p 5.9p
 				       
 				<button onclick="practice_scale16_Hm([0, Iba_Lesp], 240, [0, 0, 0, 0, 11, 11, 11, 11 , 0 , 0, 0, 0, 0, 0])">   Hm   </button>45.9p 45.9p 40p 7.5p	
 			</td>
