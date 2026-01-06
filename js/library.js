@@ -46,6 +46,15 @@ var Cmp, Dmp, Emp, Fmp, Gmp, Amp, Hmp = 0;
 var Dbm, Ebm, Gbm, Abm, Bbm = 0;
 var Dbmp, Gbmp, Abmp, Bbmp = 0;
 
+const global_frets_for_3notes_scale = {
+	"D": { "frets": [0, 2, 3, 5, 7, 9, 10, 12, 14, 15, 17, 19],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		},
+	"F": { "frets": [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		}
+};
+
 var Cb = ['Cb', 'Db', 'Eb', 'Fb', 'Gb', 'Ab', 'Bb'];
 var C = ['C', 'D', 'E', 'F', 'G', 'A', 'H'];
 var C_G = ['C', 'D', 'E', 'F', 'F#', 'G', 'A', 'H'];
@@ -158,12 +167,12 @@ var global_last_memorize_params = {
 	string_to: 0
 }
 
-function calc_to_walkn(notes, repeat = global_walking_repeat, reverse = true) {
-    if (reverse) {
+function calc_to_walkn(notes, repeat = global_walking_repeat/*, reverse = true*/) {
+    /*if (reverse) {
 		to = global_frettimeout + global_frettimeout * (notes.length - 1) + (notes.length) * global_frettimeout;
-	} else {
+	} else {*/
 		to = global_frettimeout + global_frettimeout * (notes.length - 1);
-	}
+	//}
     if (repeat != 0 ) to = to * repeat + (global_intro_repeat ) * global_frettimeout;
 	else to = 0;	
     return to;
@@ -750,24 +759,25 @@ function practice_scale16_D(fret, bpm, repeat) {
 }
 
 function practice_scale_3_notes_by_string_D(fret, bpm, repeat) {
-	let frets = [0, 2, 3, 5, 7, 9, 10, 12, 14, 15, 17, 19];
-	let startindex = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];	
+	// Define an associative array (object) for frets by scale name
+	let frets = global_frets_for_3notes_scale["D"].frets;
+	let startindex = global_frets_for_3notes_scale["D"].startindex;
 	set_gbgchord("D");
 	practice_scale_3_notes_by_string(D, maj_grades, fret, frets, startindex, bpm, repeat);
 }
 
-function practice_scale16_F(fret, bpm, repeat) {
+function practice_scale16_F(fret, bpm, repeat, walking_seq_preparer ) {
 	let frets = [1, 1, 3, 5, 5, 8, 10, 13, 13, 15, 17, 17, 20, 22, 22];
 	let startindex = [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1];
 	set_gbgchord("F");
-	practice_scale16(F, maj_grades, fret, frets, startindex, bpm, repeat);	
+	practice_scale16(F, maj_grades, fret, frets, startindex, bpm, repeat, walking_seq_preparer);	
 }
 
-function practice_scale_3_notes_by_string_F(fret, bpm, repeat) {
-	let frets = [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18];
-	let startindex = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];	
+function practice_scale_3_notes_by_string_F(fret, bpm, repeat, walking_seq_preparer) {
+	let frets = global_frets_for_3notes_scale["F"].frets;
+	let startindex = global_frets_for_3notes_scale["F"].startindex;
 	set_gbgchord("F");
-	practice_scale_3_notes_by_string(F, maj_grades, fret, frets, startindex, bpm, repeat);
+	practice_scale_3_notes_by_string(F, maj_grades, fret, frets, startindex, bpm, repeat, walking_seq_preparer);
 }
 
 
@@ -917,7 +927,7 @@ function practice_scale16_Emp(fret, bpm, repeat) {
 }
 
 
-function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repeat) {
+function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repeat, walking_seq_preparer = function() { return this; }	) {
 	let filtered_frets = frets;
 	let filtered_startindex = startindex;	
 	$("#infobox3").html(bpm + " bpm");
@@ -957,8 +967,6 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 	let gradescale2 = gradescale;
 	let scale2 = scale;
 	global_frettimeout = (60 / bpm) * 1000 ;
-	//global_inhibit_bgchord = false;
-	//global_walking_repeat = repeat;
 	global_mode = "learn";
 
 	//redraw();
@@ -976,39 +984,15 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 	saved_gradescale = gradescale;
 	displaynotes(scale2, gradescale2);
 		
-	function prepareNotes(scale, fret, index) {
-		
-		let notes1 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 4, 6);
-		let notes2 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 1, 3);
-		if (filtered_startindex[index] == 1) {
-			notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
-		}
-		if (filtered_startindex[index] == 2) {
-			notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
-		}
-		const notes3 = jQuery.merge(notes1, notes2);
-		
-		//const notes3 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 6);
-		//const notes3 = scale_3_notes_by_string(scale, gradescale, fret, fret + 5, 1, 6);
-
-		let selectedNotes = [];
-		let maxnote = 16;
-		if ( gradescale == majp_grades || gradescale == minp_grades) maxnote = 12;
-		for (let i = 0; i < maxnote; i++) {
-			//selectedNotes.push(notes3[(startindex[index] + i) % notes3.length]);
-			selectedNotes.push(notes3[(filtered_startindex[index] + i)]);
-		}
-		return prepare_walking_seq_0(selectedNotes);
-	}
-	
 	filtered_frets.forEach( (fret,i) => {
-		let notes = prepareNotes(scale, fret, i);				
+		let notes = select_scalebox_notes(scale2, gradescale2, fret, i, filtered_startindex);				
+		notes = walking_seq_preparer(notes);
 		let repeat_i = repeat;
 		if ( Array.isArray(repeat) ) {
 			repeat_i = repeat[i];
 		}		
 		mysetTimeout(function() {
-			walkn(notes, repeat_i);					
+			walk_seq_ntimes(notes, repeat_i);					
  		}, nextstart);
 		nextstart += calc_to_walkn(notes, repeat_i);
 	});
@@ -1016,7 +1000,7 @@ function practice_scale16(scale, gradescale, fret, frets, startindex, bpm, repea
 	global_tickdiv = 4;
 }
 
-function practice_scale_3_notes_by_string(scale, gradescale, fret, frets, startindex, bpm, repeat) {
+function practice_scale_3_notes_by_string(scale, gradescale, fret, frets, startindex, bpm, repeat, walking_seq_preparer = function() { return this; }	) {
 	let filtered_frets = frets;
 	let filtered_startindex = startindex;	
 	$("#infobox3").html(bpm + " bpm");
@@ -1074,42 +1058,20 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, frets, starti
 	saved_scale = scale;
 	saved_gradescale = gradescale;
 	displaynotes(scale2, gradescale2);
-		
-	function prepareNotes(scale, fret, index) {		
-		/*let notes1 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 4, 6);
-		let notes2 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 1, 3);
-		if (filtered_startindex[index] == 1) {
-			notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
-		}
-		if (filtered_startindex[index] == 2) {
-			notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
-		}
-		const notes3 = jQuery.merge(notes1, notes2);
-		*/
-		//const notes3 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 6);
-		const notes3 = scale_3_notes_by_string(scale, gradescale, fret, fret + 5, 1, 6);
-
-		let selectedNotes = [];
-		let maxnote = 18;
-		if ( gradescale == majp_grades || gradescale == minp_grades) maxnote = 12;
-		for (let i = 0; i < maxnote; i++) {
-			//selectedNotes.push(notes3[(startindex[index] + i) % notes3.length]);
-			selectedNotes.push(notes3[(filtered_startindex[index] + i)]);
-		}
-		return prepare_walking_seq_0(selectedNotes);
-	}
 	
 	filtered_frets.forEach( (fret,i) => {
-		let notes = prepareNotes(scale, fret, i);				
+		let notes = select_3_notes_by_string(scale, gradescale, filtered_startindex, fret, i);				
+		notes = walking_seq_preparer(notes);
 		let repeat_i = repeat;
 		if ( Array.isArray(repeat) ) {
 			repeat_i = repeat[i];
 		}		
 		mysetTimeout(function() {
-			walkn(notes, repeat_i);					
+			walk_seq_ntimes(notes, repeat_i);					
  		}, nextstart);
 		nextstart += calc_to_walkn(notes, repeat_i);
 	});
+	
 	console.log("nextstart:", nextstart);
 	timerWatch((nextstart)/1000);
 	global_tickdiv = 6;
@@ -1182,6 +1144,82 @@ function play_rpattern(pattern, intro = "", ms = 60 / 60 * 250) {
 			setTimeout( function() { metronome_tick();}, i*ms);
 		}
 	}
+}
+
+function select_3_notes_by_string(scale, gradescale, filtered_startindex, fret, index) {		
+	const notes3 = scale_3_notes_by_string(scale, gradescale, fret, fret + 5, 1, 6);
+	let maxnote = 18;
+	if ( gradescale == majp_grades || gradescale == minp_grades) maxnote = 12;
+	return notes3.slice(filtered_startindex[index], filtered_startindex[index] + maxnote);;
+}
+
+function select_scalebox_notes(scale, gradescale, fret, index, filtered_startindex) {		
+	let notes1 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 4, 6);
+	let notes2 = scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 1, 3);
+	if (filtered_startindex[index] == 1) {
+		notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
+	}
+	if (filtered_startindex[index] == 2) {
+		notes2 = jQuery.merge(scale_on_fret2fret(scale, gradescale, fret - 1, fret + 3, 2, 3), scale_on_fret2fret(scale, gradescale, fret - 1, fret + 5, 1, 1));
+	}
+	const notes3 = jQuery.merge(notes1, notes2);
+	
+	let selectedNotes = [];
+	let maxnote = 16;
+	if ( gradescale == majp_grades || gradescale == minp_grades) maxnote = 12;
+	for (let i = 0; i < maxnote; i++) {			
+		selectedNotes.push(notes3[(filtered_startindex[index] + i)]);
+	}
+	return selectedNotes;
+}
+
+function prepare_wseq_for_scalebox_notes(notes) {
+	return notes.concat(notes.slice().reverse());
+}
+
+function prepare_wseq_for_scalebox_notes_135_246(notes) {
+	let notes2 = [];		
+	// Group notes by rown
+	const group246 = [];
+	const group135 = [];
+	for (let i = 0; i < notes.length; i++) {
+		const parentTd = $(notes[i]).parent('td')[0];
+		if (!parentTd) continue;
+		const rown = parseInt(parentTd.getAttribute("rown"), 10);
+		if ([2, 4, 6].includes(rown)) {
+			group246.push(notes[i]);
+		} else if ([1, 3, 5].includes(rown)) {
+			group135.push(notes[i]);
+		}
+	}
+	// Add 2-4-6 group forward and backward
+	notes2.push(...group246, ...group246.slice().reverse());
+	// Add 1-3-5 group forward and backward
+	notes2.push(...group135, ...group135.slice().reverse());
+		
+	return notes2;
+}
+
+function prepare_wseq_for_3_notes_by_string(notes) {
+	return notes.concat(notes.slice().reverse());;
+}
+
+function prepare_wseq_for_3_notes_by_string_135_246(notes) {
+	let notes2 = new Array(36);
+	// Fill notes2 with the pattern: 0-2, 6-8, 12-14, then reverse, then 3-5, 9-11, 15-17, then reverse
+	const pattern = [
+		[0, 1, 2], [6, 7, 8], [12, 13, 14],
+		[14, 13, 12], [8, 7, 6], [2, 1, 0],
+		[3, 4, 5], [9, 10, 11], [15, 16, 17],
+		[17, 16, 15], [11, 10, 9], [5, 4, 3]
+	];
+	let idx = 0;
+	for (const group of pattern) {
+		for (const i of group) {
+			notes2[idx++] = notes[i];
+		}
+	}
+	return notes2;
 }
 
 function prepare_walking_seq_0(notes) {
@@ -1258,10 +1296,10 @@ function scale_3_notes_by_string(scale, gradescale=0, fret_from=0, fret_to=24, s
 	let lastnote = neck[5][0];	
 	var notes = new Array();	
 	for(var i=string_to-1; i>=string_from-1; i--) {
-		console.log("i", i);
+		//console.log("i", i);
 		for(var j=fret_from, notecounter = 0; notecounter < 3 && j < 25; j++) {			
-			console.log("i j notecounter", i, j, notecounter);
-			console.log('neck[i][j].attr("freq") lastnote.attr("freq")', neck[i][j].attr("freq"), lastnote.attr("freq"));
+			//console.log("i j notecounter", i, j, notecounter);
+			//console.log('neck[i][j].attr("freq") lastnote.attr("freq")', neck[i][j].attr("freq"), lastnote.attr("freq"));
 			currentFreq = parseFloat(neck[i][j].attr("freq"));
 			lastFreq = parseFloat(lastnote.attr("freq"));				
 			for(var k=0; k<scale.length; k++) {
@@ -1276,7 +1314,7 @@ function scale_3_notes_by_string(scale, gradescale=0, fret_from=0, fret_to=24, s
 					lastnote = neck[i][j];
 					notes.push(lastnote);
 					notecounter++;
-					console.log("DEBUG#1 i j notecounter", i, j, notecounter);					
+					//console.log("DEBUG#1 i j notecounter", i, j, notecounter);					
 				}					
 				else if (necknotes_flat[i][j] == scale[k] && currentFreq > lastFreq ) {
 					neck[i][j].attr("note", scale[k]);					
@@ -1285,7 +1323,7 @@ function scale_3_notes_by_string(scale, gradescale=0, fret_from=0, fret_to=24, s
 					} else {
 						neck[i][j].attr("grade", '');
 					}
-					console.log("DEBUG#2", neck[i][j].attr("grade"));
+					//console.log("DEBUG#2", neck[i][j].attr("grade"));
 					lastnote = neck[i][j];
 					notes.push(lastnote);
 					notecounter++;
@@ -1302,7 +1340,7 @@ function scale_3_notes_by_string(scale, gradescale=0, fret_from=0, fret_to=24, s
 					} else {
 						neck[i][j].attr("grade", '');
 					}
-					console.log("DEBUG#3", neck[i][j]);
+					//console.log("DEBUG#3", neck[i][j]);
 					lastnote = neck[i][j];
 					notes.push(lastnote);
 					notecounter++;
@@ -1692,43 +1730,37 @@ function updateNoteContent(note, delay, half_tick = global_half_tick, tickcounte
 	}, delay);
 }
 
-function walk(period, notes, repeat = global_walking_repeat, reverse = true, half_tick = global_half_tick) {
-	if (global_walkcounter > repeat) {
-		global_walkcounter = 1;
-	}
-	$('#infobox').html(global_walkcounter++ + '/' + repeat);
+function walk_seq_ntimes(notes, repeat = global_walking_repeat, /*reverse = true, */half_tick = global_half_tick) {
+	const period = global_frettimeout;
+	const introCount = global_intro_repeat;
+	const totalNotes = notes.length;
+	/*const walkTime = reverse
+		? period * (2 * totalNotes)
+		: period * totalNotes;*/
+	const walkTime = period * totalNotes;
 
-	$.each(notes, function (i, note) {
-		updateNoteContent(note, period + period * i, half_tick, i);		
-	});
-
-	if (reverse) {
-		$.each(notes.slice().reverse(), function (i, note) {
-			updateNoteContent(note, period + (period * i) + (notes.length * period), half_tick, i);
-		});
-	}
-}
-
-function walkn(notes, repeat = global_walking_repeat, reverse = true, half_tick = global_half_tick) {	
-	if (reverse) {
-		to = global_frettimeout + global_frettimeout * (notes.length-1)+(notes.length) * global_frettimeout;
-	} else {
-		to = global_frettimeout + global_frettimeout * (notes.length-1);
-	}
-	
-	//let tmp = global_bgchord;
-	//global_bgchord = 0;
-	if ( repeat != 0) 
-	for (i = 0; i < global_intro_repeat; i++) {
-		updateNoteContent(notes[0], i * global_frettimeout, half_tick = false, i, inhhibit_bgchord = true);		
+	// Play intro notes
+	for (let i = 0; i < introCount; i++) {
+		updateNoteContent(notes[0], i * period, false, i, true);
 	}
 	tickcounter = 0;
-	
-	for(j=0; j<repeat; j++) {
-		mysetTimeout(function(j) { 
-			displaynotes(saved_scale, saved_gradescale, j % 2 == 0 ? "notes_only" : "grades_only");				
-			//global_bgchord = tmp;			
-			walk(global_frettimeout, notes, repeat, reverse=reverse, half_tick=global_half_tick);			
-		}, to*j+(global_intro_repeat-1)*global_frettimeout, j);	
+
+	// Main walking loop
+	for (let j = 0; j < repeat; j++) {
+		mysetTimeout(() => {
+			displaynotes(saved_scale, saved_gradescale, j % 2 === 0 ? "notes_only" : "grades_only");
+			$('#infobox').html((global_walkcounter++) + '/' + repeat);
+
+			notes.forEach((note, i) => {
+				updateNoteContent(note, period + period * i, half_tick, i);
+			});
+
+			/*if (reverse) {
+				notes.slice().reverse().forEach((note, i) => {
+					updateNoteContent(note, period + period * i + totalNotes * period, half_tick, i);
+				});
+			}*/
+		}, walkTime * j + (introCount - 1) * period);
 	}
+	global_walkcounter = 1;
 }

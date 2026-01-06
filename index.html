@@ -45,7 +45,7 @@
 	
 	const neck_tds_style = [
             { width: "15px", background: "#EAEAEA", fontWeight: "normal" },
-            { width: "90px", color: "white" }, 
+            { width: "" + 9*10 + "px", color: "white" }, 
 			{ width: "90px", color: "white" }, 
 			{ width: "90px", color: "white" },
             { width: "90px", color: "white" }, 
@@ -92,7 +92,7 @@
 </script>
 <style>
 body {
-  zoom: 0.92; /* Scales the entire page to 150% */
+  zoom: 0.92; /* Scales the entire page to specified % */
 }
 
 table {
@@ -125,7 +125,16 @@ td {
 .table_learn_scale_notes_between_frets td {
 	padding:10px;
 }
-	
+
+.note-grade-column_inner_table {
+	border-collapse: collapse;
+	border: none;
+}
+
+.note-grade-column_inner_table td, .note-grade-column_inner_table th {
+	border: none;
+}
+
 #neck table, #neck th, #neck td {
 	 height: 44px;
 	 text-align: center;
@@ -235,6 +244,34 @@ td {
 				<br><br><button style="height:30px" onclick="metropractice([120, 10]);">120</button>
 				<br><br><button style="height:30px" onclick="metropractice([170, 10]);">170</button>
 			</td>
+			<td>
+				<button id="wheelToggleBtn" style="height:50px;width:120px">Wheel: OFF</button>
+				<script>
+				let wheelEnabled = false;
+				let wheelHandler = function(e) {
+					e.preventDefault();
+					// Your custom wheel handling code here
+					document.getElementById('infobox').textContent = `Wheel delta: ${e.deltaY}`;
+					let body = document.body;
+					let currentZoom = parseFloat(getComputedStyle(body).zoom) || 1;
+					if (e.deltaY < 0) {
+						currentZoom = Math.min(currentZoom + 0.01, 3);
+					} else {
+						currentZoom = Math.max(currentZoom - 0.01, 0.2);
+					}
+					body.style.zoom = currentZoom;
+				};
+				document.getElementById('wheelToggleBtn').onclick = function() {
+					wheelEnabled = !wheelEnabled;
+					this.textContent = 'Wheel: ' + (wheelEnabled ? 'ON' : 'OFF');
+					if (wheelEnabled) {
+						window.addEventListener('wheel', wheelHandler, { passive: false });
+					} else {
+						window.removeEventListener('wheel', wheelHandler, { passive: false });
+					}
+				};
+				</script>
+			</td>
 		</tr>
 	</table>
 	<br>	
@@ -311,46 +348,95 @@ td {
 	<a href="https://hu.pinterest.com/pin/734086807999383137/">minor scale boxes</a> 
 	<a href="https://appliedguitartheory.com/wp-content/uploads/2020/03/5-major-scale-patterns-positions-connected.jpg">| major scale boxes</a> | 
 	<a href="https://www.metronomeonline.com/">metronome</a> | <a href="https://onlineora.hu/stopper/#">stopper</a> | 
-	<table>
+	<style>
+		.fancy-table td {
+			background: white !important;
+			border-radius: 12px;
+			/* For smooth corners, add some padding */
+			padding: 10px;
+			/* Optional: add subtle box-shadow for more depth */
+			box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+		}
+		.fancy-table {
+			border-collapse: separate !important;
+			border-spacing: 8px 6px !important;
+		}
+	</style>
+	<table class="fancy-table" style="border: none;">	
 		<tr>
-			<td style="padding:10px"><textarea id="textbox1" rows="6" placeholder="Enter text here" style="width: 300px;font-size:12pt"></textarea></td>
-			<td style="padding:10px">
+			<td><textarea id="textbox1" rows="6" placeholder="Enter text here" style="width: 300px;font-size:12pt"></textarea></td>
+			<td>
 				<button onclick="exec_textbox1_line(0)" style="width: 100px">1</button>
 				<br><br><button onclick="exec_textbox1_line(1)" style="width: 100px">2</button>
 				<br><br><button onclick="exec_textbox1_line(2)" style="width: 100px">3</button>
 				<br><br><button onclick="exec_textbox1_line(3)" style="width: 100px">4</button>
 			</td>
-			<td style="padding:10px">
+			<td style="width:50px">
 				<button style="height:50px; width:100px" onclick="stop_practice();">STOP</button>
 				<br><br><button style="height:50px; width:100px" onclick="redraw()">REDRAW</button>				
-			
 			</td>
-			<td style="vertical-align: top; width:450px"><b style="color:blue">NOTE-GRADE-COLUMN</b>
-				<br><br>
-				<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Gb   </button> 3-1-6				
-				       
-				<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   D#m   </button> 2-2-4
-				<br><br>				
-				<button onclick="practice_scale16_F([0, Iba_Lesp], 200, [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 0, 0, 0])">   F   </button> 44.8p 44.8p 19.2p 4.8p  
+			<td style="vertical-align: top; width:500px"><b style="color:blue">NOTE-GRADE-COLUMN</b>
 				<br>
-				<button onclick="practice_scale_3_notes_by_string_F([0, Iba_Lesp], 220, [12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0])">   F   </button> 5.9p
-				<br><br>
-				<button onclick="practice_scale16_C([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   C   </button> 3-3-4
-				       
-				<br>
-				<br><button onclick="practice_scale16_Am([0, Iba_Lesp], 240, [0, 0, 0, 0, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0])">   Am /4   </button> 11.8p 5.9p 
-				<br>
-				<button onclick="practice_scale_3_notes_by_string_Am([0, Iba_Lesp], 220, [0, 0, 0, 12, 12, 12, 0, 0, 0, 0, 0, 0])">   Am /6   </button> 11.8p 5.9p
-				<br><br>				
-				<button onclick="practice_scale16_G([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   G   </button> 4-4-4
-				       
-				<button onclick="practice_scale16_Em([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Em   </button> 4-4-6
-				<br><br>				
-				<button onclick="practice_scale16_D([0, Iba_Lesp], 240, [0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 0, 0, 0, 0])">   D /4   </button> 34.3p 35.1p 5.9p				
-				<br>
-				<button onclick="practice_scale_3_notes_by_string_D([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 12, 12, 12, 0, 0, 0])">   D /6   </button> 36.4p 35.4p 5.9p
-				       
-				<button onclick="practice_scale16_Hm([0, Iba_Lesp], 240, [0, 0, 0, 0, 11, 11, 11, 11 , 0 , 0, 0, 0, 0, 0])">   Hm   </button>45.9p 45.9p 40p 7.5p	
+				<table class="note-grade-column_inner_table">
+					<tr>
+						<td>
+							<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Gb   </button>
+						</td>
+						<td>
+							<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   D#mp   </button> 
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button onclick="practice_scale16_F([0, Iba_Lesp], 200, [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 0, 0, 0], prepare_wseq_for_scalebox_notes)">   F /4   </button> 
+							44.8p 44.8p 19.2p 4.8p  
+							<br>
+							<button onclick="practice_scale16_F([0, Iba_Lesp], 200, [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 0, 0, 0], prepare_wseq_for_scalebox_notes_135_246)">   F /4-2   </button> 
+							
+							<br>
+							<button onclick="practice_scale_3_notes_by_string_F([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0], prepare_wseq_for_3_notes_by_string)">   F /6   </button> 
+							21.7p 15.8p 23.7p 23.7p
+							<br>
+							<button onclick="practice_scale_3_notes_by_string_F([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0], prepare_wseq_for_3_notes_by_string_135_246)">   F /6-2   </button> 
+						</td>
+						<td>
+
+						</td>
+					</tr>
+					<tr>					
+						<td>
+							<button onclick="practice_scale16_C([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   C   </button> 
+						</td>
+						<td>
+							<button onclick="practice_scale16_Am([0, Iba_Lesp], 240, [12, 12, 12, 12, 0,0, 0, 0, 0, 0, 0, 0, 0, 0])">   Am /4   </button> 
+							11.8p 5.9p 
+							<br>
+							<button onclick="practice_scale_3_notes_by_string_Am([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16])">   Am /6   </button> 
+							33.5p 34.5p 36.5p 35.5p
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button onclick="practice_scale16_G([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   G   </button> 
+						</td>
+						<td>
+							<button onclick="practice_scale16_Em([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Em   </button> 
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button onclick="practice_scale16_D([0, Iba_Lesp], 240, [0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 14, 14, 0, 0, 0, 0])">   D /4   </button> 
+							34.3p 35.1p 25.2p				
+							<br>
+							<button onclick="practice_scale_3_notes_by_string_D([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16])">   D /6   </button> 
+							36.4p 35.4p 41.4p 15.8p
+						</td>
+						<td>
+							<button onclick="practice_scale16_Hm([0, Iba_Lesp], 240, [0, 0, 0, 0, 11, 11, 11, 11 , 0 , 0, 0, 0, 0, 0])">   Hm /4   </button> 
+							45.9p 45.9p 40p 7.5p	
+						</td>
+					</tr>
+				</table>		
 			</td>
 			<td style="vertical-align: top;"><b style="color:blue">LEARN BY RANDOM</b>
 				<br><br><button onclick="schedule_practice_ScaleRandomNote(1000 / 2500 * 60, 145, Gbp, majp_grades, 0, 12, 1, 6);">Gbp 0-12</button> 1
@@ -389,68 +475,74 @@ td {
 
 				
 			</td>
+			<!--
 			<td style="vertical-align: top;"><b style="color:blue">CHORDS</b>
 				<br><br>
 				<button onclick="displaynotes(Gb_triad, 0, 'notes')">Gb</button>
 				<br><br><button onclick="displaynotes(C_triad, 0, 'notes')">C</button>
 				<br><br><button onclick="displaynotes(Diszm_triad, 0, 'notes')">D#m</button>
 				
+			</td>-->
+		</tr>
+		<tr>
+			<td style="font-family: 'Courier New', Courier, monospace;">
+				9-7: _____ 13-19: 102/7
+				<br>9-7: _____ 13-19: 102/7
+				<br>9-7: _____ 13-19: 102/7
+				<br>9-7: _____ 13-19: 102/7
+				<br>9-7: 103/8 13-19: 102/7
+				<br>9-7: 103/8 13-19: 102/7
 			</td>
-			<tr>
-				<td style="font-family: 'Courier New', Courier, monospace;">
-					9-7: _____ 13-19: 102/7
-					<br>9-7: _____ 13-19: 102/7
-					<br>9-7: _____ 13-19: 102/7
-					<br>9-7: _____ 13-19: 102/7
-					<br>9-7: 103/8 13-19: 102/7
-					<br>9-7: 103/8 13-19: 102/7
-				</td>
-				<td style="width: 240px">legato
-					<br>9-6: _____
-					<br>9-6: _____
-					<br>9-6: _____
-					<br>9-6: 101/6
-					<br>9-6: 101/6
-					<br>9-6: 101/6
-				</td>
+			<td style="">legato
+				<br>9-6: _____
+				<br>9-6: _____
+				<br>9-6: _____
+				<br>9-6: 101/6
+				<br>9-6: 101/6
+				<br>9-6: 101/6
+			</td>
+			
+			<td style="">
 				
+				
+			</td>
+							<td style="width: 240px">
+				hotel california orion
+				road to hell
+				save your tears
+				sweet child
+				don't cry
+				tükör
+				canon rock
+				Empty rooms
+				Time
+				doom
+				We will rock you
+				Just got paid
+				Wind of change
+				coast to coast
+				fonográf
+				mr crowley aint fun
+				<br><br>
+				Gyakorlás fejből a teljes nyakon,
+				amíg tévesztés nélkül nem megy:
 
-				<td>Gyakorlás fejből a teljes nyakon,<br>amígtévesztés nélkül nem megy:<br>
-					<br>Gbp 80bpm-33p
-					<br>C 170bpm-20p					
-					<br>D#mp 					
-					<br>Ebmp
-					<br>F#p 
-					<br>Am
-				</td>
-				<td style="width: 240px">
-					<a href="https://www.youtube.com/watch?v=dE6w7PLty3E">How to start a guitar solo?</a>
-				</td>
-								<td style="width: 240px">
-					hotel california orion
-					road to hell
-					save your tears
-					sweet child
-					don't cry
-					tükör
-					canon rock
-					Empty rooms
-					Time
-					doom
-					We will rock you
-					Just got paid
-					Wind of change
-					coast to coast
-					fonográf
-					mr crowley aint fun
-				</td>
-				<td style="width: 240px">
-					
-					felskálázunk, leskálázunk.<br>
-					1 húron felskálázunk, leskálázunk<br>	
-				</td>
-			</tr>
-	</table>	
+				Gbp 80bpm-33p
+				C 170bpm-20p
+				D#mp
+				Ebmp
+				F#p
+				Am
+				<br><br>
+				<a href="https://www.youtube.com/watch?v=dE6w7PLty3E">How to start a guitar solo?</a>
+			</td>
+			<td style="width: 240px">
+				
+				felskálázunk, leskálázunk.<br>
+				1 húron felskálázunk, leskálázunk<br>	
+			</td>
+		</tr>
+	</table>
 	<div id="div1" style="display:none">
 		<table>			
 			<tr>
