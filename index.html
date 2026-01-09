@@ -380,27 +380,28 @@ td {
 				<table class="note-grade-column_inner_table">
 					<tr>
 						<td>
-							<button onclick="practice_scale16_Gbp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Gb   </button>
+							<button onclick="practice_scale16(Gbp, majp_grades, [0, Iba_Lesp], 150, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], prepare_wseq_for_notes_up_down)">   Gbp   </button>
+							4.9p
+							<br><button onclick="practice_scale_3_notes_by_string(Gbp, majp_grades, [0, Iba_Lesp], 120 , [10, 10, 10, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   Gbp /6   </button>
+
 						</td>
 						<td>
-							<button onclick="practice_scale16_Diszmp([0, Iba_Lesp], 180, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   D#mp   </button> 
+							<button onclick="practice_scale16(Diszmp, minp_grades, [0, Iba_Lesp], 150, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], prepare_wseq_for_notes_up_down)">   D#mp   </button> 
+							5.8p
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<button onclick="practice_scale16_F([0, Iba_Lesp], 200, [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 0, 0, 0], prepare_wseq_for_scalebox_notes)">   F /4   </button> 
-							44.8p 44.8p 19.2p 4.8p  
-							<br>
-							<button onclick="practice_scale16_F([0, Iba_Lesp], 200, [0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 0, 0, 0], prepare_wseq_for_scalebox_notes_135_246)">   F /4-2   </button> 
-							
-							<br>
-							<button onclick="practice_scale_3_notes_by_string_F([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0], prepare_wseq_for_3_notes_by_string)">   F /6   </button> 
-							21.7p 15.8p 23.7p 23.7p
-							<br>
-							<button onclick="practice_scale_3_notes_by_string_F([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0], prepare_wseq_for_3_notes_by_string_135_246)">   F /6-2   </button> 
+							<button onclick="practice_scale16_F([0, Iba_Lesp], 200, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10], prepare_wseq_for_notes_up_down)">   F /4   </button> 
+							44.8p 44.8p 19.2p 12.9p  
+							<br><button onclick="practice_scale_3_notes_by_string(F, maj_grades, [0, Iba_Lesp], 220, [16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   F /6   </button> 
+							29.6p 15.8p 23.7p 23.7p
 						</td>
 						<td>
-
+							<button onclick="practice_scale16_Dm([0, Iba_Lesp], 200, [12, 12, 12, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   Dm /4   </button> 
+							7.7p							  
+							<br><button onclick="practice_scale_3_notes_by_string(Dm, min_grades, [0, Iba_Lesp], 220,  [16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   Dm /6   </button> 
+							7.9p
 						</td>
 					</tr>
 					<tr>					
@@ -408,19 +409,28 @@ td {
 							<button onclick="practice_scale16_C([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   C   </button> 
 						</td>
 						<td>
-							<button onclick="practice_scale16_Am([0, Iba_Lesp], 240, [12, 12, 12, 12, 0,0, 0, 0, 0, 0, 0, 0, 0, 0])">   Am /4   </button> 
+							<button onclick="practice_scale16_Am([0, Iba_Lesp], 240, [12, 12, 12, 12, 0,0, 0, 0, 0, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   Am /4   </button> 
 							11.8p 5.9p 
-							<br>
-							<button onclick="practice_scale_3_notes_by_string_Am([0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16])">   Am /6   </button> 
+							<br><button onclick="practice_scale_3_notes_by_string(Am, min_grades, [0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16], prepare_wseq_for_notes_up_down)">   Am /6   </button> 
 							33.5p 34.5p 36.5p 35.5p
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<button onclick="practice_scale16_G([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   G   </button> 
+														
+							<br><button onclick="practice_scale_3_notes_by_string(G, maj_grades, [0, Iba_Lesp], 220, [16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   G /6   </button> 
+							7.9p
+							
 						</td>
 						<td>
-							<button onclick="practice_scale16_Em([0, Iba_Lesp], 200, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])">   Em   </button> 
+							<button onclick="practice_scale16_Em([0, Iba_Lesp], 240, [0, 0, 0, 0, 0, 0, 0, 0, 12, 12, 12, 12, 0, 0], prepare_wseq_for_notes_up_down)">   Em /4   </button>
+							7.6p 6.4p 6.4p
+							<br>
+							<button onclick="practice_scale_3_notes_by_string(Em, min_grades, [0, Iba_Lesp], 220, [0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0], prepare_wseq_for_notes_up_down)">   Em /6   </button>  
+							7.9p 7.9p 7.9p 
+							 
+							
 						</td>
 					</tr>
 					<tr>
@@ -507,6 +517,9 @@ td {
 				
 			</td>
 							<td style="width: 240px">
+								<a href="https://www.youtube.com/watch?v=w8KlZvTrjcI&list=PLUzqRbYuUxoBoZ_l8_iFvr6A2ZsC2oaBL&index=6">50 easy</a>
+								10p
+								<br>
 				hotel california orion
 				road to hell
 				save your tears

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        
+        .content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+        
+        .watch-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+        
+        .watch-face {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 8px solid #2c3e50;
+        }
+        
+        .watch-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            white-space: nowrap;
+            padding: 10px;
+        }
+        
+        .number {
+            position: absolute;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-origin: center;
+            user-select: none;
+        }
+                
+        pre {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+        
+        .highlight {
+            background-color: rgba(52, 152, 219, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .controls, .watch-container {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            
+        </header>
+        
+        <div class="content-wrapper">
+            <div class="watch-container">
+                <div class="watch-face" id="watchFace">
+                    <!-- Numbers will be positioned here by JavaScript -->
+                    <div class="watch-center" id="centerText"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="number-list" id="numberInputs">
+                    <!-- Number inputs will be generated here by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+       
+    </div>
+
+    <script>
+        // Initial array with numbers 1-12
+        let watchNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        
+        // Variable for center text
+        let centerText = "hello";
+        
+        // Calculate positions for numbers around the watch face
+        function calculatePositions() {
+            const positions = [];
+            const radius = 45; // Percentage from center
+            const angleStep = (2 * Math.PI) / 12;
+            
+            for (let i = 0; i < 12; i++) {
+                // Position each number around the circle
+                // The -Math.PI/2 offset starts at the top (12 o'clock position)
+                const angle = (i * angleStep) - Math.PI / 2;
+                const x = 50 + radius * Math.cos(angle);
+                const y = 50 + radius * Math.sin(angle);
+                
+                positions.push({x, y});
+            }
+            
+            return positions;
+        }
+        
+        // Create the number elements on the watch face
+        function createWatchNumbers() {
+            const watchFace = document.getElementById('watchFace');
+            const positions = calculatePositions();
+            
+            // Clear any existing numbers
+            const existingNumbers = document.querySelectorAll('.number');
+            existingNumbers.forEach(num => num.remove());
+            
+            // Create number elements
+            for (let i = 0; i < 12; i++) {
+                const numberElement = document.createElement('div');
+                numberElement.className = 'number';
+                numberElement.id = `num-${i+1}`;
+                numberElement.textContent = watchNumbers[i];
+                
+                // Position the number
+                const pos = positions[i];
+                numberElement.style.left = `${pos.x}%`;
+                numberElement.style.top = `${pos.y}%`;
+                numberElement.style.transform = `translate(-50%, -50%)`;
+                
+                watchFace.appendChild(numberElement);
+            }
+        }
+                
+        // Update the watch face with current array values
+        function updateWatchFace() {
+            // Update the array from input values
+            for (let i = 0; i < 12; i++) {
+                const input = document.getElementById(`input-${i+1}`);
+                watchNumbers[i] = input.value || ""; // Allow empty values
+            }
+            
+            // Update the visual numbers
+            for (let i = 0; i < 12; i++) {
+                document.getElementById(`num-${i+1}`).textContent = watchNumbers[i];
+            }
+            
+            // Update the displayed array in the code section
+            document.getElementById('arrayOutput').textContent = JSON.stringify(watchNumbers);
+        }
+        
+        // Reset to default numbers (1-12)
+        function resetToDefault() {
+            watchNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            
+            // Update input fields
+            for (let i = 0; i < 12; i++) {
+                document.getElementById(`input-${i+1}`).value = watchNumbers[i];
+            }
+            
+            // Update watch face
+            updateWatchFace();
+        }
+        
+        // Function to update center text
+        function updateCenterText(newText) {
+            centerText = newText;
+            document.getElementById('centerText').textContent = centerText;
+            document.getElementById('centerTextOutput').textContent = JSON.stringify(centerText);
+        }
+        
+        // Initialize the application
+        function init() {
+            createWatchNumbers();
+            //createNumberInputs();
+            
+            // Initialize center text
+            document.getElementById('centerText').textContent = centerText;
+            
+            // Set up event listeners
+            document.getElementById('updateBtn').addEventListener('click', updateWatchFace);
+            document.getElementById('resetBtn').addEventListener('click', resetToDefault);
+            
+            // Set up center text controls
+            document.getElementById('centerTextInput').value = centerText;
+            document.getElementById('updateCenterBtn').addEventListener('click', function() {
+                const newText = document.getElementById('centerTextInput').value;
+                updateCenterText(newText);
+            });
+            
+            // Update the code display with initial values
+            document.getElementById('arrayOutput').textContent = JSON.stringify(watchNumbers);
+            document.getElementById('centerTextOutput').textContent = JSON.stringify(centerText);
+        }
+        
+        // Initialize when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
