@@ -56,6 +56,9 @@ const global_frets_for_3notes_scale = {
 	"Dm": { "frets": [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
+	"Diszmp": { "frets": [2, 4, 6, 9, 11, 14, 16, 19],
+		"startindex": [0, 0, 0, 0, 0, 0, 0, 0]
+	},
 	"Em": { "frets": [0, 2, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
@@ -71,6 +74,12 @@ const global_frets_for_3notes_scale = {
 };
 
 const global_frets_for_scale16 = {
+	"C": { "frets": [0, 0, 3, 5, 7, 8, 10, 12, 12, 15, 17, 20, 20, 22],
+			"startindex": [0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0]
+	},
+	"Cp": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+		},
 	"Dm": { "frets": [1, 1, 3, 5, 5, 8, 10, 13, 13, 15, 17, 17, 20, 22, 22],
 			"startindex": [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1]
 	},
@@ -78,6 +87,9 @@ const global_frets_for_scale16 = {
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},
 	"Gbp": { "frets": [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
+			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+	},
+	"Amp": { "frets": [0, 0, 3, 3, 5, 5, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	}
 };
@@ -824,16 +836,12 @@ function practice_fourths(scale, gradescale) {
 
 
 function practice_scale16_C(fret, bpm, repeat) {
-	let frets = [0, 0, 3, 5, 8, 8, 10, 12, 12, 15, 17, 20, 20, 22];
-	let startindex = [0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0];
 	set_gbgchord("C");
 	practice_scale16(C, maj_grades, fret, frets, startindex, bpm, repeat);	
 }
 
 
 function practice_scale16_Cp(fret, bpm, repeat) {
-	let frets = [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22];
-	let startindex = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0];
 	set_gbgchord("C");
 	practice_scale16(Cp, majp_grades, fret, frets, startindex, bpm, repeat);	
 }
@@ -891,11 +899,11 @@ function practice_scale16_Dm(fret, bpm, repeat, walking_seq_preparer ) {
 }
 
 
-function practice_scale16_Diszmp(fret, bpm, repeat, walking_seq_preparer) {
+/*function practice_scale16_Diszmp(fret, bpm, repeat, walking_seq_preparer) {
 	
 	set_gbgchord("Diszm");
 	practice_scale16(Diszmp, minp_grades, fret, frets, startindex, bpm, repeat, walking_seq_preparer);	
-}
+}*/
 
 
 function practice_scale16_H(fret, bpm, repeat) {
@@ -1040,7 +1048,6 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	//redraw();
 	if ( global_notes_andor_grades != "columns" ) {
 		if ( majp_list.includes(scale)) {
-			console.log("DEBUG#1");
 			scale2 = maj_list[majp_list.indexOf(scale)];
 			gradescale2 = maj_grades;
 		}
@@ -1060,10 +1067,11 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 		if ( Array.isArray(repeat) ) {
 			repeat_i = repeat[i];
 		}		
+		if ( repeat_i == 0 ) return;
 		mysetTimeout(function() {
-			walk_seq_ntimes(notes, repeat_i);					
- 		}, nextstart);
-		nextstart += calc_to_walkn(notes, repeat_i);
+			walk_seq_ntimes(notes, repeat_i);								
+ 		}, nextstart);		
+		nextstart += calc_to_walkn(notes, repeat_i);		
 	});
 	timerWatch((nextstart)/1000);
 	global_tickdiv = 4;
@@ -1139,6 +1147,7 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 		if ( Array.isArray(repeat) ) {
 			repeat_i = repeat[i];
 		}		
+		if ( repeat_i == 0 ) return;
 		mysetTimeout(function() {
 			walk_seq_ntimes(notes, repeat_i);					
  		}, nextstart);
@@ -1876,7 +1885,7 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 			$('#infobox').html((global_walkcounter++) + '/' + repeat);
 
 			notes.forEach((note, i) => {
-				updateNoteContent(note, period + period * i, half_tick, i);
+				updateNoteContent(note, period + period * i, half_tick, i, false);				
 			});		
 		}, walkTime * j + (introCount - 1) * period);
 	}
