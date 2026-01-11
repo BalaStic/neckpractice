@@ -36,7 +36,7 @@ var global_chordfiles = {
 	"F": new Audio("assets/F.wav"),
 	"Fisz": new Audio("assets/Gb.wav"),
 };
-var Iba_Lesp = 24;
+var enya_hb = 24;
 var C, D, E, F, G, A, H = 0;
 var Cp, Dp, Ep, Fp, Gp, Ap, Hp = 0;
 var Db, Eb, Gb, Ab, Hb = 0;
@@ -206,12 +206,8 @@ var global_last_memorize_params = {
 	string_to: 0
 }
 
-function calc_to_walkn(notes, repeat = global_walking_repeat/*, reverse = true*/) {
-    /*if (reverse) {
-		to = global_frettimeout + global_frettimeout * (notes.length - 1) + (notes.length) * global_frettimeout;
-	} else {*/
-		to = global_frettimeout + global_frettimeout * (notes.length - 1);
-	//}
+function calc_to_walkn(notes, repeat = global_walking_repeat) {
+    to = global_frettimeout + global_frettimeout * (notes.length - 1);
     if (repeat != 0 ) to = to * repeat + (global_intro_repeat ) * global_frettimeout;
 	else to = 0;	
     return to;
@@ -835,16 +831,6 @@ function practice_fourths(scale, gradescale) {
 }
 
 
-function practice_scale16_C(fret, bpm, repeat) {
-	set_gbgchord("C");
-	practice_scale16(C, maj_grades, fret, frets, startindex, bpm, repeat);	
-}
-
-
-function practice_scale16_Cp(fret, bpm, repeat) {
-	set_gbgchord("C");
-	practice_scale16(Cp, majp_grades, fret, frets, startindex, bpm, repeat);	
-}
 
 function practice_scale16_D(fret, bpm, repeat) {
 	let frets = [0, 0, 2, 2, 5, 7, 10, 10, 12, 14, 14, 17, 19, 22, 22, 24];
@@ -1156,7 +1142,7 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 	
 	console.log("nextstart:", nextstart);
 	timerWatch((nextstart)/1000);
-	global_tickdiv = 6;
+	global_tickdiv = 1;
 }
 
 function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1779,7 +1765,7 @@ function updateFretboard(note, newcontent, play = true) {
 	note.attr("actual", newcontent);
 	lastfrettext = lastfret.text();
 
-	//lastnote.attr("actual", note.text());
+	lastnote.attr("actual", note.text());
 
 	note.css("color", "red");
 	fret.css("color", "red");
@@ -1834,7 +1820,7 @@ function update_global_mode() {
             global_mode = mode;
         }
     });
-	$('#tr_fretnums').find('td').each(function(index) {
+	$('#tr_fretnums').find('td').find('div').each(function(index) {
 		$(this).text(global_mode == 'test' ? 'X' : index);
 	});
 }
