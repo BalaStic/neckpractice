@@ -20,6 +20,7 @@ var lastnote;
 var lastfret;
 var lastnotecolor;
 var lastfrettext = "";
+var lastnotetext = "";
 var global_RepeatMemorize_cnt = 0;
 var global_chordfiles = {
 	"C": new Audio("assets/C.wav"),
@@ -65,8 +66,8 @@ const global_frets_for_3notes_scale = {
 	"F": { "frets": [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
-	"Gbp": { "frets": [2, 4, 6, 9, 11, 14, 16, 19],
-			"startindex": [0, 0, 0, 0, 0, 0, 0, 0]
+	"Gbp": { "frets": [2, 4, 6], //9, 11, 14, 16, 19],
+			"startindex": [0, 0, 0] //, 0, 0, 0, 0, 0]
 		},
 	"G": { "frets": [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -217,10 +218,18 @@ function convertCssPxToInt(cssPxValue) {
     return parseInt(cssPxValue, 10);
 }
 
-function displaynotes(scale, gradescale = 0, notes_andor_grades = global_notes_andor_grades) {
+function displaynotes(scale, gradescale = 0, fret_from = 0, fret_to = 24, string_from = 1, string_to = 6, notes_andor_grades = global_notes_andor_grades) {
+	let notes = prepare_notes_actual(scale, gradescale, fret_from, fret_to, string_from, string_to, global_notes_andor_grades);
+	$.each(notes, function(i, note) {
+		display_note_actual(note);
+	});	
+}
+
+function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24, string_from = 1, string_to = 6, notes_andor_grades = global_notes_andor_grades) {
 	drawStrings();
 	
-	$.each(scale_on_fret2fret(scale, gradescale, 0, 24), function(i, note) { 
+	let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
+	$.each(notes, function(i, note) { 
 		to_display_as_note = note.attr('note');
 		if (gradescale != 0) {
 				index = scale.indexOf(note.attr('note'));
@@ -238,16 +247,20 @@ function displaynotes(scale, gradescale = 0, notes_andor_grades = global_notes_a
 
 				note.attr('actual', to_display_as_note);
 		}
-		note.text("──── " + to_display_as_note + " ────");
+		//note.text("──── " + to_display_as_note + " ────");
+		note.attr("actual", to_display_as_note );
 
 		if ( note.attr('grade') == 1 ) { 
 				note.css('color', 'lightgreen');
 		}
 				
 	});
-	
+	return notes;
 }
 
+function display_note_actual(note) {
+	note.text("──── " + note.attr("actual") + " ────");
+}
 
 function drawString(string_id) {
 	neck_tds_style.forEach((style, index) => {
@@ -770,68 +783,6 @@ function getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, st
 	practice_scale16(C, maj_grades, fret, frets, startindex, bpm, repeat);
 }*/
 
-function practice_fourths(scale, gradescale) {
-	saved_scale = scale;
-	saved_gradescale = gradescale;
-	let notes = scale_on_fret2fret(scale, gradescale, 0, 24, 1, 6);
-	let notesall = [];
-	
-	let notes_21 = [];
-	let notes_32 = [];
-	let notes_43 = [];
-	let notes_54 = [];
-	let notes_65 = [];
-	let notes1 = notes.filter(note => note.parent().attr("rown") == 1);
-	let notes2 = notes.filter(note => note.parent().attr("rown") == 2);
-	let notes3 = notes.filter(note => note.parent().attr("rown") == 3);
-	let notes4 = notes.filter(note => note.parent().attr("rown") == 4);
-	let notes5 = notes.filter(note => note.parent().attr("rown") == 5);
-	let notes6 = notes.filter(note => note.parent().attr("rown") == 6);
-		
-	
-	for (let i = 0; i < Math.max(notes5.length, notes6.length); i++) {
-		if (i < notes6.length) notes_65.push(notes6[i]);
-		if (i < notes5.length) notes_65.push(notes5[i]);
-	}
-	for (let i = 0; i < notes_65.length - 1; i += 2) {
-		const n1 = notes_65[i];
-		const n2 = notes_65[i + 1];
-		const coln1 = parseInt(n1.parent().attr("coln"), 10);
-		const coln2 = parseInt(n2.parent().attr("coln"), 10);
-		if (coln1 > 12 && coln2 > 12) {
-			notes_65.splice(i, 2);
-			i -= 2; // adjust index after removal
-		}
-	}
-	notes_65 = notes_65.concat(notes_65.slice().reverse());
-
-	for (let i = 0; i < Math.max(notes4.length, notes5.length); i++) {
-		if (i < notes5.length) notes_54.push(notes5[i]);
-		if (i < notes4.length) notes_54.push(notes4[i]);
-	}
-	for (let i = 0; i < notes_54.length - 1; i += 2) {
-		const n1 = notes_54[i];
-		const n2 = notes_54[i + 1];
-		const coln1 = parseInt(n1.parent().attr("coln"), 10);
-		const coln2 = parseInt(n2.parent().attr("coln"), 10);
-		if (coln1 > 12 && coln2 > 12) {
-			notes_54.splice(i, 2);
-			i -= 2; // adjust index after removal
-		}
-	}
-	notes_54 = notes_54.concat(notes_54.slice().reverse());
-
-	noteasall = notes_65.concat(notes_54);
-
-	displaynotes(scale, gradescale);
-	global_frettimeout = 500;
-	//console.log(notesall);
-	walk_seq_ntimes(noteasall, 2);	
-	
-}
-
-
-
 function practice_scale16_D(fret, bpm, repeat) {
 	let frets = [0, 0, 2, 2, 5, 7, 10, 10, 12, 14, 14, 17, 19, 22, 22, 24];
 	let startindex = [0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0];
@@ -992,6 +943,8 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	set_gbgchord(scale);	
 	let filtered_frets = frets;
 	let filtered_startindex = startindex;	
+	global_tickdiv = 4;
+	//displaynotes(scale, gradescale);
 	$("#infobox3").html(bpm + " bpm");
 	if ( Array.isArray(fret) ) {
 		let lo = fret[0];
@@ -1034,19 +987,18 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	//redraw();
 	if ( global_notes_andor_grades != "columns" ) {
 		if ( majp_list.includes(scale)) {
-			scale2 = maj_list[majp_list.indexOf(scale)];
-			gradescale2 = maj_grades;
+			//scale2 = maj_list[majp_list.indexOf(scale)];
+			//gradescale2 = maj_grades;
 		}
 		if ( minp_list.includes(scale)) {
-			scale2 = min_list[minp_list.indexOf(scale)];
-			gradescale2 = min_grades;
+			//scale2 = min_list[minp_list.indexOf(scale)];
+			//gradescale2 = min_grades;
 		}
 	}	
 	saved_scale = scale2;
 	saved_gradescale = gradescale2;
-	displaynotes(scale2, gradescale2);
-	
-	filtered_frets.forEach( (fret,i) => {
+	displaynotes(scale2, gradescale2, filtered_frets[0]-1, filtered_frets[0]+3);
+	filtered_frets.forEach( (fret,i) => {		
 		let notes = select_scalebox_notes(scale, gradescale, fret, i, filtered_startindex);				
 		notes = walking_seq_preparer(notes);
 		let repeat_i = repeat;
@@ -1060,7 +1012,6 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 		nextstart += calc_to_walkn(notes, repeat_i);		
 	});
 	timerWatch((nextstart)/1000);
-	global_tickdiv = 4;
 }
 
 function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, walking_seq_preparer = function() { return this; }	) {
@@ -1124,8 +1075,7 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 	}	
 	saved_scale = scale2;
 	saved_gradescale = gradescale2;
-	displaynotes(scale2, gradescale2);
-	
+		
 	filtered_frets.forEach( (fret,i) => {
 		let notes = select_3_notes_by_string(scale, gradescale, filtered_startindex, fret, i);				
 		notes = walking_seq_preparer(notes);
@@ -1152,6 +1102,7 @@ function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string
 
 function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
 	let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
+	prepare_notes_actual(scale, gradescale);
 	if (gradescale == "coln" ) {		
 		getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
@@ -1190,8 +1141,7 @@ function practice_RandomNoteBetweenFrets(fret_from, fret_to, string_from = 1, st
 	} else if (note.length == 2 ) {
 		content = Array(2);
 		content[0] = '' + note[0].attr("note")
-		content[1] = '' + note[1].attr("note")
-		
+		content[1] = '' + note[1].attr("note")		
 	}
 	updateFretboard(note, content);				
 }
@@ -1322,21 +1272,18 @@ function prepare_wseq_for_3_notes_fourths(notes) {
 }
 
 
-function prepare_wseq_for_3_notes_by_string_135_246(notes) {
-	let notes2 = new Array(36);
-	// Fill notes2 with the pattern: 0-2, 6-8, 12-14, then reverse, then 3-5, 9-11, 15-17, then reverse
-	const pattern = [
-		[0, 1, 2], [6, 7, 8], [12, 13, 14],
-		[14, 13, 12], [8, 7, 6], [2, 1, 0],
-		[3, 4, 5], [9, 10, 11], [15, 16, 17],
-		[17, 16, 15], [11, 10, 9], [5, 4, 3]
-	];
-	let idx = 0;
-	for (const group of pattern) {
-		for (const i of group) {
-			notes2[idx++] = notes[i];
-		}
+function prepare_wseq_for_N_notes_123_234(notes) {
+	const n = notes.length;
+	let notes2 = [];
+	// Forward pattern: 0,1,2 | 1,2,3 | ... | n-3,n-2,n-1
+	for (let i = 0; i <= n - 3; i++) {
+		notes2.push(notes[i], notes[i + 1], notes[i + 2]);
 	}
+	// Backward pattern: n-3,n-2,n-1 | n-4,n-3,n-2 | ... | 0,1,2
+	for (let i = n - 3; i >= 0; i--) {
+		notes2.push(notes[i + 2], notes[i + 1], notes[i]);
+	}
+	global_tickdiv = 3;
 	return notes2;
 }
 
@@ -1749,7 +1696,7 @@ function stop_practice() {
 
 function updateFretboard(note, newcontent, play = true) {
 	if (lastnote) {
-			updateNoteText(lastnote, lastnote.attr("actual"));
+			lastnote.text(lastnotetext);
 			lastnote.css("color", lastnotecolor);
 			lastfret.text(lastfrettext);
 			lastfret.css("color", lastfretcolor);
@@ -1761,24 +1708,21 @@ function updateFretboard(note, newcontent, play = true) {
 	
 	lastnotecolor = note.css("color");
 	lastfretcolor = lastfret.css("color");
-	
-	note.attr("actual", newcontent);
-	lastfrettext = lastfret.text();
 
-	lastnote.attr("actual", note.text());
+	lastfrettext = lastfret.text();
 
 	note.css("color", "red");
 	fret.css("color", "red");
 	
-	content_x = '───X───';
+	content_x = 'X';
 	
 	if (newcontent == 'done') {
 		note.text("done");
 	} else if (global_mode == 'test') {
-		note.text(content_x);
+		updateNoteText(note, content_x);
 		fret.text("X");
 	} else if (global_mode == 'half') {
-		note.text(content_x);
+		updateNoteText(note, content_x);
 		fret.text("X");
 		mysetTimeout(function() {
 			updateNoteText(note, newcontent);
@@ -1789,15 +1733,11 @@ function updateFretboard(note, newcontent, play = true) {
 	}
 
 	if (play) play_chord(global_bgchord);		
+	lastnotetext = note.text();
 }
 
-function updateNoteText(note, newcontent) {    
-    let width = convertCssPxToInt(note.css("width"));
-	note.text("───" + newcontent + "───");
-    if (note.attr("is_zerofret") === "yes") {
-        note.text(newcontent);
-	 	//note_displayed(note);
-    }
+function updateNoteText(note, newcontent) {
+    note.text("───" + newcontent + "───");    
 }
 
 function update_global_notegrade() {
@@ -1835,29 +1775,28 @@ function update_global_walking_repeat() {
 
 function updateNoteContent(note, delay, half_tick = global_half_tick, tickcounter, inhibit_bgchord = false) {
 	mysetTimeout(function () {
-		content = note.attr('actual');		
-		updateFretboard(note, content, false);
+		updateFretboard(note, note.attr('actual'), false);
+		display_note_actual(note);
 		if (!half_tick || tickcounter % global_tickdiv === 0) {
 			metronome_tick();
 			if ( tickcounter % global_tickdiv === 0 ) {
 				if ( global_bgchord != 0 && !inhibit_bgchord) play_chord(global_bgchord);
 			}
 		}
-		//console.log(tickcounter);
+		display_note_actual(note);		
 		tickcounter++;		
 	}, delay);
 }
 
 function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = global_half_tick) {
 	const period = global_frettimeout;
-	const introCount = global_intro_repeat;
+	const introCount = global_tickdiv;
 	const totalNotes = notes.length;
 	/*const walkTime = reverse
 		? period * (2 * totalNotes)
 		: period * totalNotes;*/
 	const walkTime = period * totalNotes;
-	
-	displaynotes(saved_scale, saved_gradescale, "notes_only");
+
 	// Play intro notes
 	for (let i = 0; i < introCount; i++) {
 		updateNoteContent(notes[0], i * period, false, i, true);
@@ -1867,7 +1806,12 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 	// Main walking loop
 	for (let j = 0; j < repeat; j++) {
 		mysetTimeout(() => {
-			displaynotes(saved_scale, saved_gradescale, j % 2 === 0 ? "notes_only" : "grades_only");
+			//prepare_notes_actual(saved_scale, saved_gradescale, j % 2 === 0 ? "notes_only" : "grades_only");
+			const showNotes = j % 2 === 0;
+			notes.forEach(note => {
+				note.attr('actual', showNotes ? note.attr('note') : note.attr('grade'));
+			});
+
 			$('#infobox').html((global_walkcounter++) + '/' + repeat);
 
 			notes.forEach((note, i) => {
