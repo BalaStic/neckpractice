@@ -1001,9 +1001,9 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	saved_gradescale = gradescale2;
 		
 	prepare_notes_actual(scale, gradescale);
-	
+		
 	filtered_frets.forEach( (fret,i) => {		
-		let notes = select_scalebox_notes(scale, gradescale, fret, i, filtered_startindex);				
+		let notes = select_scalebox_notes(scale, gradescale, fret, i, filtered_startindex);					
 		notes = walking_seq_preparer(notes);
 		
 		let repeat_i = repeat;
@@ -1111,7 +1111,8 @@ function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string
 
 function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
 	let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
-	prepare_notes_actual(scale, gradescale);
+	prepare_notes_actual(scale, gradescale);	
+	display_notes_actual(notes);
 	if (gradescale == "coln" ) {		
 		getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
