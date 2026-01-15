@@ -17,9 +17,7 @@ var global_inhibit_bgchord = false;
 var global_tickdiv = 4;
 var tick = new Audio("assets/metronome.wav");
 var lastnote;
-var lastfret;
 var lastnotecolor;
-var lastfrettext = "";
 var lastnotetext = "";
 var global_RepeatMemorize_cnt = 0;
 var global_chordfiles = {
@@ -218,15 +216,14 @@ function convertCssPxToInt(cssPxValue) {
     return parseInt(cssPxValue, 10);
 }
 
-function displaynotes(scale, gradescale = 0, fret_from = 0, fret_to = 24, string_from = 1, string_to = 6, notes_andor_grades = global_notes_andor_grades) {
-	let notes = prepare_notes_actual(scale, gradescale, fret_from, fret_to, string_from, string_to, global_notes_andor_grades);
+function display_notes_actual(notes) {
 	$.each(notes, function(i, note) {
 		display_note_actual(note);
 	});	
 }
 
 function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24, string_from = 1, string_to = 6, notes_andor_grades = global_notes_andor_grades) {
-	drawStrings();
+	//drawStrings();
 	
 	let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
 	$.each(notes, function(i, note) { 
@@ -247,7 +244,6 @@ function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24
 
 				note.attr('actual', to_display_as_note);
 		}
-		//note.text("──── " + to_display_as_note + " ────");
 		note.attr("actual", to_display_as_note );
 
 		if ( note.attr('grade') == 1 ) { 
@@ -261,6 +257,11 @@ function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24
 function display_note_actual(note) {
 	note.text("──── " + note.attr("actual") + " ────");
 }
+
+function display_note_note(note) {
+	note.text("──── " + note.attr("note") + " ────");
+}
+
 
 function drawString(string_id) {
 	neck_tds_style.forEach((style, index) => {
@@ -686,11 +687,12 @@ function getRandomNoteAndShow(notes, scale, gradescale, fret_from, fret_to, stri
 	if (rand != undefined) global_previouses.push(rand);
 	note = notes[rand];
 	const content = contentCallback(note);
-    updateFretboard(note, content);
+    updateNoteText(note, content);
+	play_chord(global_bgchord);		
 }
 
 
-function getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, contentCallback, want_rootnote_2nd = global_want_rootnote_2nd) {
+function getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, contentCallback, want_rootnote_2nd = global_want_rootnote_2nd) {
     //notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);    
 	let rand = 0;
 	let root_lo;
@@ -772,7 +774,8 @@ function getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, st
 			tmp += "<br>─────";
 	}
 	$("#infobox2").html(tmp);
-	updateFretboard(note, content);
+	updateNoteText(note, content);
+	play_chord(global_bgchord);		
     scale_note_counter++;
     $("#scale_note_counter").text(scale_note_counter + " / 10000");
 }
@@ -935,7 +938,6 @@ function practice_scale16_Emp(fret, bpm, repeat) {
 	practice_scale16(Emp, minp_grades, fret, frets, startindex, bpm, repeat);
 }
 
-
 function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_preparer = function() { return this; }	) {
 	const keyInScaleDict = Object.keys(scaleDict).find(k => scaleDict[k] === scale);
 	let frets = global_frets_for_scale16[keyInScaleDict].frets;
@@ -944,7 +946,7 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	let filtered_frets = frets;
 	let filtered_startindex = startindex;	
 	global_tickdiv = 4;
-	//displaynotes(scale, gradescale);
+	
 	$("#infobox3").html(bpm + " bpm");
 	if ( Array.isArray(fret) ) {
 		let lo = fret[0];
@@ -997,18 +999,23 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	}	
 	saved_scale = scale2;
 	saved_gradescale = gradescale2;
-	displaynotes(scale2, gradescale2, filtered_frets[0]-1, filtered_frets[0]+3);
+		
+	prepare_notes_actual(scale, gradescale);
+	
 	filtered_frets.forEach( (fret,i) => {		
 		let notes = select_scalebox_notes(scale, gradescale, fret, i, filtered_startindex);				
 		notes = walking_seq_preparer(notes);
+		
 		let repeat_i = repeat;
 		if ( Array.isArray(repeat) ) {
 			repeat_i = repeat[i];
 		}		
 		if ( repeat_i == 0 ) return;
 		mysetTimeout(function() {
+			display_notes_actual(notes);
 			walk_seq_ntimes(notes, repeat_i);								
  		}, nextstart);		
+		
 		nextstart += calc_to_walkn(notes, repeat_i);		
 	});
 	timerWatch((nextstart)/1000);
@@ -1075,6 +1082,8 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 	}	
 	saved_scale = scale2;
 	saved_gradescale = gradescale2;
+
+	prepare_notes_actual(scale, gradescale);
 		
 	filtered_frets.forEach( (fret,i) => {
 		let notes = select_3_notes_by_string(scale, gradescale, filtered_startindex, fret, i);				
@@ -1092,31 +1101,31 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 	
 	console.log("nextstart:", nextstart);
 	timerWatch((nextstart)/1000);
-	global_tickdiv = 1;
+	global_tickdiv = 3;
 }
 
 function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
     let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
-	getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("grade"), insert_rootnote_2nd = global_insert_rootnote_2nd);	
+	getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("grade"), insert_rootnote_2nd = global_insert_rootnote_2nd);	
 }
 
 function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
 	let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
 	prepare_notes_actual(scale, gradescale);
 	if (gradescale == "coln" ) {		
-		getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+		getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
 	else if (gradescale == "coln_note" ) {		
-		getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln") + ' ' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+		getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln") + ' ' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	} else {
-		getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+		getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
 	
 }
 
 function practice_ScaleRandomCombined(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
     let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
-	getRandomNoteAndUpdate(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note") + ' ' + note.attr("grade"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+	getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note") + ' ' + note.attr("grade"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 }
 
 function practice_ScaleRandomMemorize(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1129,7 +1138,7 @@ function practice_RepeatMemorize(scale, gradescale, fret_from, fret_to, string_f
 	note = notes[global_previouses[global_RepeatMemorize_cnt++]];
 	if ( global_RepeatMemorize_cnt == global_previouses.length ) global_RepeatMemorize_cnt = 0;
 	const content = "dontcare";
-	updateFretboard(note, content);
+	updateNoteText(note, content);
 }
 
 function practice_RandomNoteBetweenFrets(fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1143,7 +1152,7 @@ function practice_RandomNoteBetweenFrets(fret_from, fret_to, string_from = 1, st
 		content[0] = '' + note[0].attr("note")
 		content[1] = '' + note[1].attr("note")		
 	}
-	updateFretboard(note, content);				
+	updateNoteText(note, content);				
 }
 
 
@@ -1665,7 +1674,7 @@ function stopinterval(func, after) {
 	mysetTimeout( function() {
 		clearInterval(func);
 		//window.alert('done');
-		if (global_display_done ) updateFretboard(lastnote, "done");
+		if (global_display_done ) updateNoteText(lastnote, "done");
 	}, after);
 }
 
@@ -1694,50 +1703,32 @@ function stop_practice() {
 	tickcounter = 0;
 }
 
-function updateFretboard(note, newcontent, play = true) {
+function updateNoteText(note, newcontent) {
 	if (lastnote) {
 			lastnote.text(lastnotetext);
+			//display_note_actual(lastnote);
 			lastnote.css("color", lastnotecolor);
-			lastfret.text(lastfrettext);
-			lastfret.css("color", lastfretcolor);
 			lastnote_displayed(lastnote);
 	}
-	let fret = $("td[fretnum=" + note.attr("coln") + "] > div");
-	lastfret = fret;
 	lastnote = note;		
+	lastnotetext = note.text();
 	
 	lastnotecolor = note.css("color");
-	lastfretcolor = lastfret.css("color");
-
-	lastfrettext = lastfret.text();
-
 	note.css("color", "red");
-	fret.css("color", "red");
-	
 	content_x = 'X';
 	
 	if (newcontent == 'done') {
-		note.text("done");
+		note.text("───" + "done" + "───");    
 	} else if (global_mode == 'test') {
-		updateNoteText(note, content_x);
-		fret.text("X");
+		note.text("───" + content_x + "───");    
 	} else if (global_mode == 'half') {
-		updateNoteText(note, content_x);
-		fret.text("X");
+		note.text("───" + content_x + "───");    
 		mysetTimeout(function() {
-			updateNoteText(note, newcontent);
-			fret.text("" + note.attr("coln"));			
+			note.text("───" + newcontent + "───");    
 		}, global_frettimeout / 2);
 	} else if (global_mode == 'learn') {
-		updateNoteText(note, newcontent);
+		note.text("───" + newcontent + "───");    
 	}
-
-	if (play) play_chord(global_bgchord);		
-	lastnotetext = note.text();
-}
-
-function updateNoteText(note, newcontent) {
-    note.text("───" + newcontent + "───");    
 }
 
 function update_global_notegrade() {
@@ -1773,17 +1764,15 @@ function update_global_walking_repeat() {
     });
 }
 
-function updateNoteContent(note, delay, half_tick = global_half_tick, tickcounter, inhibit_bgchord = false) {
+function schedule_noteupdate_and_play(note, delay, half_tick = global_half_tick, tickcounter, inhibit_bgchord = false) {
 	mysetTimeout(function () {
-		updateFretboard(note, note.attr('actual'), false);
-		display_note_actual(note);
+		updateNoteText(note, note.attr('actual'), false);
 		if (!half_tick || tickcounter % global_tickdiv === 0) {
 			metronome_tick();
 			if ( tickcounter % global_tickdiv === 0 ) {
 				if ( global_bgchord != 0 && !inhibit_bgchord) play_chord(global_bgchord);
 			}
 		}
-		display_note_actual(note);		
 		tickcounter++;		
 	}, delay);
 }
@@ -1799,24 +1788,37 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 
 	// Play intro notes
 	for (let i = 0; i < introCount; i++) {
-		updateNoteContent(notes[0], i * period, false, i, true);
+		schedule_noteupdate_and_play(notes[0], i * period, false, i, true);
 	}
 	tickcounter = 0;
 
 	// Main walking loop
 	for (let j = 0; j < repeat; j++) {
 		mysetTimeout(() => {
-			//prepare_notes_actual(saved_scale, saved_gradescale, j % 2 === 0 ? "notes_only" : "grades_only");
-			const showNotes = j % 2 === 0;
-			notes.forEach(note => {
-				note.attr('actual', showNotes ? note.attr('note') : note.attr('grade'));
-			});
-
 			$('#infobox').html((global_walkcounter++) + '/' + repeat);
 
 			notes.forEach((note, i) => {
-				updateNoteContent(note, period + period * i, half_tick, i, false);				
+				schedule_noteupdate_and_play(note, period + period * i, half_tick, i, false);				
 			});		
+			
+			if (j % 2 == 0) {
+				mysetTimeout(() => {
+					notes.forEach(note => {
+						note.attr('actual', note.attr('note'));
+						note.text("───" + note.attr('actual') + "───");
+					});
+					lastnotetext = notes[0].text();
+				}, 100);				
+			} else {
+				mysetTimeout(() => {
+					notes.forEach(note => {
+						note.attr('actual', note.attr('grade'));
+						note.text("───" + note.attr('actual') + "───");
+					});
+					lastnotetext = notes[0].text();
+				}, period / 2);
+			}
+			
 		}, walkTime * j + (introCount - 1) * period);
 	}
 	global_walkcounter = 1;
