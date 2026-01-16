@@ -249,6 +249,12 @@ function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24
 		if ( note.attr('grade') == 1 ) { 
 				note.css('color', 'lightgreen');
 		}
+		if ( note.attr('grade') == 3 ) { 
+				note.css('color', 'cyan');
+		}
+		if ( note.attr('grade') == 5 ) { 
+				note.css('color', '#0072ff');
+		}
 				
 	});
 	return notes;
@@ -295,37 +301,37 @@ function drawString(string_id) {
 		td.setAttribute("rown", string.getAttribute("row") );
 		td.setAttribute("coln", index );
 		if ( ( [3,5,7,9,15,17,19,21,24].includes(index)) && string_id=="tr_string_G") {
-			td.style.backgroundImage = "url('assets/bundpötty_TOP3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_TOP3_black.png')";
 			td.style.backgroundPosition = "center bottom";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ( ( [3,5,7,9,15,17,19,21,24].includes(index)) && string_id=="tr_string_D") {
-			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3_black.png')";
 			td.style.backgroundPosition = "center top";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_A") {
-			td.style.backgroundImage = "url('assets/bundpötty_TOP3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_TOP3_black.png')";
 			td.style.backgroundPosition = "center bottom";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_E6") {
-			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3_black.png')";
 			td.style.backgroundPosition = "center top";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_E1") {
-			td.style.backgroundImage = "url('assets/bundpötty_TOP3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_TOP3_black.png')";
 			td.style.backgroundPosition = "center bottom";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
 		}
 		if ([12].includes(index) && string_id=="tr_string_H") {
-			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3.png')";
+			td.style.backgroundImage = "url('assets/bundpötty_BOTTOM3_black.png')";
 			td.style.backgroundPosition = "center top";
 			td.style.backgroundRepeat = "no-repeat";
 			td.style.color = "white";			
@@ -1709,13 +1715,17 @@ function updateNoteText(note, newcontent) {
 			lastnote.text(lastnotetext);
 			//display_note_actual(lastnote);
 			lastnote.css("color", lastnotecolor);
+			//lastnote.css("background", "#6E260E");
+			lastnote.css("background", "black");
 			lastnote_displayed(lastnote);
 	}
 	lastnote = note;		
 	lastnotetext = note.text();
 	
 	lastnotecolor = note.css("color");
-	note.css("color", "red");
+	//note.css("color", "red");
+	note.css("color", "black");
+	note.css("background", "white");
 	content_x = 'X';
 	
 	if (newcontent == 'done') {
