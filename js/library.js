@@ -44,6 +44,7 @@ var Cm, Dm, Em, Fm, Gm, Am, Hm = 0;
 var Cmp, Dmp, Emp, Fmp, Gmp, Amp, Hmp = 0;
 var Dbm, Ebm, Gbm, Abm, Bbm = 0;
 var Dbmp, Gbmp, Abmp, Bbmp = 0;
+var gradecolors = new Array(5);		
 
 const global_frets_for_3notes_scale = {
 	"Am": { "frets":  [0, 1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19],
@@ -247,15 +248,24 @@ function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24
 		note.attr("actual", to_display_as_note );
 
 		if ( note.attr('grade') == 1 ) { 
-				note.css('color', 'lightgreen');
+				note.css('color', gradecolors[0]);
+		}
+		if ( note.attr('grade') == 2 ) { 
+				note.css('color', gradecolors[1]);
 		}
 		if ( note.attr('grade') == 3 ) { 
-				note.css('color', 'cyan');
+				note.css('color', gradecolors[2]);
 		}
 		if ( note.attr('grade') == 5 ) { 
-				note.css('color', '#0072ff');
+				note.css('color', gradecolors[3]);
 		}
-				
+
+		if ( note.attr('grade') == 6 ) { 
+				note.css('color', gradecolors[4]);
+		}
+
+		
+						
 	});
 	return notes;
 }

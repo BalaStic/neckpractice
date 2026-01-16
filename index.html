@@ -86,7 +86,15 @@
 			//$('input[name="radio-2"]').change(update_global_frettimeout);
 			$('input[name="radio-3"]').change(update_global_mode);	
 			$('input[name="radio-4"]').change(update_global_notegrade);	
-		} );					
+		} );		
+		
+		
+		let colors = ['white', 'orange', 'lightgreen', 'cyan', 'blue'];
+		for (let i = 0; i < 6; i++) {
+			random = Math.floor(Math.random() * colors.length);
+			gradecolors[i] = colors[random];
+			colors.splice(random, 1);			
+		}
 		
     });	
 </script>
