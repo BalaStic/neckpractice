@@ -1170,15 +1170,6 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 	let tdnotes = $(divnotes).map(function() {
     	return $(this).closest('td').get(0);
 	}).get();
-
-	
-	let tdnotespaths = findSequences(tdnotes ,$(tdnotes).filter("#r4c4")[0], $(tdnotes).filter("#r2c7")[0], 6);
-	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
-	//console.log("tdnotespath:", tdnotespath);
-	
-	let divnotespath = $($.map(tdnotespath, function(el) { 
-    	return $(el).children('div').first().get(0); 
-	}));
 	
 	let tdroots = tdnotes.filter(td => {
 		const coln = parseInt(td.getAttribute('coln'), 10);
@@ -1189,6 +1180,27 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 		return false;
 	});
 	console.log("tdroots:", tdroots);
+	let found = false;
+	let item1, item2;
+	while (!found && tdroots.length >= 2) {
+		const indices = getRandomInts(0, tdroots.length - 1, 2);
+		item1 = tdroots[indices[0]];
+		item2 = tdroots[indices[1]];
+		const freq1 = parseFloat(item1.getAttribute('freq'));
+		const freq2 = parseFloat(item2.getAttribute('freq'));
+		if (  Math.abs( freq2 - (2 * freq1)) < 2.0) {
+			found = true;
+		}
+	}
+	// item1 and item2 now hold the required td elements if found
+
+	let tdnotespaths = findSequences(tdnotes ,item1, item2, 6);
+	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
+	//console.log("tdnotespath:", tdnotespath);
+	
+	let divnotespath = $($.map(tdnotespath, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	}));
 
 	//console.log("divnotespath:", divnotespath);	
 	
@@ -1196,9 +1208,9 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 		return $(el);
 	}).get();
 	//console.log("divnotespathArr:", divnotespathArr);	
-
+	drawStrings();
 	prepare_notes_actual(scale, gradescale);	
-	display_notes_actual(divnotespathArr);
+	
 	if (gradescale == "coln" ) {		
 		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
@@ -1207,6 +1219,7 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 	} else {
 		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
+	display_notes_actual(divnotespathArr);
 	
 }
 
@@ -1644,7 +1657,7 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II", "", 60 / bpm * 125);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I", "", 60 / bpm * 125);
-	let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I---", "", 60 / bpm * 125);
+	let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I-", "", 60 / bpm * 125);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
@@ -1791,14 +1804,13 @@ function stop_practice() {
 
 function updateNoteText(note, newcontent) {
 	if (lastnote) {
-			lastnote.text(lastnotetext);
-			//display_note_actual(lastnote);
+			//lastnote.text(lastnotetext);			
+			lastnote.text("─────────");			
 			lastnote.css("color", lastnotecolor);
 			lastnote.css("background", lastnotebackground);
-			//lastnote.css("background", "#6E260E");
-			//lastnote.css("background", "black");*/
 			lastnote_displayed(lastnote);
 	}
+	
 	lastnote = note;		
 	lastnotetext = note.text();
 	lastnotebackground = note.css("background");
