@@ -354,6 +354,12 @@ function drawStrings() {
 					// Each fret increases by a semitone: freq = openFreq * 2^(n/12)
 					const freq = Math.round(openFreq * Math.pow(2, col / 12));
 					note.attr("freq", freq);
+					if (note && note.parent && typeof note.parent === "function") {
+						const parentTd = note.parent();
+						if (parentTd && parentTd.length > 0) {
+							parentTd.attr("freq", freq);
+						}
+					}
 				}
 			//}
 			note.text("");
@@ -1123,16 +1129,37 @@ function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string
 }
 
 function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
-	let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
+	let divnotes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
+	console.log("divnotes:", divnotes);
+	let tdnotes = $(divnotes).map(function() {
+    	return $(this).closest('td').get(0);
+	}).get();
+
+	
+	let tdnotespaths = findSequences(tdnotes ,$(tdnotes).filter("#r6c2")[0], $(tdnotes).filter("#r4c4")[0], 6);
+	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
+	//console.log("tdnotespath:", tdnotespath);
+	
+	let divnotespath = $($.map(tdnotespath, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	}));
+	
+	//console.log("divnotespath:", divnotespath);	
+	
+	let divnotespathArr = divnotespath.map(function(idx, el) {
+		return $(el);
+	}).get();
+	//console.log("divnotespathArr:", divnotespathArr);	
+
 	prepare_notes_actual(scale, gradescale);	
-	display_notes_actual(notes);
+	display_notes_actual(divnotes);
 	if (gradescale == "coln" ) {		
-		getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+		getRandomNote_ShowPlay(divnotes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
 	else if (gradescale == "coln_note" ) {		
-		getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln") + ' ' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+		getRandomNote_ShowPlay(divnotes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln") + ' ' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	} else {
-		getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+		getRandomNote_ShowPlay(divnotes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
 	
 }
@@ -1523,6 +1550,7 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 			}
 		}
 	}
+			
 	return notes;
 }
 
