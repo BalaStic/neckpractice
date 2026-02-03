@@ -1164,6 +1164,52 @@ function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_
 	
 }
 
+function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
+	let divnotes = scale_on_fret2fret(scale, gradescale);
+	console.log("divnotes:", divnotes);
+	let tdnotes = $(divnotes).map(function() {
+    	return $(this).closest('td').get(0);
+	}).get();
+
+	
+	let tdnotespaths = findSequences(tdnotes ,$(tdnotes).filter("#r4c4")[0], $(tdnotes).filter("#r2c7")[0], 6);
+	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
+	//console.log("tdnotespath:", tdnotespath);
+	
+	let divnotespath = $($.map(tdnotespath, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	}));
+	
+	let tdroots = tdnotes.filter(td => {
+		const coln = parseInt(td.getAttribute('coln'), 10);
+		if (coln >= fret_from && coln <= fret_to) {
+			const div = td.querySelector('div');
+			return div && div.getAttribute('note') === scale[0];
+		}
+		return false;
+	});
+	console.log("tdroots:", tdroots);
+
+	//console.log("divnotespath:", divnotespath);	
+	
+	let divnotespathArr = divnotespath.map(function(idx, el) {
+		return $(el);
+	}).get();
+	//console.log("divnotespathArr:", divnotespathArr);	
+
+	prepare_notes_actual(scale, gradescale);	
+	display_notes_actual(divnotespathArr);
+	if (gradescale == "coln" ) {		
+		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+	}
+	else if (gradescale == "coln_note" ) {		
+		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln") + ' ' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+	} else {
+		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
+	}
+	
+}
+
 function practice_ScaleRandomCombined(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
     let notes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
 	getRandomNote_ShowPlay(notes, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note") + ' ' + note.attr("grade"), insert_rootnote_2nd = global_insert_rootnote_2nd);
@@ -1615,6 +1661,11 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 function schedule_practice_ScaleRandomNote(bpm , duration, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6) {
 	set_gbgchord(scale);
 	schedule_practiceScaleRandomX(bpm, duration, practice_ScaleRandomNote, scale, gradescale, fret1, fret2, string_from, string_to);
+}
+
+function schedule_practice_ScaleRandomPath(bpm , duration, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6) {
+	set_gbgchord(scale);
+	schedule_practiceScaleRandomX(bpm, duration, practice_ScaleRandomPath, scale, gradescale, fret1, fret2, string_from, string_to);
 }
 
 function schedule_practice_ScaleRandomGrade(bpm, duration, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6) {
