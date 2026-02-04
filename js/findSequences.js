@@ -1,10 +1,11 @@
 /*
 Given a list of <td> elements. Each element has and id (unique), and has attributes of "freq" (float), "coln", "rown" (integers as string).
 Implement a javascript function that:
-Takes 2 elements of the list by parameter and takes a stepcount variable. The function prepares all the possibe lists that fulfill the following conditions:
+Takes 4 elements as parameter: 1st is list of elements. 2nd is the start element, 3rd is the end element, and 4th is the step count. 
+The function prepares all the possibe lists that fulfill the following conditions:
 A list have stepcount piece of elements.
-1st element is the 1st parameter, 6th is the second parameter.
-The elements's freq attribute are incremental from 1st element to 6th element, no equal freq is allowed.
+1st element is the start element, 6th is the end element.
+The elements' freq attribute are incremental from 1st element to 6th element, no equal freq is allowed.
 For any 2 consecutive elements of the list it is valid that the difference between their coln attribute must be less or equal than 5.
 For any 2 consecutive elements of the list it is valid that the difference between their rown attribute must be less or equal than 1.
 For any 3 consecutive elements of the list it is valid that the difference between 1st item coln attribute and 3rd item coln attribute must be less or equal than 5.

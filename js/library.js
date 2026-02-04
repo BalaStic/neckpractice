@@ -1643,7 +1643,7 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 	tick_bpm = 16 * bpm;
 	tick_ms = 60 / tick_bpm * 1000;
 	$("#infobox3").html(bpm + " beat bpm");
-	$("#infobox4").html(tick_bpm / 4 + " tick bpm");
+	$("#infobox4").html(tick_bpm / 2 + " tick bpm");
 	const now = new Date();
 	const formattedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
 	//console.log(formattedTime);
@@ -1653,11 +1653,11 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 	duration_ms = totalc * interval;
 	let currentInterval = mysetInterval(practiceFunction, interval, scale, gradescale, fret1, fret2, string_from, string_to);
     //let currentInterval2 = mysetInterval(metronome_tick, interval);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I- IIII II--", "", tick_ms);
+	let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- -II- ---- ----", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II", "", 60 / bpm * 125);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I", "", 60 / bpm * 125);
-	let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I-", "", 60 / bpm * 125);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I-", "", 60 / bpm * 125);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
