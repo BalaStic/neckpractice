@@ -1655,9 +1655,9 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
     //let currentInterval2 = mysetInterval(metronome_tick, interval);
 	let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- -II- ---- ----", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II", "", 60 / bpm * 125);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I", "", 60 / bpm * 125);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I-", "", 60 / bpm * 125);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II ---- ----", "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I ---- ----", "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I- ---- ----", "", tick_ms);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
