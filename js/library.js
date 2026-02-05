@@ -1660,26 +1660,20 @@ function schedule_practice_ScaleRandomNote(bpm , duration, scale, gradescale, fr
 	schedule_practiceScaleRandomX(bpm, duration, practice_ScaleRandomNote, scale, gradescale, fret1, fret2, string_from, string_to);
 }
 
-function schedule_practice_ScaleRandomPath(bpm , totalc, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6, timerWatch_duration = 0) {
+function schedule_practice_ScaleRandomPath(beatbpm , totalc, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6, timerWatch_duration = 0) {
 	set_gbgchord(scale);	
-	tick_bpm = 32 * bpm;
+	tick_bpm = 32 * beatbpm;
 	tick_ms = 60 / tick_bpm * 1000;
-	$("#infobox3").html(bpm + " beat bpm");
-	$("#infobox4").html(tick_bpm / 2 + " tick bpm");
+	$("#infobox3").html(beatbpm + " beat bpm");
+	$("#infobox4").html(tick_bpm + " tick bpm");
 	const now = new Date();
 	const formattedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
-	//console.log(formattedTime);
-	//console.log;
-	interval = 60 / bpm * 1000;
+	interval = 60 / beatbpm * 1000;
 	global_frettimeout = interval;
 	duration_ms = totalc * interval;
 	let currentInterval = mysetInterval(practice_ScaleRandomPath, interval, scale, gradescale, fret1, fret2, string_from, string_to);
     //let currentInterval2 = mysetInterval(metronome_tick, interval);
 	let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I--- I--- I--- I--- I---", "", tick_ms);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II ---- ----", "", tick_ms);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I ---- ----", "", tick_ms);
-	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I- ---- ----", "", tick_ms);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
@@ -1688,7 +1682,6 @@ function schedule_practice_ScaleRandomPath(bpm , totalc, scale, gradescale, fret
 	if ( timerWatch_duration == 0 ) {
 		timerWatch(duration_ms/1000);
 	} else if ( timerWatch_duration != -1){
-		//console.log("call timerWatch(",timerWatch_duration, ")");
 		timerWatch(timerWatch_duration);
 	}	
 }
