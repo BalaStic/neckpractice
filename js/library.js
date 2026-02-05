@@ -248,8 +248,6 @@ function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24
 		note.attr('actual', to_display_as_note);
 	
 		note.css('color', gradecolors[gradescale.indexOf(grade)]);
-		//console.log("note: " + note.attr('note') + ", grade: " + grade + ", color: " + note.css('color'));
-			//}	
 	});
 
 	return notes;
@@ -377,7 +375,6 @@ function getTextboxlines(textboxid) {
     
     // Get the content of the textarea and split it into lines
     const lines = textarea.value.split('\n').map(line => line.trim()); // Trim whitespace from each line
-	console.log(lines);
     return lines; // Return the array of lines
 }
 
@@ -598,9 +595,6 @@ function move_up(tr_id) {
 }
 
 function mysetTimeout(callback, delay, ...args) {
-    // Log a message to the console
-    //console.log(`Setting a timeout for ${delay} milliseconds`);
-
     // Use the native mysetTimeout to execute the callback after the specified delay
     func = setTimeout(() => callback(...args), delay);
 	global_functions_settimeout.push(func);
@@ -1118,7 +1112,6 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 		nextstart += calc_to_walkn(notes, repeat_i);
 	});
 	
-	console.log("nextstart:", nextstart);
 	timerWatch((nextstart)/1000);
 	global_tickdiv = 3;
 }
@@ -1130,7 +1123,6 @@ function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string
 
 function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
 	let divnotes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to, string_from, string_to);
-	console.log("divnotes:", divnotes);
 	let tdnotes = $(divnotes).map(function() {
     	return $(this).closest('td').get(0);
 	}).get();
@@ -1138,18 +1130,14 @@ function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_
 	
 	let tdnotespaths = findSequences(tdnotes ,$(tdnotes).filter("#r6c2")[0], $(tdnotes).filter("#r4c4")[0], 6);
 	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
-	//console.log("tdnotespath:", tdnotespath);
 	
 	let divnotespath = $($.map(tdnotespath, function(el) { 
     	return $(el).children('div').first().get(0); 
 	}));
 	
-	//console.log("divnotespath:", divnotespath);	
-	
 	let divnotespathArr = divnotespath.map(function(idx, el) {
 		return $(el);
 	}).get();
-	//console.log("divnotespathArr:", divnotespathArr);	
 
 	prepare_notes_actual(scale, gradescale);	
 	display_notes_actual(divnotes);
@@ -1166,7 +1154,6 @@ function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_
 
 function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
 	let divnotes = scale_on_fret2fret(scale, gradescale);
-	console.log("divnotes:", divnotes);
 	let tdnotes = $(divnotes).map(function() {
     	return $(this).closest('td').get(0);
 	}).get();
@@ -1179,7 +1166,6 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 		}
 		return false;
 	});
-	console.log("tdroots:", tdroots);
 	let found = false;
 	let item1, item2;
 	while (!found && tdroots.length >= 2) {
@@ -1188,26 +1174,25 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 		item2 = tdroots[indices[1]];
 		const freq1 = parseFloat(item1.getAttribute('freq'));
 		const freq2 = parseFloat(item2.getAttribute('freq'));
-		if (  Math.abs( freq2 - (2 * freq1)) < 2.0) {
+		const coln1 = parseInt(item1.getAttribute('coln'), 10);
+		const coln2 = parseInt(item2.getAttribute('coln'), 10);
+		if (Math.abs(freq2 - (2 * freq1)) < 2.0 && Math.abs(coln1 - coln2) <= 3) {
 			found = true;
 		}
 	}
+		
 	// item1 and item2 now hold the required td elements if found
 
 	let tdnotespaths = findSequences(tdnotes ,item1, item2, 6);
 	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
-	//console.log("tdnotespath:", tdnotespath);
 	
 	let divnotespath = $($.map(tdnotespath, function(el) { 
     	return $(el).children('div').first().get(0); 
 	}));
-
-	//console.log("divnotespath:", divnotespath);	
 	
 	let divnotespathArr = divnotespath.map(function(idx, el) {
 		return $(el);
 	}).get();
-	//console.log("divnotespathArr:", divnotespathArr);	
 	drawStrings();
 	prepare_notes_actual(scale, gradescale);	
 	
@@ -1265,11 +1250,10 @@ function play_rpattern(pattern, intro = "", ms = 60 / 60 * 250) {
 		.filter(char => allowedSet.has(char)) // Keep only allowed characters
 		.join(''); // Join the array back into a string
 
-	console.log("filteredString: , ms", filteredString);
-	for(i=0; i<filteredString.length; i=i+1) {
-		if (filteredString[i] == "I") {
-			setTimeout( function() { metronome_tick();}, i*ms);
-		}
+		for(i=0; i<filteredString.length; i=i+1) {
+			if (filteredString[i] == "I") {
+				setTimeout( function() { metronome_tick();}, i*ms);
+			}
 	}
 }
 
@@ -1676,9 +1660,37 @@ function schedule_practice_ScaleRandomNote(bpm , duration, scale, gradescale, fr
 	schedule_practiceScaleRandomX(bpm, duration, practice_ScaleRandomNote, scale, gradescale, fret1, fret2, string_from, string_to);
 }
 
-function schedule_practice_ScaleRandomPath(bpm , duration, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6) {
+function schedule_practice_ScaleRandomPath(bpm , totalc, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6, timerWatch_duration = 0) {
+	set_gbgchord(scale);	
+	tick_bpm = 32 * bpm;
+	tick_ms = 60 / tick_bpm * 1000;
+	$("#infobox3").html(bpm + " beat bpm");
+	$("#infobox4").html(tick_bpm / 2 + " tick bpm");
+	const now = new Date();
+	const formattedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
+	//console.log(formattedTime);
+	//console.log;
+	interval = 60 / bpm * 1000;
+	global_frettimeout = interval;
+	duration_ms = totalc * interval;
+	let currentInterval = mysetInterval(practice_ScaleRandomPath, interval, scale, gradescale, fret1, fret2, string_from, string_to);
+    //let currentInterval2 = mysetInterval(metronome_tick, interval);
+	let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I--- I--- I--- I--- I---", "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II ---- ----", "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I ---- ----", "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I- ---- ----", "", tick_ms);
+	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
-	schedule_practiceScaleRandomX(bpm, duration, practice_ScaleRandomPath, scale, gradescale, fret1, fret2, string_from, string_to);
+	stopinterval(currentInterval, duration_ms);
+    //stopinterval(currentInterval2, duration_ms);
+	stopinterval(currentInterval3, duration_ms);
+	if ( timerWatch_duration == 0 ) {
+		timerWatch(duration_ms/1000);
+	} else if ( timerWatch_duration != -1){
+		//console.log("call timerWatch(",timerWatch_duration, ")");
+		timerWatch(timerWatch_duration);
+	}	
 }
 
 function schedule_practice_ScaleRandomGrade(bpm, duration, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6) {
@@ -1708,7 +1720,7 @@ function schedule_practice_ScaleRandomMemorize(bpm, duration, scale, gradescale,
 		string_to: string_to
 	}
 	
-	console.log("----------------");
+	//console.log("----------------");
 	global_mode = "test";
 	schedule_practiceScaleRandomX(bpm, duration, practice_ScaleRandomMemorize, rscale, gradescale, fret1, fret2, string_from, string_to, duration);
 }
@@ -1817,7 +1829,7 @@ function updateNoteText(note, newcontent) {
 	
 	lastnotecolor = note.css("color");
 	//note.css("color", "red");
-	console.log("note.css('background')", note.css("background"));
+	//console.log("note.css('background')", note.css("background"));
 	if (note.css("background") == "rgb(234, 234, 234)") {
 		note.css("color", "white");
 		note.css("background", "red");
