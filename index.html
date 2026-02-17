@@ -287,6 +287,9 @@ td {
 				};
 				</script>
 			</td>
+			<td>
+				<span id="infobox5" style="color: green;">infobox5</span>
+			</td>
 		</tr>
 	</table>
 	<br>	
@@ -395,11 +398,12 @@ td {
 				<table class="note-grade-column_inner_table">
 					<tr>
 						<td>
-							<button onclick="practice_scale16(Gbp, majp_grades, [0, 12], 150, 4, prepare_wseq_for_notes_up_down)">   Gbp 0-12   </button>
-							
-							<br><button onclick="practice_scale_3_notes_by_string(Gbp, majp_grades, [0, enya_hb], 120 , 4, prepare_wseq_for_N_notes_123_234)">   Gbp /6   </button>
-							27.3p
-
+							<button onclick="practice_scale16(Gbp, majp_grades, [0, 12], 150, 4, prepare_wseq_for_notes_up_down)">   Gbp /4   </button>
+							<button onclick="practice_scale16(Gbp, majp_grades, [0, 12], 150, 4, prepare_wseq_for_N_notes_123_234)">   Gbp /4   </button>
+							<br><button onclick="practice_scale_3_notes_by_string(Gbp, majp_grades, [0, enya_hb], 110 , 4, prepare_wseq_for_notes_up_down)">   Gbp /6   </button>
+							4p
+							<button onclick="practice_scale_3_notes_by_string(Gbp, majp_grades, [0, enya_hb], 110 , 4, prepare_wseq_for_N_notes_123_234)">   Gbp /6   </button>
+							22.5p
 						</td>
 						<td>
 							
@@ -417,9 +421,15 @@ td {
 							<br><button onclick="practice_scale_3_notes_by_string(Cp, majp_grades,[0, enya_hb], 150,  [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], prepare_wseq_for_notes_up_down)">   Cp /6   </button> 
 						</td>
 						<td>
-							<button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200,[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4], prepare_wseq_for_notes_up_down)">   Amp /4   </button> 
+							<button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200, 4, prepare_wseq_for_notes_up_down)">   Amp /4   </button> 
 							8.5p							 
-							<br><button onclick="practice_scale_3_notes_by_string(Am, min_grades, [0, enya_hb], 220, [0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16], prepare_wseq_for_notes_up_down)">   Amp /6   </button> 
+							<br><button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200,[4, 4, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4], prepare_wseq_for_N_notes_123_234)">   Amp /4   </button> 
+							24.3p
+							<br><button onclick="practice_scale_3_notes_by_string(Amp, minp_grades, [0, enya_hb], 110, 4, prepare_wseq_for_notes_up_down)">   Amp /6   </button> 
+							46.8p
+							<br><button onclick="practice_scale_3_notes_by_string(Amp, minp_grades, [0, enya_hb], 110, 4, prepare_wseq_for_N_notes_123_234)">   Amp /6   </button> 
+							26
+
 							
 						</td>
 					</tr>
@@ -430,9 +440,9 @@ td {
 						</td>
 						<td>
 							<button onclick="practice_scale16(Diszmp, minp_grades, [0, enya_hb], 150, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], prepare_wseq_for_notes_up_down)">   D#mp /4   </button> 
-							11.6p
+							
 							<br><button onclick="practice_scale_3_notes_by_string(Diszmp, minp_grades, [0, enya_hb], 120,  [10, 10, 10, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   D#mp /6   </button> 
-							18.2p 
+							 
 							
 						</td>
 					</tr>
@@ -451,13 +461,20 @@ td {
  				
 				<br><br>
 				<button onclick="schedule_practice_ScaleRandomPath(1000 / 8000 * 60, 45, Gbp, majp_grades, 0, 24);">Gbp</button> 
+				72
 				
-				
-				        <button onclick="schedule_practice_ScaleRandomPath(1000 / 8000 * 60, 45, Amp, minp_grades, 0, 24);">Amp</button> 
+				        <button onclick="schedule_practice_ScaleRandomPath(1000 / 8000 * 60, 45, Amp, minp_grades, 0, 24);">Amp</button>
+				84
 
-				        <button onclick="schedule_practice_ScaleRandomPath(1000 / 8000 * 60, 45, Cp, majp_grades, 0, 24);">Cp</button> 
+				        <button onclick="schedule_practice_ScaleRandomPath(1000 / 8000 * 60, 45, Cp, majp_grades, 0, 24);">Cp</button>
+				54
 				
-				<br><br><br><br>A gyakorlás célja: a megjelenített skála-minta azonnali memorizálása, azonnali felidézése, majd motívum improvizáció.
+				
+				<br><br>
+				<br><br>TARGET 0: a megjelenített mintán fe-le skálázás.
+				<br>TARGET 1: a megjelenített skála-minta azonnali memorizálása, azonnali felidézése, majd motívum improvizáció.
+				<br><br>Szumma 60 perc minden skálára, 30 perc/nap.
+				<br><br>Skálák elmélyítése: Gbp Amp Cp
 			</td>
 						
 		</tr>
@@ -484,7 +501,7 @@ td {
 				
 			</td>
 							<td style="width: 240px">
-								<br><a href="https://www.szolomania.com/pentaton">JT pentaton</a> 70p
+								<br><a href="https://www.szolomania.com/pentaton">JT pentaton</a> 85p
 								<a href="https://www.szolomania.com/pentaton">Billy Gibbons</a> 5p
 
 								<br><a href="https://www.youtube.com/watch?v=w8KlZvTrjcI&list=PLUzqRbYuUxoBoZ_l8_iFvr6A2ZsC2oaBL&index=6">50 easy</a>

@@ -166,8 +166,8 @@ function findSequences(allElements, startElem, endElem, stepCount) {
     return results;
 }
 
-// Optimized version with memoization
-function findSequencesOptimized(startElem, endElem, stepCount) {
+// Optimized version with memorization
+function findSequencesOptimized(allElements, startElem, endElem, stepCount) {
     if (stepCount < 4) {
         console.error('stepCount must be at least 4 for quadruple constraint');
         return [];

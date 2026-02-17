@@ -51,6 +51,9 @@ const global_frets_for_3notes_scale = {
 	"Am": { "frets":  [0, 1, 3, 5, 7, 8, 10, 12, 13, 15, 17, 19],
 			"startindex":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
+	"Amp": { "frets":  [0, 2, 4, 7, 9, 12, 14, 17],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0]
+		},
 	"D": { "frets": [0, 2, 3, 5, 7, 9, 10, 12, 14, 15, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
@@ -66,8 +69,8 @@ const global_frets_for_3notes_scale = {
 	"F": { "frets": [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
-	"Gbp": { "frets": [2, 4, 6], //9, 11, 14, 16, 19],
-			"startindex": [0, 0, 0] //, 0, 0, 0, 0, 0]
+	"Gbp": { "frets": [2, 4, 6, 9, 11, 14, 16],  //, 19],
+			"startindex": [0, 0, 0, 0, 0, 0, 0] //, 0]
 		},
 	"G": { "frets": [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -90,8 +93,8 @@ const global_frets_for_scale16 = {
 	"Gbp": { "frets": [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},
-	"Amp": { "frets": [0, 0, 3, 3, 5, 5, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 21],
-			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+	"Amp": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	}
 };
 
@@ -1041,6 +1044,7 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 	set_gbgchord(scale);	
 	let filtered_frets = frets;
 	let filtered_startindex = startindex;	
+	global_tickdiv = 1;
 	$("#infobox3").html(bpm + " bpm");
 	if ( Array.isArray(fret) ) {
 		let lo = fret[0];
@@ -1107,13 +1111,13 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 		}		
 		if ( repeat_i == 0 ) return;
 		mysetTimeout(function() {
+			drawStrings();
 			walk_seq_ntimes(notes, repeat_i);					
  		}, nextstart);
 		nextstart += calc_to_walkn(notes, repeat_i);
 	});
 	
-	timerWatch((nextstart)/1000);
-	global_tickdiv = 3;
+	timerWatch((nextstart)/1000);	
 }
 
 function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1183,7 +1187,7 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 		
 	// item1 and item2 now hold the required td elements if found
 
-	let tdnotespaths = findSequences(tdnotes ,item1, item2, 6);
+	let tdnotespaths = findSequencesOptimized(tdnotes ,item1, item2, 6);
 	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
 	
 	let divnotespath = $($.map(tdnotespath, function(el) { 
@@ -1376,7 +1380,7 @@ function prepare_wseq_for_N_notes_123_234(notes) {
 	for (let i = n - 3; i >= 0; i--) {
 		notes2.push(notes[i + 2], notes[i + 1], notes[i]);
 	}
-	global_tickdiv = 3;
+	global_tickdiv = 2;
 	return notes2;
 }
 
@@ -1642,6 +1646,7 @@ function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gra
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "-II- I-II ---- ----", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "--II II-I ---- ----", "", tick_ms);
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, "I-I- I-I- ---- ----", "", tick_ms);
+		
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
@@ -1673,7 +1678,17 @@ function schedule_practice_ScaleRandomPath(beatbpm , totalc, scale, gradescale, 
 	duration_ms = totalc * interval;
 	let currentInterval = mysetInterval(practice_ScaleRandomPath, interval, scale, gradescale, fret1, fret2, string_from, string_to);
     //let currentInterval2 = mysetInterval(metronome_tick, interval);
-	let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I--- I--- I--- I--- I---", "", tick_ms);
+	let rpatterns = [
+		"I--- I--- I--- I--- I--- I--- I--- I---",
+		"-II- I-II -II- I-II I--- I--- I--- I---",
+		"--II II-I --II II-I I--- I--- I--- I---"
+	];
+
+	//rpattern = rpatterns[Math.floor(Math.random() * rpatterns.length)];
+	rpattern = rpatterns[0];
+
+	let currentInterval3 = mysetInterval(play_rpattern, interval, rpattern, "", tick_ms);
+	$("#infobox5").html(rpattern);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
@@ -1810,7 +1825,7 @@ function stop_practice() {
 function updateNoteText(note, newcontent) {
 	if (lastnote) {
 			//lastnote.text(lastnotetext);			
-			lastnote.text("─────────");			
+			//lastnote.text("─────────");		ezt keresed!	
 			lastnote.css("color", lastnotecolor);
 			lastnote.css("background", lastnotebackground);
 			lastnote_displayed(lastnote);
@@ -1898,7 +1913,7 @@ function play_by_conditions(tickcounter, inhibit_bgchord) {
 
 function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = global_half_tick) {
 	const period = global_frettimeout;
-	const introCount = global_tickdiv;
+	const introCount = 4; // global_tickdiv
 	const totalNotes = notes.length;
 	/*const walkTime = reverse
 		? period * (2 * totalNotes)
