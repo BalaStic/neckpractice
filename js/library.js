@@ -1298,6 +1298,7 @@ function select_scalebox_notes(scale, gradescale, fret, index, filtered_startind
 }
 
 function prepare_wseq_for_notes_up_down(notes) {
+	console.log("notes", notes);
 	return notes.concat(notes.slice().reverse());
 }
 
@@ -1633,6 +1634,49 @@ function scale_on_2_frets(scale, fret1, fret2, string_from = 1, string_to = 6) {
 				}
 			}
 	return notes;
+}
+
+function schedule_Alapi_maj(scale, gradescale, startcol, bpm, repeat) {
+	tick_bpm = bpm;
+	tick_ms = 60 / tick_bpm * 1000;
+	$("#infobox3").html(bpm + " beat bpm");
+	$("#infobox4").html(tick_bpm + " tick bpm");
+	let divnotes = scale_on_fret2fret(scale, gradescale);
+	let tdnotes = $(divnotes).map(function() {
+    	return $(this).closest('td').get(0);
+	}).get();
+	//console.log("tdnotes", tdnotes);
+	let startnote = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === 6 && parseInt($(n).attr("coln"), 10) === startcol);
+	//console.log("startnote", startnote);
+	let rown0 = parseInt($(startnote).attr('rown'), 10);
+	let coln0 = parseInt($(startnote).attr('coln'), 10);
+	let pattern = [ [0, 2, 4, 5], [2, 4, 6, 7] , [4, 6, 7, 9], [6, 8, 9, 11], [9, 10, 12], [9, 11, 12]];
+	let selectednotes = [];
+	
+	for (let i = 0; i < pattern.length; i++) {
+		for (let j = 0; j < pattern[i].length; j++) {
+			let row = rown0 - i;
+			let col = coln0 + pattern[i][j];
+			// Use row and col variables here
+			let note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row && parseInt($(n).attr("coln"), 10) === col);
+			if (note) {
+				// Use the note element
+				selectednotes.push(note);
+			}
+		}
+	}
+	let divselectednotes = [];
+	$($.map(selectednotes, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	})).each(function() {
+		divselectednotes.push($(this));
+	});
+
+	global_frettimeout = tick_ms;
+	let seq = prepare_wseq_for_notes_up_down(divselectednotes);
+	walk_seq_ntimes(seq, repeat);	
+	timerWatch(calc_to_walkn(seq, repeat)/1000);
+
 }
 
 function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6, timerWatch_duration = 0) {
