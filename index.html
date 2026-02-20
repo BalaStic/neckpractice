@@ -398,13 +398,16 @@ td {
 				<table class="note-grade-column_inner_table">
 					<tr>
 						<td>
-							<button onclick="practice_scale16(Gbp, majp_grades, [0, enya_hb], 150, 4, prepare_wseq_for_notes_up_down)">   Gbp /4   </button>
+							<button onclick="schedule_pattern_roots('Gb', 60, 5)">   Gbp roots   </button>
+							4
+							<br><button onclick="practice_scale16(Gbp, majp_grades, [0, enya_hb], 200, 10, prepare_wseq_for_notes_up_down)">   Gbp /4   </button>
+							10.9
 							<button onclick="practice_scale16(Gbp, majp_grades, [0, enya_hb], 220, 4, prepare_wseq_for_N_notes_123_234)">   Gbp /4   </button>
 							18.9
 							<br><button onclick="practice_scale_3_notes_by_string(Gbp, majp_grades, [0, enya_hb], 110 , 4, prepare_wseq_for_notes_up_down)">   Gbp /6   </button>
 							4p
-							<button onclick="practice_scale_3_notes_by_string(Gbp, majp_grades, [0, enya_hb], 110 , 4, prepare_wseq_for_N_notes_123_234)">   Gbp /6   </button>
-							22.5p
+							<button onclick="practice_scale_3_notes_by_string(Gbp, majp_grades, [0, enya_hb], 160 , 3, prepare_wseq_for_N_notes_123_234)">   Gbp /6   </button>
+							34.1p
 						</td>
 						<td>
 							
@@ -419,18 +422,26 @@ td {
 					<tr>					
 						<td>	
 							<button onclick="practice_scale16(Cp, majp_grades,[0, enya_hb], 150,  [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], prepare_wseq_for_notes_up_down)">   Cp /4   </button> 
-							<br><button onclick="practice_scale_3_notes_by_string(Cp, majp_grades,[0, enya_hb], 150,  [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], prepare_wseq_for_notes_up_down)">   Cp /6   </button> 
-							<br><button onclick="schedule_Alapi_maj(C, maj_grades, 8, 160, 8)">   C Alapi   </button> 
+							<br><button onclick="practice_scale_3_notes_by_string(Cp, majp_grades,[0, enya_hb], 150,  2, prepare_wseq_for_notes_up_down)">   Cp /6   </button> 
+							<button onclick="practice_scale_3_notes_by_string(Cp, majp_grades,[0, enya_hb], 150,  2, prepare_wseq_for_N_notes_123_234)">   Cp /6   </button> 
+							10.5
+							<br><button onclick="schedule_pattern(C, maj_grades, Alapi_maj, 8, 160, 8, prepare_wseq_for_N_notes_123_234)">   C Alapi   </button> 
+							<br><button onclick="schedule_pattern_hangközök_horizontal(C, maj_grades, maj_4ths_horizontal, 8, 110, 8, prepare_wseq_for_notes_up_down)">   C 4 ─   </button> 
+							23.2
+							<button onclick="schedule_pattern_hangközök_vertical(C, maj_grades, maj_4ths_vertical, 8, 110, 8, prepare_wseq_for_notes_up_down)">   C 4 |   </button> 
+							10.2
 						</td>
 						<td>
-							<button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200, 4, prepare_wseq_for_notes_up_down)">   Amp /4   </button> 
+							<button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200, [4, 4, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4], prepare_wseq_for_notes_up_down)">   Amp /4   </button> 
 							8.5p							 
 							<button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200,[4, 4, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4], prepare_wseq_for_N_notes_123_234)">   Amp /4   </button> 
 							37.6p
 							<br><button onclick="practice_scale_3_notes_by_string(Amp, minp_grades, [0, enya_hb], 110, 4, prepare_wseq_for_notes_up_down)">   Amp /6   </button> 
 							46.8p
-							<button onclick="practice_scale_3_notes_by_string(Amp, minp_grades, [0, enya_hb], 165, 4, prepare_wseq_for_N_notes_123_234)">   Amp /6   </button> 
+							<button onclick="practice_scale_3_notes_by_string(Amp, minp_grades, [0, enya_hb], 165, 3, prepare_wseq_for_N_notes_123_234)">   Amp /6   </button> 
 							44.9
+							<br><button onclick="schedule_pattern(Am, min_grades, Alapi_min, 5, 160, 14, prepare_wseq_for_N_notes_123_234)">   Am Alapi   </button> 
+							10.5
 
 							
 						</td>
@@ -455,13 +466,14 @@ td {
 						<td>
 							<button onclick="practice_scale16(Emp, minp_grades, [0, enya_hb], 170, 4, prepare_wseq_for_notes_up_down)">   Emp /4   </button> 
 							11.1
-							<button onclick="practice_scale16(Emp, minp_grades, [0, enya_hb], 170, 4, prepare_wseq_for_N_notes_123_234)">   Emp /4   </button> 
-							
+							<button onclick="practice_scale16(Emp, minp_grades, [0, enya_hb], 170, 3, prepare_wseq_for_N_notes_123_234)">   Emp /4   </button> 
+							10.8
 							<br><button onclick="practice_scale_3_notes_by_string(Emp, minp_grades, [0, enya_hb], 120,  4, prepare_wseq_for_notes_up_down)">   Emp /6   </button> 
+							10.1
 							<button onclick="practice_scale_3_notes_by_string(Emp, minp_grades, [0, enya_hb], 170,  2, prepare_wseq_for_N_notes_123_234)">   Emp /6   </button> 
 							20.9
-							
-							
+							<br><button onclick="schedule_pattern(Em, min_grades, Alapi_min, 0, 160, 14, prepare_wseq_for_N_notes_123_234)">   Em Alapi   </button> 
+							10.5
 							
 						</td>
 					</tr>
@@ -486,6 +498,7 @@ td {
 				<br>TARGET 1: a megjelenített skála-minta azonnali memorizálása, azonnali felidézése, majd motívum improvizáció.
 				<br><br>Szumma 60 perc minden skálára, 30 perc/nap.
 				<br><br>Skálák elmélyítése: Gbp Amp Cp
+				<br><br><a href="#" onclick="displayNotes(C, maj_grades);">C</a>
 			</td>
 						
 		</tr>

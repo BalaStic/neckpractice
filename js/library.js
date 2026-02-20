@@ -54,6 +54,10 @@ const global_frets_for_3notes_scale = {
 	"Amp": { "frets":  [0, 2, 4, 7, 9, 12, 14, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
+	"Cp": { "frets": [0, 3, 5, 8, 10, 12, 15, 17, 20],  //, 19],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0] //, 0]
+		},
+	
 	"D": { "frets": [0, 2, 3, 5, 7, 9, 10, 12, 14, 15, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
@@ -95,11 +99,17 @@ const global_frets_for_scale16 = {
 	"Diszmp": { "frets":  [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},
-	"Emp": { "frets":  [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+	/*"Emp": { "frets":  [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+	},*/
+	"Emp": { "frets":  [0, 3, 5, 8, 10, 12, 15, 17, 20, 22],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	},
-	"Gbp": { "frets": [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
+	/*"Gbp": { "frets": [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+	},*/
+	"Gbp": { "frets": [2, 4, 7, 9, 11, 14, 16, 19, 21],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	},
 	"Amp": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
@@ -195,6 +205,10 @@ var majp_list = [Cp, Dbp, Hp, Ep, Gbp, Fiszp, Gp, Fp];
 var	maj_list = [C, Db, H, E, Gb, Fisz, G, F];
 var minp_list = [Amp, Ebmp, Emp, Dmp, Diszmp];
 var min_list = [Am, Ebm, Em, Dm, Diszm];
+var Alapi_maj = [ [0, 2, 4, 5], [2, 4, 6, 7] , [4, 6, 7, 9], [6, 8, 9, 11], [9, 10, 12], [9, 11, 12]];
+var Alapi_min = [ [0, 2, 3], [0, 2, 3, 5] , [2, 4, 5, 7], [4, 5, 7, 9], [7, 8, 10, 12], [8, 10, 12]];
+var maj_4ths_horizontal = [[0, 2, 4, 5, 7, 9, 11, 12], [0, 2, 4, 6, 7, 9, 11, 12], [1, 2, 4, 6, 7, 9, 11, 13], [1, 2, 4, 6, 8, 9, 11, 13], [2, 4, 5, 7, 9, 10, 12, 12], [0, 2, 4, 5, 7, 9, 10, 12], [0, 2, 4, 5, 7, 9, 11, 12]];
+var maj_4ths_vertical = [[0, 0, 1, 1, 2, 2], [2, 2, 2, 2, 4, 4], [4, 4, 4, 4, 5, 5], [5, 6, 6, 6, 7, 7], [7, 7, 7, 8, 9, 9], [9, 9, 9, 9, 10, 11], [11, 11, 11, 11, 12, 12]];
 
 var scaleDict = {
 	"C": C, "Db": Db, "D": D, "Eb": E, "E": E, "F": F, "Gb": Gb, "G": G, "Ab": Ab, "A": A, "Bb": Bb, "H": H,
@@ -231,6 +245,17 @@ function convertCssPxToInt(cssPxValue) {
 
 function display_notes_actual(notes) {
 	$.each(notes, function(i, note) {
+		display_note_actual(note);
+	});	
+}
+
+function displayNotes(scale, gradescale) {
+	let notes = scale_on_fret2fret(scale, gradescale);
+	prepare_notes_actual(scale, gradescale);
+	
+	$.each(notes, function(i, note) {
+		
+		//updateNoteText(note);
 		display_note_actual(note);
 	});	
 }
@@ -1636,7 +1661,7 @@ function scale_on_2_frets(scale, fret1, fret2, string_from = 1, string_to = 6) {
 	return notes;
 }
 
-function schedule_Alapi_maj(scale, gradescale, startcol, bpm, repeat) {
+function schedule_pattern(scale, gradescale, pattern, startcol, bpm, repeat, walking_seq_preparer) {
 	tick_bpm = bpm;
 	tick_ms = 60 / tick_bpm * 1000;
 	$("#infobox3").html(bpm + " beat bpm");
@@ -1648,9 +1673,9 @@ function schedule_Alapi_maj(scale, gradescale, startcol, bpm, repeat) {
 	//console.log("tdnotes", tdnotes);
 	let startnote = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === 6 && parseInt($(n).attr("coln"), 10) === startcol);
 	//console.log("startnote", startnote);
-	let rown0 = parseInt($(startnote).attr('rown'), 10);
-	let coln0 = parseInt($(startnote).attr('coln'), 10);
-	let pattern = [ [0, 2, 4, 5], [2, 4, 6, 7] , [4, 6, 7, 9], [6, 8, 9, 11], [9, 10, 12], [9, 11, 12]];
+	let rown0 = 6;
+	let coln0 = startcol;
+	
 	let selectednotes = [];
 	
 	for (let i = 0; i < pattern.length; i++) {
@@ -1673,10 +1698,162 @@ function schedule_Alapi_maj(scale, gradescale, startcol, bpm, repeat) {
 	});
 
 	global_frettimeout = tick_ms;
+	let seq = walking_seq_preparer(divselectednotes);
+	walk_seq_ntimes(seq, repeat);	
+	timerWatch(calc_to_walkn(seq, repeat)/1000);
+	set_gbgchord(scale);
+
+}
+
+function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, startcol, bpm, repeat, walking_seq_preparer) {
+	tick_bpm = bpm;
+	tick_ms = 60 / tick_bpm * 1000;
+	$("#infobox3").html(bpm + " beat bpm");
+	$("#infobox4").html(tick_bpm + " tick bpm");
+	let divnotes = scale_on_fret2fret(scale, gradescale);
+	let tdnotes = $(divnotes).map(function() {
+    	return $(this).closest('td').get(0);
+	}).get();
+	//console.log("tdnotes", tdnotes);
+	let startnote = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === 6 && parseInt($(n).attr("coln"), 10) === startcol);
+	//console.log("startnote", startnote);
+	
+	let selectednotes = [];
+	
+	for (let i = 0; i < 5; i++) {
+		for (let j = 0; j < pattern[i].length; j++) {
+			let row1 = 6-i;
+			let row2 = row1-1;
+			let col1 = startcol + pattern[i][j];
+			let col2 = startcol + pattern[i+1][j];
+			if ( row1 == 2 && row2 == 1) {
+				col1 = startcol + pattern[i+1][j];
+				col2 = startcol + pattern[i+2][j];				
+			}
+
+			// Use row and col variables here
+			let note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row1 && parseInt($(n).attr("coln"), 10) === col1);
+			if (note) {
+				// Use the note element
+				selectednotes.push(note);
+			}			
+			note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row2 && parseInt($(n).attr("coln"), 10) === col2);
+			if (note) {
+				// Use the note element
+				selectednotes.push(note);
+			}
+		}
+	}
+	
+	let divselectednotes = [];
+	$($.map(selectednotes, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	})).each(function() {
+		divselectednotes.push($(this));
+	});
+
+	global_frettimeout = tick_ms;
+	let seq = walking_seq_preparer(divselectednotes);
+	walk_seq_ntimes(seq, repeat);	
+	timerWatch(calc_to_walkn(seq, repeat)/1000);
+	set_gbgchord(scale);
+}
+
+function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, startcol, bpm, repeat, walking_seq_preparer) {
+	tick_bpm = bpm;
+	tick_ms = 60 / tick_bpm * 1000;
+	$("#infobox3").html(bpm + " beat bpm");
+	$("#infobox4").html(tick_bpm + " tick bpm");
+	let divnotes = scale_on_fret2fret(scale, gradescale);
+	let tdnotes = $(divnotes).map(function() {
+    	return $(this).closest('td').get(0);
+	}).get();
+	//console.log("tdnotes", tdnotes);
+	let startnote = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === 6 && parseInt($(n).attr("coln"), 10) === startcol);
+	//console.log("startnote", startnote);
+	
+	let selectednotes = [];
+	
+	for (let i = 0; i < pattern.length; i++) {
+		for (let j = 0; j < 5; j++) {		
+			let row = 6-j;
+			let col = startcol + pattern[i][j];
+			
+			// Use row and col variables here
+			let note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row && parseInt($(n).attr("coln"), 10) === col);
+			if (note) {
+				// Use the note element
+				selectednotes.push(note);
+			}
+			row = 5-j;
+			col = startcol + pattern[i][j+1];
+			
+			// Use row and col variables here
+			note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row && parseInt($(n).attr("coln"), 10) === col);
+			if (note) {
+				// Use the note element
+				selectednotes.push(note);
+			}						
+		}
+	}
+	
+	let divselectednotes = [];
+	$($.map(selectednotes, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	})).each(function() {
+		divselectednotes.push($(this));
+	});
+
+	global_frettimeout = tick_ms;
+	let seq = walking_seq_preparer(divselectednotes);
+	walk_seq_ntimes(seq, repeat);	
+	timerWatch(calc_to_walkn(seq, repeat)/1000);
+	set_gbgchord(scale);
+	global_tickdiv = 2;
+}
+
+function schedule_pattern_roots(rootnote, bpm, repeat) {
+	tick_bpm = bpm;
+	tick_ms = 60 / tick_bpm * 1000;
+	$("#infobox3").html(bpm + " beat bpm");
+	$("#infobox4").html(tick_bpm + " tick bpm");
+	let divnotes = scale_on_fret2fret(scaleDict[rootnote], maj_grades);
+	
+	//console.log("tdnotes", tdnotes);
+	//let rootnotes = divnotes.find(n => $(n).attr("note") == rootnote );
+	let rootnotes = divnotes.filter(n => $(n).attr("note") === rootnote);
+	
+	let tdnotes = $(rootnotes).map(function() {
+    	return $(this).closest('td').get(0);
+	}).get();
+
+	console.log("tdnotes", tdnotes);
+	tdnotes.sort((a, b) => {
+		const colnA = parseInt($(a).attr("coln"), 10);
+		const colnB = parseInt($(b).attr("coln"), 10);
+		return colnA - colnB;
+	});
+
+	let selectednotes = [];
+	
+	tdnotes.forEach(note => {
+		selectednotes.push(note);
+		//selectednotes.push(note);
+	});
+	
+	let divselectednotes = [];
+	$($.map(selectednotes, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	})).each(function() {
+		divselectednotes.push($(this));
+	});
+
+	global_frettimeout = tick_ms;
 	let seq = prepare_wseq_for_notes_up_down(divselectednotes);
 	walk_seq_ntimes(seq, repeat);	
 	timerWatch(calc_to_walkn(seq, repeat)/1000);
-
+	set_gbgchord(rootnote);
+	global_tickdiv = 1;
 }
 
 function schedule_practiceScaleRandomX(bpm, totalc, practiceFunction, scale, gradescale, fret1, fret2, string_from = 1, string_to = 6, timerWatch_duration = 0) {
