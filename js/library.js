@@ -15,6 +15,7 @@ var global_half_tick = true;
 var global_bgchord = 0;
 var global_inhibit_bgchord = false;
 var global_tickdiv = 4;
+var global_beatdiv = 2;
 var tick = new Audio("assets/metronome.wav");
 var lastnote;
 var lastnotecolor;
@@ -64,6 +65,9 @@ const global_frets_for_3notes_scale = {
 	"Dm": { "frets": [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
+	"Dmp": { "frets": [1, 3, 5, 8, 10, 13, 15, 18],
+		"startindex": [0, 0, 0, 0, 0, 0, 0, 0]
+	},
 	"Diszmp": { "frets": [2, 4, 6, 9, 11, 14, 16, 19],
 		"startindex": [0, 0, 0, 0, 0, 0, 0, 0]
 	},
@@ -78,6 +82,9 @@ const global_frets_for_3notes_scale = {
 	"F": { "frets": [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
+	"Fp": { "frets": [1, 3, 5, 8, 10, 13, 15, 18],
+		"startindex": [0, 0, 0, 0, 0, 0, 0, 0]
+	},
 	"Gbp": { "frets": [2, 4, 6, 9, 11, 14, 16],  //, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0] //, 0]
 		},
@@ -96,6 +103,9 @@ const global_frets_for_scale16 = {
 	"Dm": { "frets": [1, 1, 3, 5, 5, 8, 10, 13, 13, 15, 17, 17, 20, 22, 22],
 			"startindex": [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1]
 	},
+	"Dmp": { "frets":  [1, 3, 6, 8, 10, 13, 15, 18, 20],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	},
 	"Diszmp": { "frets":  [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},
@@ -108,6 +118,9 @@ const global_frets_for_scale16 = {
 	/*"Gbp": { "frets": [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},*/
+	"Fp": { "frets": [1, 3, 5, 8, 10, 13, 15, 18, 20],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
+		},
 	"Gbp": { "frets": [2, 4, 7, 9, 11, 14, 16, 19, 21],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	},
@@ -208,6 +221,8 @@ var min_list = [Am, Ebm, Em, Dm, Diszm];
 var Alapi_maj = [ [0, 2, 4, 5], [2, 4, 6, 7] , [4, 6, 7, 9], [6, 8, 9, 11], [9, 10, 12], [9, 11, 12]];
 var Alapi_min = [ [0, 2, 3], [0, 2, 3, 5] , [2, 4, 5, 7], [4, 5, 7, 9], [7, 8, 10, 12], [8, 10, 12]];
 var maj_4ths_horizontal = [[0, 2, 4, 5, 7, 9, 11, 12], [0, 2, 4, 6, 7, 9, 11, 12], [1, 2, 4, 6, 7, 9, 11, 13], [1, 2, 4, 6, 8, 9, 11, 13], [2, 4, 5, 7, 9, 10, 12, 12], [0, 2, 4, 5, 7, 9, 10, 12], [0, 2, 4, 5, 7, 9, 11, 12]];
+var min_4ths_horizontal = [[0, 2, 3, 5, 7, 8, 10, 12], [0, 2, 3, 5, 7, 9, 10, 12], [0, 2, 4, 5, 7, 9, 10, 12], [0, 2, 4, 5, 7, 9, 11, 12], [1, 3, 5, 7, 8, 10, 12, 12], [0, 1, 3, 5, 7, 8, 10, 12], [0, 2, 3, 5, 7, 8, 10, 12]];
+
 var maj_4ths_vertical = [[0, 0, 1, 1, 2, 2], [2, 2, 2, 2, 4, 4], [4, 4, 4, 4, 5, 5], [5, 6, 6, 6, 7, 7], [7, 7, 7, 8, 9, 9], [9, 9, 9, 9, 10, 11], [11, 11, 11, 11, 12, 12]];
 
 var scaleDict = {
@@ -994,8 +1009,7 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	set_gbgchord(scale);	
 	let filtered_frets = frets;
 	let filtered_startindex = startindex;	
-	global_tickdiv = 4;
-	
+		
 	$("#infobox3").html(bpm + " bpm");
 	if ( Array.isArray(fret) ) {
 		let lo = fret[0];
@@ -1068,6 +1082,7 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 		nextstart += calc_to_walkn(notes, repeat_i);		
 	});
 	timerWatch((nextstart)/1000);
+	global_tickdiv = 4;
 }
 
 function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, walking_seq_preparer = function() { return this; }	) {
@@ -1077,7 +1092,6 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 	set_gbgchord(scale);	
 	let filtered_frets = frets;
 	let filtered_startindex = startindex;	
-	global_tickdiv = 1;
 	$("#infobox3").html(bpm + " bpm");
 	if ( Array.isArray(fret) ) {
 		let lo = fret[0];
@@ -1151,6 +1165,8 @@ function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, 
 	});
 	
 	timerWatch((nextstart)/1000);	
+	global_tickdiv = 2;
+	global_beatdiv = 4;
 }
 
 function practice_ScaleRandomGrade(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1414,7 +1430,25 @@ function prepare_wseq_for_N_notes_123_234(notes) {
 	for (let i = n - 3; i >= 0; i--) {
 		notes2.push(notes[i + 2], notes[i + 1], notes[i]);
 	}
-	global_tickdiv = 2;
+	return notes2;
+}
+
+function prepare_wseq_for_N_notes_1324(notes) {
+	const n = notes.length;
+	let notes2 = [];
+
+	// Forward pattern: 1,3,2,4 | 3,5,4,6 | ... (indices 0,2,1,3 | 2,4,3,5 | ...)
+	for (let i = 0; i < n - 3; i += 2) {
+		notes2.push(notes[i], notes[i + 2], notes[i + 1], notes[i + 3]);
+	}
+
+	// Handle remaining notes if n is odd
+	if (n % 2 === 1) {
+		notes2.push(notes[n - 3], notes[n - 1], notes[n - 2]);
+	}
+
+	const notes2_reversed = notes2.slice().reverse();
+	notes2 = notes2.concat(notes2_reversed);
 	return notes2;
 }
 
@@ -1702,6 +1736,8 @@ function schedule_pattern(scale, gradescale, pattern, startcol, bpm, repeat, wal
 	walk_seq_ntimes(seq, repeat);	
 	timerWatch(calc_to_walkn(seq, repeat)/1000);
 	set_gbgchord(scale);
+	global_tickdiv = 2;
+	global_beatdiv = 4;
 
 }
 
@@ -1757,6 +1793,7 @@ function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, sta
 	walk_seq_ntimes(seq, repeat);	
 	timerWatch(calc_to_walkn(seq, repeat)/1000);
 	set_gbgchord(scale);
+	global_tickdiv = 1;
 }
 
 function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, startcol, bpm, repeat, walking_seq_preparer) {
@@ -1810,6 +1847,7 @@ function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, start
 	timerWatch(calc_to_walkn(seq, repeat)/1000);
 	set_gbgchord(scale);
 	global_tickdiv = 2;
+	global_beatdiv = 4;
 }
 
 function schedule_pattern_roots(rootnote, bpm, repeat) {
@@ -2135,14 +2173,14 @@ function schedule_noteupdate_and_play(note, delay, half_tick = global_half_tick,
 }
 
 function play_by_conditions(tickcounter, inhibit_bgchord) {
-	if (global_bgchord && !inhibit_bgchord && tickcounter % global_tickdiv === 0) {
+	if (global_bgchord && !inhibit_bgchord && tickcounter % global_beatdiv === 0) {
 		play_chord(global_bgchord);
 	}
 }
 
 function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = global_half_tick) {
 	const period = global_frettimeout;
-	const introCount = 4; // global_tickdiv
+	const introCount = 4;
 	const totalNotes = notes.length;
 	/*const walkTime = reverse
 		? period * (2 * totalNotes)
