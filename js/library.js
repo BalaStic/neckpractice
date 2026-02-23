@@ -224,6 +224,7 @@ var maj_4ths_horizontal = [[0, 2, 4, 5, 7, 9, 11, 12], [0, 2, 4, 6, 7, 9, 11, 12
 var min_4ths_horizontal = [[0, 2, 3, 5, 7, 8, 10, 12], [0, 2, 3, 5, 7, 9, 10, 12], [0, 2, 4, 5, 7, 9, 10, 12], [0, 2, 4, 5, 7, 9, 11, 12], [1, 3, 5, 7, 8, 10, 12, 12], [0, 1, 3, 5, 7, 8, 10, 12], [0, 2, 3, 5, 7, 8, 10, 12]];
 
 var maj_4ths_vertical = [[0, 0, 1, 1, 2, 2], [2, 2, 2, 2, 4, 4], [4, 4, 4, 4, 5, 5], [5, 6, 6, 6, 7, 7], [7, 7, 7, 8, 9, 9], [9, 9, 9, 9, 10, 11], [11, 11, 11, 11, 12, 12]];
+var min_4ths_vertical = [[0, 0, 0, 0, 1, 2], [2, 2, 2, 2, 3, 3], [3, 3, 4, 4, 5, 5], [5, 5, 5, 5, 7, 7], [7, 7, 7, 7, 8, 8], [8, 9, 9, 9, 10, 10], [10, 10, 10, 11, 12, 12]];	
 
 var scaleDict = {
 	"C": C, "Db": Db, "D": D, "Eb": E, "E": E, "F": F, "Gb": Gb, "G": G, "Ab": Ab, "A": A, "Bb": Bb, "H": H,
@@ -1764,7 +1765,7 @@ function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, sta
 			let col2 = startcol + pattern[i+1][j];
 			if ( row1 == 2 && row2 == 1) {
 				col1 = startcol + pattern[i+1][j];
-				col2 = startcol + pattern[i+2][j];				
+				//col2 = startcol + pattern[i+2][j];				
 			}
 
 			// Use row and col variables here
@@ -1773,11 +1774,11 @@ function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, sta
 				// Use the note element
 				selectednotes.push(note);
 			}			
-			note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row2 && parseInt($(n).attr("coln"), 10) === col2);
+			/*note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row2 && parseInt($(n).attr("coln"), 10) === col2);
 			if (note) {
 				// Use the note element
 				selectednotes.push(note);
-			}
+			}*/
 		}
 	}
 	
@@ -1860,6 +1861,50 @@ function schedule_pattern_roots(rootnote, bpm, repeat) {
 	//console.log("tdnotes", tdnotes);
 	//let rootnotes = divnotes.find(n => $(n).attr("note") == rootnote );
 	let rootnotes = divnotes.filter(n => $(n).attr("note") === rootnote);
+	
+	let tdnotes = $(rootnotes).map(function() {
+    	return $(this).closest('td').get(0);
+	}).get();
+
+	console.log("tdnotes", tdnotes);
+	tdnotes.sort((a, b) => {
+		const colnA = parseInt($(a).attr("coln"), 10);
+		const colnB = parseInt($(b).attr("coln"), 10);
+		return colnA - colnB;
+	});
+
+	let selectednotes = [];
+	
+	tdnotes.forEach(note => {
+		selectednotes.push(note);
+		//selectednotes.push(note);
+	});
+	
+	let divselectednotes = [];
+	$($.map(selectednotes, function(el) { 
+    	return $(el).children('div').first().get(0); 
+	})).each(function() {
+		divselectednotes.push($(this));
+	});
+
+	global_frettimeout = tick_ms;
+	let seq = prepare_wseq_for_notes_up_down(divselectednotes);
+	walk_seq_ntimes(seq, repeat);	
+	timerWatch(calc_to_walkn(seq, repeat)/1000);
+	set_gbgchord(rootnote);
+	global_tickdiv = 1;
+}
+
+function schedule_pattern_roots_fifths(rootnote, fifthnote, bpm, repeat) {
+	tick_bpm = bpm;
+	tick_ms = 60 / tick_bpm * 1000;
+	$("#infobox3").html(bpm + " beat bpm");
+	$("#infobox4").html(tick_bpm + " tick bpm");
+	let divnotes = scale_on_fret2fret(scaleDict[rootnote], maj_grades);
+	
+	//console.log("tdnotes", tdnotes);
+	//let rootnotes = divnotes.find(n => $(n).attr("note") == rootnote );
+	let rootnotes = divnotes.filter(n => $(n).attr("note") === rootnote || $(n).attr("note") === fifthnote);
 	
 	let tdnotes = $(rootnotes).map(function() {
     	return $(this).closest('td').get(0);
