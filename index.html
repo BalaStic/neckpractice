@@ -91,12 +91,16 @@
 		} );		
 		
 		
-		let colors = ['white', 'orange', 'lightgreen', 'cyan', 'red'];
+		let colors = ['blue', 'orange', 'cyan', 'red', 'lightgreen'];
 		for (let i = 0; i < 5; i++) {
+			if (i === 0) continue;
 			random = Math.floor(Math.random() * colors.length);
 			gradecolors[i] = colors[random];
+			
 			colors.splice(random, 1);			
 		}
+		gradecolors[0] = "white";
+		//gradecolors[2] = "lightgreen";
 		
     });	
 </script>
@@ -469,27 +473,28 @@ td {
 						
 								
 						<td>
-							<button onclick="schedule_pattern_roots('D', 60, 4)">   D 1   </button>
-							7.2
+							<button onclick="schedule_pattern_roots('D', 60, 4)">   D root   </button>
+							14.4
 							<br><button onclick="practice_scale16(Dmp, minp_grades,[0, enya_hb], 150,  7, prepare_wseq_for_notes_up_down)">   Dmp /4   </button> 
 							10.3
 							<button onclick="practice_scale16(Dmp, minp_grades,[0, enya_hb], 150,  3, prepare_wseq_for_N_notes_123_234)">   Dmp /4   </button> 
 							11
+							<button onclick="practice_scale16(Dmp, minp_grades,[0, enya_hb], 150,  4, prepare_wseq_for_N_notes_1324)">   Dmp /4   </button> 
+							9.8
 							<br><button onclick="practice_scale_3_notes_by_string(Dmp, minp_grades,[0, enya_hb], 90,  4, prepare_wseq_for_notes_up_down)">   Dmp /6   </button> 
 							11.7
 							<button onclick="practice_scale_3_notes_by_string(Dmp, minp_grades,[0, enya_hb], 150,  4, prepare_wseq_for_N_notes_123_234)">   Dmp /6   </button> 
 							9.1
 							<button onclick="practice_scale_3_notes_by_string(Dmp, minp_grades,[0, enya_hb], 120,  3, prepare_wseq_for_N_notes_1324)">   Dmp /6   </button> 
 							11.5							
-							<br><button onclick="schedule_pattern(Dm, min_grades, Alapi_min, 10, 150, 12, prepare_wseq_for_N_notes_123_234)">   Dm Alapi   </button> 
-							9.6
+							<br><button onclick="schedule_pattern(Dm, min_grades, Alapi_min, 10, 150, 32, prepare_wseq_for_notes_up_down)">   Dm Alapi   </button> 
+							9.4p
+							<button onclick="schedule_pattern(Dm, min_grades, Alapi_min, 10, 150, 12, prepare_wseq_for_N_notes_123_234)">   Dm Alapi   </button> 
+							19.2
 							<br><button onclick="schedule_pattern_hangközök_horizontal(Dm, min_grades, min_4ths_horizontal, 10, 60, 4, prepare_wseq_for_notes_up_down)">   Dm 4 ─   </button> 
-							10.7							
+							32.1							
 							<button onclick="schedule_pattern_hangközök_vertical(Dm, min_grades, min_4ths_vertical, 10, 110, 8, prepare_wseq_for_notes_up_down)">   Dm 4 |   </button> 
-							10.2
-							<button onclick="practice_scale16(Diszmp, minp_grades, [0, enya_hb], 150, [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], prepare_wseq_for_notes_up_down)">   D#mp /4   </button> 
-							
-							<br><button onclick="practice_scale_3_notes_by_string(Diszmp, minp_grades, [0, enya_hb], 120,  [10, 10, 10, 0, 0, 0, 0, 0], prepare_wseq_for_notes_up_down)">   D#mp /6   </button> 
+							20.4
 							 
 							
 						</td>
@@ -527,6 +532,8 @@ td {
 				        <button onclick="schedule_practice_ScaleRandomPath(1000 / 8000 * 60, 45, Cp, majp_grades, 0, 24);">Cp</button>
 				54
 				
+				        <button onclick="schedule_practice_ScaleRandomPath(1000 / 8000 * 60, 75, Dmp, minp_grades, 0, 24);">Dmp</button>
+				10
 				
 				<br><br>
 				<br><br>TARGET 0: a megjelenített mintán fe-le skálázás.

@@ -1755,6 +1755,10 @@ function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, sta
 	let startnote = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === 6 && parseInt($(n).attr("coln"), 10) === startcol);
 	//console.log("startnote", startnote);
 	
+	divnotes.forEach(note => {
+		note.css('color', gradecolors[gradescale.indexOf(note.attr("grade"))]);
+	});
+
 	let selectednotes = [];
 	
 	for (let i = 0; i < 5; i++) {
@@ -1765,7 +1769,7 @@ function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, sta
 			let col2 = startcol + pattern[i+1][j];
 			if ( row1 == 2 && row2 == 1) {
 				col1 = startcol + pattern[i+1][j];
-				//col2 = startcol + pattern[i+2][j];				
+				col2 = startcol + pattern[i+2][j];				
 			}
 
 			// Use row and col variables here
@@ -1774,11 +1778,11 @@ function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, sta
 				// Use the note element
 				selectednotes.push(note);
 			}			
-			/*note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row2 && parseInt($(n).attr("coln"), 10) === col2);
+			note = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === row2 && parseInt($(n).attr("coln"), 10) === col2);
 			if (note) {
 				// Use the note element
-				selectednotes.push(note);
-			}*/
+				selectednotes.push(note);				
+			}
 		}
 	}
 	
@@ -1850,6 +1854,7 @@ function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, start
 	global_tickdiv = 2;
 	global_beatdiv = 4;
 }
+
 
 function schedule_pattern_roots(rootnote, bpm, repeat) {
 	tick_bpm = bpm;
