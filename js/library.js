@@ -37,6 +37,7 @@ var global_chordfiles = {
 	"F": new Audio("assets/F.wav"),
 	"Fisz": new Audio("assets/Gb.wav"),
 };
+var global_introcount = 4;
 var enya_hb = 24;
 var C, D, E, F, G, A, H = 0;
 var Cp, Dp, Ep, Fp, Gp, Ap, Hp = 0;
@@ -55,12 +56,18 @@ const global_frets_for_3notes_scale = {
 	"Amp": { "frets":  [0, 2, 4, 7, 9, 12, 14, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
+	"Hmp": { "frets":  [0, 2, 4, 7, 9, 12, 14, 17, 19],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
+		},
 	"Cp": { "frets": [0, 3, 5, 8, 10, 12, 15, 17, 20],  //, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0] //, 0]
 		},
 	
 	"D": { "frets": [0, 2, 3, 5, 7, 9, 10, 12, 14, 15, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		},
+	"Dp": { "frets": [0, 2, 5, 7, 10, 12, 14, 17, 19],  //, 19],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0] //, 0]
 		},
 	"Dm": { "frets": [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -88,8 +95,11 @@ const global_frets_for_3notes_scale = {
 	"Gbp": { "frets": [2, 4, 6, 9, 11, 14, 16],  //, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0] //, 0]
 		},
-	"G": { "frets": [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19],
+	/*"G": { "frets": [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		}*/
+	"Gp": { "frets": [0, 3, 5, 7, 10, 12, 15, 17],  //, 19],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0] //, 0]
 		}
 };
 
@@ -99,6 +109,9 @@ const global_frets_for_scale16 = {
 	},
 	"Cp": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+		},
+	"Dp": { "frets":  [0, 3, 5, 7, 10, 12, 15, 17, 19, 22],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
 	"Dm": { "frets": [1, 1, 3, 5, 5, 8, 10, 13, 13, 15, 17, 17, 20, 22, 22],
 			"startindex": [0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1]
@@ -124,9 +137,15 @@ const global_frets_for_scale16 = {
 	"Gbp": { "frets": [2, 4, 7, 9, 11, 14, 16, 19, 21],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	},
+	"Gp": { "frets": [0, 3, 5, 8, 10, 12, 15, 17, 20, 22],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	},
 	"Amp": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
-	}
+	},
+	"Hmp": { "frets":  [0, 3, 5, 7, 10, 12, 15, 17, 19, 22],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	},
 };
 
 var Cb = ['Cb', 'Db', 'Eb', 'Fb', 'Gb', 'Ab', 'Bb'];
@@ -165,6 +184,7 @@ var CmU = ['C', 'D', 'Eb', 'F', 'Gb', 'G', 'Ab', 'Bb'];
 var Db = ['Db', 'Eb', 'F', 'Gb', 'Ab', 'Bb', 'C'];
 var Dbp = ['Db', 'Eb', 'F', 'Ab', 'Bb'];
 var D = ['D', 'E', 'F#', 'G', 'A', 'H', 'C#'];
+var Dp = ['D', 'E', 'F#', 'A', 'H'];
 var Dm = ['D', 'E', 'F', 'G', 'A', 'Bb', 'C'];
 var Dmp = ['D', 'F', 'G', 'A', 'C'];
 var Disz_only = ['D#'];
@@ -211,6 +231,7 @@ var Bb = ['Bb', 'C', 'D', 'Eb', 'F', 'G', 'A'];
 var H = ['H', 'C#', 'D#', 'E', 'F#', 'G#', 'A#'];
 var Hp = ['H', 'C#', 'D#', 'F#', 'G#'];
 var Hm = ['H', 'C#', 'D', 'E', 'F#', 'G', 'A'];
+var Hmp = ['H', 'D', 'E', 'F#', 'A'];
 var allnotes = ['C', 'D', 'E', 'F', 'G', 'A', 'H', 'C', 'C#', 'D#', 'F#', 'G#', 'A#', 'Cb', 'Db', 'Eb', 'Gb', 'Ab', 'Bb'];
 var sharps = ['C#', 'D#', 'F#', 'G#', 'A#'];
 var flats = ['Db', 'Eb', 'Gb', 'Ab', 'Bb'];
@@ -248,6 +269,16 @@ var global_last_memorize_params = {
 	string_to: 0
 }
 
+/*let colors = ['blue', 'orange', 'cyan', 'red', 'lightgreen'];
+for (let i = 0; i < 5; i++) {
+	if (i === 0) continue;
+	random = Math.floor(Math.random() * colors.length);
+	gradecolors[i] = colors[random];
+	
+	colors.splice(random, 1);			
+}
+gradecolors[0] = "white";*/
+
 function calc_to_walkn(notes, repeat = global_walking_repeat) {
     to = global_frettimeout + global_frettimeout * (notes.length - 1);
     if (repeat != 0 ) to = to * repeat + (global_intro_repeat ) * global_frettimeout;
@@ -263,6 +294,10 @@ function display_notes_actual(notes) {
 	$.each(notes, function(i, note) {
 		display_note_actual(note);
 	});	
+}
+
+function display_notes_actual_randomly(notes) {
+		
 }
 
 function displayNotes(scale, gradescale) {
@@ -299,7 +334,8 @@ function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24
 		}
 		note.attr('actual', to_display_as_note);
 	
-		note.css('color', gradecolors[gradescale.indexOf(grade)]);
+		note.css('color', note.attr("gradecolor"));		
+		
 	});
 
 	return notes;
@@ -1258,8 +1294,50 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 	} else {
 		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
-	display_notes_actual(divnotespathArr);
-	
+	// display_notes_actual(divnotespathArr);
+	//display_notes_actual_randomly(divnotespathArr);
+
+	const shuffledNotes = [...divnotespathArr].sort(() => Math.random() - 0.5);
+
+	$.each(shuffledNotes, function(i, note) {
+		display_note_actual(note);
+	});
+	global_frettimeout = 500;
+	global_introcount = 0;
+	//walk_seq_ntimes(shuffledNotes.slice(0, 3), 1);
+	//timerWatch(8*250);
+
+	const allowedSet = new Set(['I', '-']);
+	let ms = 250;
+	let intro = "";
+	let patterns = [ "I-I- -II- ---- ----",
+					 "I-I- -II- ---- ----"];
+	let pattern = patterns[Math.floor(Math.random() * patterns.length)];
+
+	const filteredString = (intro + pattern)
+		.split('')
+		.filter(char => allowedSet.has(char)) // Keep only allowed characters
+		.join(''); // Join the array back into a string
+		
+		let j=0;
+		for(i=0; i<filteredString.length; i=i+1) {
+			//one for the notes to display
+			if (filteredString[i%8] == "I") {
+				
+				setTimeout( function(note) { 
+					
+					updateNoteText(note,  note.attr('actual'));
+					metronome_tick();
+				}, i*ms, shuffledNotes[j++]);				
+			}
+			if (i==8) {				
+				setTimeout( function() { 					
+					play_by_conditions();
+				}, 8*ms);				
+			}
+
+			if ( j>=4 ) j=0;			
+	}	
 }
 
 function practice_ScaleRandomCombined(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1296,7 +1374,7 @@ function practice_RandomNoteBetweenFrets(fret_from, fret_to, string_from = 1, st
 
 
 //function play_rpattern(pattern, intro = "IIII IIII I--- I---") {
-function play_rpattern(pattern, intro = "", ms = 60 / 60 * 250) {
+function play_rpattern(pattern, intro = "", ms = 60 / 60 * 250, tickFn = () => metronome_tick()) {
 	const allowedSet = new Set(['I', '-']);
 
 	const filteredString = (intro + pattern)
@@ -1306,7 +1384,7 @@ function play_rpattern(pattern, intro = "", ms = 60 / 60 * 250) {
 
 		for(i=0; i<filteredString.length; i=i+1) {
 			if (filteredString[i] == "I") {
-				setTimeout( function() { metronome_tick();}, i*ms);
+				setTimeout( function() { tickFn();}, i*ms);
 			}
 	}
 }
@@ -1339,7 +1417,7 @@ function select_scalebox_notes(scale, gradescale, fret, index, filtered_startind
 	return selectedNotes;
 }
 
-function prepare_wseq_for_notes_up_down(notes) {
+	function prepare_wseq_for_notes_up_down(notes) {
 	console.log("notes", notes);
 	return notes.concat(notes.slice().reverse());
 }
@@ -1586,7 +1664,36 @@ function scale_3_notes_by_string(scale, gradescale=0, fret_from=0, fret_to=24, s
 
 function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string_from = 1, string_to = 6) {
 	let fret_to2;
-	var notes = new Array();	
+	var notes = new Array();
+	
+	const grade = note.attr("grade");
+	
+	let colors = ['blue', 'orange', 'cyan', 'red', 'lightgreen'];
+
+	function getNoteGradeColor(grade) {
+		if (grade == "1") {				
+			return "white";
+		} else if (grade == "2") {
+			return "grey";
+		}
+		else if (grade == "3" || grade == "b3" || grade == "3b") {
+			return "green";
+		}
+		else if (grade == "4") {
+			return "cyan";
+		}
+		else if (grade == "5") {
+			return "blue";
+		}	
+		else if (grade == "6" || grade == "6b") {
+			return "pink";
+		}
+		else  if (grade == "7" || grade == "maj7") {
+			return "yellow";
+		}
+	}
+
+	
 	//for(var i=string_from-1; i<string_to; i++) {
 	for(var i=string_to-1; i>=string_from-1; i--) {
 		if (fret_to > 24 && fret_from >= 21 && ([Cp, C, Gp, G].includes(scale))  && (i==0)) {
@@ -1634,6 +1741,7 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 						neck[i][j].attr("grade", '');
 					}
 					//console.log("DEBUG#1", neck[i][j]);
+					neck[i][j].attr("gradecolor", getNoteGradeColor(neck[i][j].attr("grade")));
 					notes.push(neck[i][j]);
 				}					
 				else if (necknotes_flat[i][j] == scale[k]) {
@@ -1645,6 +1753,7 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 						neck[i][j].attr("grade", '');
 					}
 					//console.log("DEBUG#2", neck[i][j].attr("grade"));
+					neck[i][j].attr("gradecolor", getNoteGradeColor(neck[i][j].attr("grade")));
 					notes.push(neck[i][j]);
 				}
 				else if (necknotes_main[i][j] == scale[k]) {
@@ -1661,6 +1770,7 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 						neck[i][j].attr("grade", '');
 					}
 					//console.log("DEBUG#3", neck[i][j]);
+					neck[i][j].attr("gradecolor", getNoteGradeColor(neck[i][j].attr("grade")));
 					notes.push(neck[i][j]);
 				}				
 			}
@@ -1702,6 +1812,9 @@ function schedule_pattern(scale, gradescale, pattern, startcol, bpm, repeat, wal
 	$("#infobox3").html(bpm + " beat bpm");
 	$("#infobox4").html(tick_bpm + " tick bpm");
 	let divnotes = scale_on_fret2fret(scale, gradescale);
+	divnotes.forEach(note => {
+		note.css('color', note.attr("gradecolor"));
+	});
 	let tdnotes = $(divnotes).map(function() {
     	return $(this).closest('td').get(0);
 	}).get();
@@ -1738,7 +1851,7 @@ function schedule_pattern(scale, gradescale, pattern, startcol, bpm, repeat, wal
 	timerWatch(calc_to_walkn(seq, repeat)/1000);
 	set_gbgchord(scale);
 	global_tickdiv = 2;
-	global_beatdiv = 4;
+	global_beatdiv = 8;
 
 }
 
@@ -1756,7 +1869,7 @@ function schedule_pattern_hangközök_horizontal(scale, gradescale, pattern, sta
 	//console.log("startnote", startnote);
 	
 	divnotes.forEach(note => {
-		note.css('color', gradecolors[gradescale.indexOf(note.attr("grade"))]);
+		note.css('color', note.attr("gradecolor"));		
 	});
 
 	let selectednotes = [];
@@ -1813,7 +1926,10 @@ function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, start
 	//console.log("tdnotes", tdnotes);
 	let startnote = tdnotes.find(n => parseInt($(n).attr("rown"), 10) === 6 && parseInt($(n).attr("coln"), 10) === startcol);
 	//console.log("startnote", startnote);
-	
+	let notes = scale_on_fret2fret(scale, gradescale);
+	notes.forEach(note => {
+		note.css('color', note.attr("gradecolor"));		
+	});
 	let selectednotes = [];
 	
 	for (let i = 0; i < pattern.length; i++) {
@@ -1826,6 +1942,7 @@ function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, start
 			if (note) {
 				// Use the note element
 				selectednotes.push(note);
+				
 			}
 			row = 5-j;
 			col = startcol + pattern[i][j+1];
@@ -2004,13 +2121,13 @@ function schedule_practice_ScaleRandomPath(beatbpm , totalc, scale, gradescale, 
 	//rpattern = rpatterns[Math.floor(Math.random() * rpatterns.length)];
 	rpattern = rpatterns[0];
 
-	let currentInterval3 = mysetInterval(play_rpattern, interval, rpattern, "", tick_ms);
+	//let currentInterval3 = mysetInterval(play_rpattern, interval, rpattern, "", tick_ms);  // -> egyenletes metronóm 0-s mintával
 	$("#infobox5").html(rpattern);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
     //stopinterval(currentInterval2, duration_ms);
-	stopinterval(currentInterval3, duration_ms);
+	//stopinterval(currentInterval3, duration_ms);
 	if ( timerWatch_duration == 0 ) {
 		timerWatch(duration_ms/1000);
 	} else if ( timerWatch_duration != -1){
@@ -2070,7 +2187,7 @@ function set_gbgchord(scale) {
     const chordMap = new Map([
         [[Am, Amp, "Am", "Amp"], "Am"],
         [[C, C_triad, Cp, "C", "Cp"], "C"],
-        [[D, "D"], "D"],
+        [[D, Dp, "D", "Dp"], "D"],
         [[Dm, Dmp, "Dm", "Dmp"], "Dm"],
         [[Diszm, Diszmp, "Diszm", "Diszmp"], "Diszm"],
         [[H, Hp, "H", "Hp"], "H"],
@@ -2082,7 +2199,7 @@ function set_gbgchord(scale) {
         [[Fisz, Fiszp, "Fiszp", "Fisz"], "Gb"],
         [["flats"], "Gb"],
         [["sharps"], "Diszm"],
-        [[Hm, "Hm"], "Hm"]
+        [[Hm, Hmp, "Hm", "Hmp"], "Hm"]
     ]);
 
     //let found = false;
@@ -2222,7 +2339,7 @@ function schedule_noteupdate_and_play(note, delay, half_tick = global_half_tick,
 	}, delay);
 }
 
-function play_by_conditions(tickcounter, inhibit_bgchord) {
+function play_by_conditions(tickcounter = 0, inhibit_bgchord = false) {
 	if (global_bgchord && !inhibit_bgchord && tickcounter % global_beatdiv === 0) {
 		play_chord(global_bgchord);
 	}
@@ -2230,7 +2347,6 @@ function play_by_conditions(tickcounter, inhibit_bgchord) {
 
 function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = global_half_tick) {
 	const period = global_frettimeout;
-	const introCount = 4;
 	const totalNotes = notes.length;
 	/*const walkTime = reverse
 		? period * (2 * totalNotes)
@@ -2238,7 +2354,7 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 	const walkTime = period * totalNotes;
 
 	// Play intro notes
-	for (let i = 0; i < introCount; i++) {
+	for (let i = 0; i < global_introcount; i++) {
 		schedule_noteupdate_and_play(notes[0], i * period, false, i, true);
 	}
 	tickcounter = 0;
@@ -2270,7 +2386,7 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 				}, period / 2);
 			}
 			
-		}, walkTime * j + (introCount - 1) * period);
+		}, walkTime * j + (global_introcount - 1) * period);
 	}
 	global_walkcounter = 1;
 }
