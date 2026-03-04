@@ -1310,9 +1310,21 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 	const allowedSet = new Set(['I', '-']);
 	let ms = 250;
 	let intro = "";
-	let patterns = [ "I-I- -II- ---- ----",
-					 "I-I- -II- ---- ----"];
+	let patterns = [ 
+					"I-I- -II- ---- ----",
+					"I-I- III- ---- ----",
+					"II-I -II- ---- ----",
+					"--II II-I ---- ----",
+					"-II- I--I ---- ----",
+					"-II- I-II ---- ----",
+					"-II- IIII ---- ----",
+					"I-I- --II ---- ----",
+					"II-- -II- ---- ----",
+					"I-I- IIII ---- ----",
+					"III- -II- ---- ----",			
+				];
 	let pattern = patterns[Math.floor(Math.random() * patterns.length)];
+	$("#infobox5").html(pattern);
 
 	const filteredString = (intro + pattern)
 		.split('')
@@ -2122,7 +2134,7 @@ function schedule_practice_ScaleRandomPath(beatbpm , totalc, scale, gradescale, 
 	rpattern = rpatterns[0];
 
 	//let currentInterval3 = mysetInterval(play_rpattern, interval, rpattern, "", tick_ms);  // -> egyenletes metronóm 0-s mintával
-	$("#infobox5").html(rpattern);
+	//$("#infobox5").html(rpattern);
 	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
 	set_gbgchord(scale);
 	stopinterval(currentInterval, duration_ms);
