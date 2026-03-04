@@ -1243,7 +1243,7 @@ function practice_ScaleRandomNote(scale, gradescale, fret_from, fret_to, string_
 }
 
 function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
-	let divnotes = scale_on_fret2fret(scale, gradescale);
+	let divnotes = scale_on_fret2fret(scale, gradescale, fret_from, fret_to);
 	let tdnotes = $(divnotes).map(function() {
     	return $(this).closest('td').get(0);
 	}).get();
@@ -1324,6 +1324,7 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 					"III- -II- ---- ----",			
 				];
 	let pattern = patterns[Math.floor(Math.random() * patterns.length)];
+	pattern = patterns[8];
 	$("#infobox5").html(pattern);
 
 	const filteredString = (intro + pattern)
@@ -2000,7 +2001,7 @@ function schedule_pattern_roots(rootnote, bpm, repeat) {
     	return $(this).closest('td').get(0);
 	}).get();
 
-	console.log("tdnotes", tdnotes);
+	//console.log("tdnotes", tdnotes);
 	tdnotes.sort((a, b) => {
 		const colnA = parseInt($(a).attr("coln"), 10);
 		const colnB = parseInt($(b).attr("coln"), 10);
@@ -2197,7 +2198,7 @@ function set_gbgchord(scale) {
     global_bgchord = 0;
 	// Map scale references to chord names
     const chordMap = new Map([
-        [[Am, Amp, "Am", "Amp"], "Am"],
+        [[Am, Amp, A, "A", "Am", "Amp"], "Am"],
         [[C, C_triad, Cp, "C", "Cp"], "C"],
         [[D, Dp, "D", "Dp"], "D"],
         [[Dm, Dmp, "Dm", "Dmp"], "Dm"],
