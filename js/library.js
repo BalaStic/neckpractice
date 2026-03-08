@@ -29,6 +29,7 @@ var global_chordfiles = {
 	"Dm": new Audio("assets/Dm.wav"),
 	"Diszm": new Audio("assets/Diszm_low.wav"),
 	"Ebm": new Audio("assets/Diszm_low.wav"),
+	"E": new Audio("assets/E.wav"),
 	"Em": new Audio("assets/Em.wav"),
 	"Gb": new Audio("assets/Gb.wav"),
 	"G": new Audio("assets/G.wav"),
@@ -341,8 +342,12 @@ function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24
 	return notes;
 }
 
-function display_note_actual(note) {
-	note.text("──── " + note.attr("actual") + " ────");
+function display_note_actual(note, note_or_grade = global_notes_andor_grades) {
+	if (note_or_grade == "notes_only") {
+		note.text("──── " + note.attr("actual") + " ────");
+	} else if (note_or_grade == "grades_only") {
+		note.text("──── " + note.attr("grade") + " ────");
+	};
 }
 
 function display_note_note(note) {
@@ -1286,14 +1291,14 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 	drawStrings();
 	prepare_notes_actual(scale, gradescale);	
 	
-	if (gradescale == "coln" ) {		
+	/*if (gradescale == "coln" ) {		
 		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	}
 	else if (gradescale == "coln_note" ) {		
 		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("coln") + ' ' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
 	} else {
 		getRandomNote_ShowPlay(divnotespathArr, scale, gradescale, fret_from, fret_to, string_from, string_to, note => '' + note.attr("note"), insert_rootnote_2nd = global_insert_rootnote_2nd);
-	}
+	}*/
 	// display_notes_actual(divnotespathArr);
 	//display_notes_actual_randomly(divnotespathArr);
 
@@ -1311,46 +1316,52 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 	let ms = 250;
 	let intro = "";
 	let patterns = [ 
+					"---- ---I ---- ----",
 					"I-I- -II- ---- ----",
+					"II-- -II- ---- ----",
+					"-II- I--I ---- ----",
 					"I-I- III- ---- ----",
 					"II-I -II- ---- ----",
 					"--II II-I ---- ----",
-					"-II- I--I ---- ----",
 					"-II- I-II ---- ----",
 					"-II- IIII ---- ----",
-					"I-I- --II ---- ----",
-					"II-- -II- ---- ----",
+										
 					"I-I- IIII ---- ----",
 					"III- -II- ---- ----",			
 				];
 	let pattern = patterns[Math.floor(Math.random() * patterns.length)];
-	pattern = patterns[8];
+	pattern = patterns[Math.floor(Math.random() * 3)];
+	pattern = patterns[4];
+
 	$("#infobox5").html(pattern);
 
 	const filteredString = (intro + pattern)
 		.split('')
 		.filter(char => allowedSet.has(char)) // Keep only allowed characters
 		.join(''); // Join the array back into a string
+	
+	let tickcount = filteredString.split('').filter(char => char === 'I').length
 		
-		let j=0;
-		for(i=0; i<filteredString.length; i=i+1) {
-			//one for the notes to display
-			if (filteredString[i%8] == "I") {
-				
-				setTimeout( function(note) { 
-					
-					updateNoteText(note,  note.attr('actual'));
-					metronome_tick();
-				}, i*ms, shuffledNotes[j++]);				
-			}
-			if (i==8) {				
-				setTimeout( function() { 					
-					play_by_conditions();
-				}, 8*ms);				
-			}
+	let j=0;
+	for(i=0; i<filteredString.length; i=i+1) {
+		//one for the notes to display
+		if (filteredString[i%8] == "I") {
+			
+			setTimeout( function(note) { 				
+				updateNoteText(note,  note.attr('actual'));
+				metronome_tick();
+			}, i*ms, shuffledNotes[j++]);				
+		}
+		if (i==8) {				
+			setTimeout( function() { 					
+				play_by_conditions();
+			}, 8*ms);				
+		}
 
-			if ( j>=4 ) j=0;			
+		if ( j>= tickcount  ) j=0;			
+
 	}	
+	
 }
 
 function practice_ScaleRandomCombined(scale, gradescale, fret_from, fret_to, string_from = 1, string_to = 6) {
@@ -1674,6 +1685,38 @@ function scale_3_notes_by_string(scale, gradescale=0, fret_from=0, fret_to=24, s
 	return notes;
 }
 
+function schedule_rootstar(bpm, totalc, scale, gradescale, timerWatch_duration = 0) {
+	tick_bpm = 4 * bpm;
+	tick_ms = 60 / tick_bpm * 1000;
+	$("#infobox3").html(bpm + " beat bpm");
+	$("#infobox4").html(tick_bpm / 2 + " tick bpm");
+	const now = new Date();
+	const formattedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
+	//console.log(formattedTime);
+	//console.log;
+	interval = 60 / bpm * 1000;
+	global_frettimeout = interval;
+	duration_ms = totalc * interval;
+	displayNotes(scale, gradescale);
+	
+	set_gbgchord(scale);
+	let currentInterval3 = mysetInterval(play_rpattern, interval, "I--- I--- I--- I---", "", tick_ms);
+	let currentInterval4 = mysetInterval(play_by_conditions, interval*4);
+		
+	if ( gradescale == empty_grades ) global_insert_rootnote_2nd = false;
+	
+
+	stopinterval(currentInterval3, duration_ms);
+	stopinterval(currentInterval4, duration_ms);
+	if ( timerWatch_duration == 0 ) {
+		timerWatch(duration_ms/1000);
+	} else if ( timerWatch_duration != -1){
+		//console.log("call timerWatch(",timerWatch_duration, ")");
+		timerWatch(timerWatch_duration);
+	}	
+}
+
+
 
 function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string_from = 1, string_to = 6) {
 	let fret_to2;
@@ -1986,7 +2029,7 @@ function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, start
 }
 
 
-function schedule_pattern_roots(rootnote, bpm, repeat) {
+function schedule_pattern_roots(rootnote, bgchord, bpm, repeat) {
 	tick_bpm = bpm;
 	tick_ms = 60 / tick_bpm * 1000;
 	$("#infobox3").html(bpm + " beat bpm");
@@ -2026,7 +2069,7 @@ function schedule_pattern_roots(rootnote, bpm, repeat) {
 	let seq = prepare_wseq_for_notes_up_down(divselectednotes);
 	walk_seq_ntimes(seq, repeat);	
 	timerWatch(calc_to_walkn(seq, repeat)/1000);
-	set_gbgchord(rootnote);
+	set_gbgchord(bgchord);
 	global_tickdiv = 1;
 }
 
@@ -2203,7 +2246,9 @@ function set_gbgchord(scale) {
         [[D, Dp, "D", "Dp"], "D"],
         [[Dm, Dmp, "Dm", "Dmp"], "Dm"],
         [[Diszm, Diszmp, "Diszm", "Diszmp"], "Diszm"],
-        [[H, Hp, "H", "Hp"], "H"],
+        [[E, Ep, "E", "Ep"], "E"],
+		[[Em, Emp, "Em", "Emp"], "Em"],
+		[[H, Hp, "H", "Hp"], "H"],
         [[Em, Emp, "Em", "Emp"], "Em"],
         [[Ebm, Ebmp, "Ebm", "Ebmp"], "Ebm"],
         [[F, Fp, F_1_3_5_7, "F", "Fp"], "F"],
