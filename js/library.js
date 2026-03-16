@@ -1730,7 +1730,7 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 		if (grade == "1") {				
 			return "white";
 		} else if (grade == "2") {
-			return "grey";
+			return "silver";
 		}
 		else if (grade == "3" || grade == "b3" || grade == "3b") {
 			return "green";
@@ -1742,7 +1742,7 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 			return "blue";
 		}	
 		else if (grade == "6" || grade == "6b") {
-			return "pink";
+			return "magenta";
 		}
 		else  if (grade == "7" || grade == "maj7") {
 			return "yellow";
