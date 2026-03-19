@@ -281,17 +281,14 @@ td {
 				</script>
 			</td>
 			<td id="infobox5" width="450px" style="color: green;">
-				<div style="max-height: 160px; overflow-y: auto; border: 1px solid #ccc; padding: 8px; background: #f9f9f9; color:black">
+				<div style="max-height: 160px; overflow-y: auto; border: 0px solid #ccc; padding: 8px; background: #f9f9f9; color:black">
 					<span style="color:green">infobox 5</span>
 					<p style="color:black;">
 						<div style="font-family: 'Courier New', Courier, monospace;">
-								kvartok gyakorlása - 1; C
-							<br>
-							<br>C F D G E A F H | G C A D H E C F
-							<br>F H G C A D H E | C F D G E A F H
-							<br>H E C F D G E A | F H G C A D H E
-							<br>E A F H G C A D | H E C F D G E A
-							<br>G C A D H E C F | D G E A F H G C						
+							ismétlő, rögzítő gyakorlatok: 	
+							<br> fejből 10 percig kvartok gyakorlása - 1,2
+							
+							
 						</div>
 					</p>
 				</div>
@@ -582,35 +579,24 @@ td {
 						</tr>
 						<tr>					
 							<td>	
-								<button onclick="schedule_pattern_roots('C', 'C',60, 4)">   C root   </button>
-								6.4
+								<button onclick="schedule_pattern_roots('C', maj_grades,'C',60, 4)">   C root   </button>
+								16.6
 								
-								<button onclick="schedule_rootstar(80, 800, Em, min_grades, timerWatch_duration = 0);">   Em rootstar   </button>
-								
+								<button onclick="schedule_rootstar(80, 800, C, maj_grades, timerWatch_duration = 0);">   C rootstar   </button>
+								10
 
-								<br><button onclick="practice_scale16(C, majp_grades,[0, enya_hb], 160,  8, prepare_wseq_for_notes_up_down)">   Cp /4   </button> 
+								<br><button onclick="practice_scale16(C, maj_grades,[0, enya_hb], 260,  2, prepare_wseq_for_N_notes_1324)">   C 13 24   </button> 
+								14.6									
+								
+								<button onclick="practice_scale16(C, maj_grades,[0, enya_hb], 300, 2, prepare_wseq_for_N_notes_123_234)">   C 123 234   </button>
+								18.9
+
+								<br><button onclick="practice_scale_3_notes_by_string(Cp, majp_grades,[0, enya_hb], 130,  4, prepare_wseq_for_notes_up_down)">   Cp /6   </button> 
+								22
+								
 															
-								
-								<button onclick="practice_scale16(Emp, minp_grades,[0, enya_hb], 170, 3, prepare_wseq_for_N_notes_123_234)">   Emp /4   </button>
-								
-								
-								<button onclick="practice_scale16(Emp, minp_grades,[0, enya_hb], 130,  3, prepare_wseq_for_N_notes_1324)">   Emp /4   </button> 
-															
-								
-								<br><button onclick="practice_scale_3_notes_by_string(Cp, majp_grades,[0, enya_hb], 110,  4, prepare_wseq_for_notes_up_down)">   Cp /6   </button> 
-								11
-								
-								<button onclick="practice_scale_3_notes_by_string(Emp, minp_grades,[0, enya_hb], 140,  2, prepare_wseq_for_N_notes_123_234)">   Emp /6   </button> 
-								
-								
-								<button onclick="practice_scale_3_notes_by_string(Emp, minp_grades,[0, enya_hb], 120,  2, prepare_wseq_for_N_notes_1324)">   Emp /6   </button> 
-								
-								
-								<br><button onclick="schedule_pattern(Em, min_grades, Alapi_min, 0, 150, 34, prepare_wseq_for_notes_up_down)">   Em Alapi   </button> 
-								
-								
-								<button onclick="schedule_pattern(Em, min_grades, Alapi_min, 0, 200, 10, prepare_wseq_for_N_notes_123_234)">   Em Alapi   </button> 
-													
+								<br><button onclick="schedule_pattern(C, maj_grades, Alapi_maj, 8, 200, 34, prepare_wseq_for_notes_up_down)">   C Alapi   </button> 
+								7.5
 								
 								
 								<br><button onclick="schedule_pattern_hangközök_horizontal(C, maj_grades, maj_4ths_horizontal, 8, 60, 4, prepare_wseq_for_notes_up_down)">   C 4 ─   </button> 
@@ -620,19 +606,30 @@ td {
 								61.2
 							</td>
 							<td>
-								<button onclick="schedule_pattern_roots('A', 60, 5)">   A roots   </button>
-								<br><button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200, [4, 4, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4], prepare_wseq_for_notes_up_down)">   Amp /4   </button> 
-								5.5
+								<button onclick="schedule_pattern_roots('A', min_grades ,'A',60, 4)">   A root   </button>
+								19.8
 								
-								<button onclick="practice_scale16(Amp, minp_grades, [0, enya_hb], 200,[4, 4, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4], prepare_wseq_for_N_notes_123_234)">   Amp /4   </button> 
-								
-								<br><button onclick="practice_scale_3_notes_by_string(Amp, minp_grades, [0, enya_hb], 110, 4, prepare_wseq_for_notes_up_down)">   Amp /6   </button> 
-								
-								<button onclick="practice_scale_3_notes_by_string(Amp, minp_grades, [0, enya_hb], 165, 3, prepare_wseq_for_N_notes_123_234)">   Amp /6   </button> 
-								
-								<br><button onclick="schedule_pattern(Am, min_grades, Alapi_min, 5, 160, 14, prepare_wseq_for_N_notes_123_234)">   Am Alapi   </button> 
+								<button onclick="schedule_rootstar(80, 800, A, min_grades, timerWatch_duration = 0);">   A rootstar   </button>
 								
 
+								<br><button onclick="practice_scale16(Am, min_grades,[0, enya_hb], 260,  2, prepare_wseq_for_N_notes_1324)">   Am 13 24   </button> 
+								16.8								
+								
+								<button onclick="practice_scale16(Am, min_grades,[0, enya_hb], 300, 2, prepare_wseq_for_N_notes_123_234)">   Am 123 234   </button>
+								21.6
+
+								<br><button onclick="practice_scale_3_notes_by_string(Cp, majp_grades,[0, enya_hb], 120,  4, prepare_wseq_for_notes_up_down)">   Cp /6   </button> 
+								
+								
+															
+								<br><button onclick="schedule_pattern(C, maj_grades, Alapi_maj, 8, 200, 34, prepare_wseq_for_notes_up_down)">   C Alapi   </button> 
+								
+								
+								
+								<br><button onclick="schedule_pattern_hangközök_horizontal(C, maj_grades, maj_4ths_horizontal, 8, 60, 4, prepare_wseq_for_notes_up_down)">   C 4 ─   </button> 
+								
+
+								<button onclick="schedule_pattern_hangközök_vertical(C, maj_grades, maj_4ths_vertical, 8, 110, 8, prepare_wseq_for_notes_up_down)">   C 4 |   </button> 
 								
 							</td>
 						</tr>

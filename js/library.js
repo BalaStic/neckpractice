@@ -105,9 +105,12 @@ const global_frets_for_3notes_scale = {
 };
 
 const global_frets_for_scale16 = {
-	"C": { "frets": [0, 0, 3, 5, 7, 8, 10, 12, 12, 15, 17, 20, 20, 22],
+	/*"C": { "frets": [0, 0, 3, 5, 7, 8, 10, 12, 12, 15, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0]
-	},
+	},*/
+	"C": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+		},
 	"Cp": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 		},
@@ -140,6 +143,9 @@ const global_frets_for_scale16 = {
 	},
 	"Gp": { "frets": [0, 3, 5, 8, 10, 12, 15, 17, 20, 22],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	},
+	"Am": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},
 	"Amp": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
@@ -310,6 +316,29 @@ function displayNotes(scale, gradescale) {
 		//updateNoteText(note);
 		display_note_actual(note);
 	});	
+}
+
+function getNoteGradeColor(grade) {
+		if (grade == "1") {				
+			return "white";
+		} else if (grade == "2") {
+			return "silver";
+		}
+		else if (grade == "3" || grade == "b3" || grade == "3b") {
+			return "green";
+		}
+		else if (grade == "4") {
+			return "cyan";
+		}
+		else if (grade == "5") {
+			return "blue";
+		}	
+		else if (grade == "6" || grade == "6b") {
+			return "magenta";
+		}
+		else  if (grade == "7" || grade == "maj7") {
+			return "yellow";
+		}
 }
 
 function prepare_notes_actual(scale, gradescale = 0, fret_from = 0, fret_to = 24, string_from = 1, string_to = 6, notes_andor_grades = global_notes_andor_grades) {
@@ -1125,6 +1154,7 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	});
 	timerWatch((nextstart)/1000);
 	global_tickdiv = 4;
+	if ( bpm > 180 ) global_beatdiv = 8;
 }
 
 function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, walking_seq_preparer = function() { return this; }	) {
@@ -1725,30 +1755,6 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 	const grade = note.attr("grade");
 	
 	let colors = ['blue', 'orange', 'cyan', 'red', 'lightgreen'];
-
-	function getNoteGradeColor(grade) {
-		if (grade == "1") {				
-			return "white";
-		} else if (grade == "2") {
-			return "silver";
-		}
-		else if (grade == "3" || grade == "b3" || grade == "3b") {
-			return "green";
-		}
-		else if (grade == "4") {
-			return "cyan";
-		}
-		else if (grade == "5") {
-			return "blue";
-		}	
-		else if (grade == "6" || grade == "6b") {
-			return "magenta";
-		}
-		else  if (grade == "7" || grade == "maj7") {
-			return "yellow";
-		}
-	}
-
 	
 	//for(var i=string_from-1; i<string_to; i++) {
 	for(var i=string_to-1; i>=string_from-1; i--) {
@@ -1757,6 +1763,9 @@ function scale_on_fret2fret(scale, gradescale=0, fret_from=0, fret_to=24, string
 		}
 		else if (fret_to > 24 && fret_from >= 21 && (scale == Cp || scale == C) && (i==4)) {
 			fret_from2 = fret_from - 1  ;
+		}
+		else if ( (scale == Cp || scale == C) && (i==1)) {
+			fret_from2 = fret_from + 1  ;
 		}
 		else if (fret_to > 24 && fret_from >= 21 && (scale == Fp || scale == F) && (i==4 || i==0) ) {
 			fret_from2 = fret_from - 1 ;
@@ -2029,17 +2038,21 @@ function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, start
 }
 
 
-function schedule_pattern_roots(rootnote, bgchord, bpm, repeat) {
+function schedule_pattern_roots(rootnote, gradescale, bgchord, bpm, repeat) {
 	tick_bpm = bpm;
 	tick_ms = 60 / tick_bpm * 1000;
 	$("#infobox3").html(bpm + " beat bpm");
 	$("#infobox4").html(tick_bpm + " tick bpm");
-	let divnotes = scale_on_fret2fret(scaleDict[rootnote], maj_grades);
+	let divnotes = scale_on_fret2fret(scaleDict[rootnote], gradescale);
 	
-	//console.log("tdnotes", tdnotes);
-	//let rootnotes = divnotes.find(n => $(n).attr("note") == rootnote );
-	let rootnotes = divnotes.filter(n => $(n).attr("note") === rootnote);
-	
+	//let rootnotes = divnotes.filter(n => $(n).attr("note") === rootnote);
+	let rootnotes = divnotes.filter(n => $(n).attr("grade") === "1" );
+	let fithnotes = divnotes.filter(n => $(n).attr("grade") === "5" );
+	fithnotes.forEach(note => {
+		note.css('color', note.attr("gradecolor"));
+		note.text("────" + note.attr("note") + "────");
+	});
+
 	let tdnotes = $(rootnotes).map(function() {
     	return $(this).closest('td').get(0);
 	}).get();
@@ -2054,8 +2067,7 @@ function schedule_pattern_roots(rootnote, bgchord, bpm, repeat) {
 	let selectednotes = [];
 	
 	tdnotes.forEach(note => {
-		selectednotes.push(note);
-		//selectednotes.push(note);
+		selectednotes.push(note);		
 	});
 	
 	let divselectednotes = [];
