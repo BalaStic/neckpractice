@@ -717,31 +717,66 @@ function move_up(tr_id) {
 }
 
 function mysetTimeout(callback, delay, ...args) {
-    // Use the native mysetTimeout to execute the callback after the specified delay
-    func = setTimeout(() => callback(...args), delay);
-	global_functions_settimeout.push(func);
-	return func;
+    // Use the native setTimeout to execute the callback after the specified delay.
+    // On iOS/WKWebView a single-shot timer is accurate enough; no drift correction needed.
+    const func = setTimeout(() => callback(...args), delay);
+    global_functions_settimeout.push(func);
+    return func;
 }
 
-/*function mysetInterval(callback, interval, ...args) {
-	callback.apply(null, args); // Call the original callback function
-	func = window.setInterval(function() {
-        callback.apply(null, args); // Call the original callback function
-    }, interval);
-	global_functions_setinterval.push(func);
-	return func;
-}*/
+// --- Self-correcting interval registry (fixes iOS Chrome / WKWebView timer drift) ---
+// setInterval on iOS accumulates unbounded drift because each tick is rescheduled
+// independently with no feedback.  We replace it with a recursive setTimeout that
+// measures actual elapsed time and shrinks / grows the next delay to compensate.
+//
+// Callers still pass the returned virtual ID to native clearInterval() – this works
+// because we shadow window.clearInterval below to intercept those virtual IDs.
+const _myIntervalRegistry = new Map();
+let _myIntervalNextId = Number.MAX_SAFE_INTEGER; // far from real setInterval IDs (1, 2, 3…)
+
+const _nativeClearInterval = window.clearInterval.bind(window);
+window.clearInterval = function (id) {
+    if (_myIntervalRegistry.has(id)) {
+        const entry = _myIntervalRegistry.get(id);
+        entry.cancelled = true;
+        _nativeClearInterval(entry.timeoutId); // cancel the pending recursive step
+        _myIntervalRegistry.delete(id);
+    } else {
+        _nativeClearInterval(id);
+    }
+};
 
 function mysetInterval(callback, interval, ...args) {
-    // Immediately call the function once
+    // Fire once immediately (preserves original behaviour)
     callback(...args);
 
-    const id = setInterval(() => {
-        callback(...args);
-    }, interval);
+    const virtualId = _myIntervalNextId--;
+    const entry = { cancelled: false, timeoutId: null };
+    _myIntervalRegistry.set(virtualId, entry);
 
-    global_functions_setinterval.push(id);
-    return id;
+    // `expected` is the wall-clock time the NEXT tick should fire
+    let expected = Date.now() + interval;
+
+    function step() {
+        if (entry.cancelled) return;
+
+        // How far past the expected time are we?  (positive = late, negative = early)
+        const drift = Date.now() - expected;
+
+        callback(...args);
+
+        expected += interval;
+
+        // Subtract the drift from the next delay so the cadence stays on track.
+        // Clamp to 0 so we never pass a negative value to setTimeout.
+        const nextDelay = Math.max(0, interval - drift);
+        entry.timeoutId = setTimeout(step, nextDelay);
+    }
+
+    entry.timeoutId = setTimeout(step, interval);
+
+    global_functions_setinterval.push(virtualId);
+    return virtualId;
 }
 
 
