@@ -126,15 +126,15 @@ const global_frets_for_scale16 = {
 	"Diszmp": { "frets":  [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},
-	/*"Emp": { "frets":  [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+	"Em": { "frets":  [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
-	},*/
+	},
 	"Emp": { "frets":  [0, 3, 5, 8, 10, 12, 15, 17, 20, 22],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	},
-	/*"Gbp": { "frets": [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
-			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
-	},*/
+	"G": { "frets": [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+	},
 	"Fp": { "frets": [1, 3, 5, 8, 10, 13, 15, 18, 20],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0]
 		},
@@ -257,7 +257,7 @@ var min_4ths_vertical = [[0, 0, 0, 0, 1, 2], [2, 2, 2, 2, 3, 3], [3, 3, 4, 4, 5,
 var scaleDict = {
 	"C": C, "Db": Db, "D": D, "Eb": E, "E": E, "F": F, "Gb": Gb, "G": G, "Ab": Ab, "A": A, "Bb": Bb, "H": H,
 	"Cp": Cp, "Dbp": Dbp, "Dp": Dp, "Ebp": Ep, "Ep": Ep, "Em" : Em, "Fp": Fp, "Gbp": Gbp, "Gp": Gp, "Abp": Abp, "Ap": Ap, "Bbp": Bbp, "Hp": Hp,
-	"Cm": Cm, "Dbm": Dbm, "Dm": Dm, "Ebm": Em, "Em": Em, "Fm": Fm, "Gbm": Gbm, "Gm": Gm, "Abm": Abm, "Am": Am, "Amp": Amp, "Bbm": Bbm, "Hm": Hm,
+	"Cm": Cm, "Dbm": Dbm, "Dm": Dm, "Ebm": Ebm, "Em": Em, "Fm": Fm, "Gbm": Gbm, "Gm": Gm, "Abm": Abm, "Am": Am, "Amp": Amp, "Bbm": Bbm, "Hm": Hm,
 	"Cmp": Cmp, "Dbmp": Dbmp, "Dmp": Dmp, "Diszmp": Diszmp, "Ebmp": Ebmp, "Emp": Emp, "Fmp": Fmp, "Gbmp": Gbmp, "Gmp": Gmp, "Abmp": Abmp, "Amp": Amp, "Bbmp": Bbmp, "Hmp": Hmp
 };
 
@@ -1154,7 +1154,7 @@ function practice_scale16(scale, gradescale, fret, bpm, repeat, walking_seq_prep
 	});
 	timerWatch((nextstart)/1000);
 	global_tickdiv = 4;
-	if ( bpm > 180 ) global_beatdiv = 8;
+	if ( bpm > 180 ) global_beatdiv = 4;
 }
 
 function practice_scale_3_notes_by_string(scale, gradescale, fret, bpm, repeat, walking_seq_preparer = function() { return this; }	) {
@@ -1566,6 +1566,28 @@ function prepare_wseq_for_N_notes_123_234(notes) {
 	return notes2;
 }
 
+function prepare_wseq_for_N_notes_123_234_4x(notes) {
+	const n = notes.length;
+	let notes2 = [];
+	// Forward pattern: 0,1,2 | 1,2,3 | ... | n-3,n-2,n-1
+	
+		for (let i = 0; i <= n - 3; i++) {
+			for ( let j = 0; j < 4; j++) {
+				notes2.push(notes[i], notes[i + 1], notes[i + 2]);
+			}
+		}
+
+	// Backward pattern: n-3,n-2,n-1 | n-4,n-3,n-2 | ... | 0,1,2
+	
+		for (let i = n - 3; i >= 0; i--) {
+			for ( let j = 0; j < 4; j++) {
+				notes2.push(notes[i + 2], notes[i + 1], notes[i]);
+			}
+		}
+	
+	return notes2;
+}
+
 function prepare_wseq_for_N_notes_1324(notes) {
 	const n = notes.length;
 	let notes2 = [];
@@ -1606,6 +1628,8 @@ function random_scale_quiz(array, span) {
 
 function redraw() {
 	document.getElementById('neck').innerHTML = orig_neck_content;
+	//neck[1][1].text("HELLO");
+	drawStrings();
 }
 
 function removenote_fullscale(note_){
