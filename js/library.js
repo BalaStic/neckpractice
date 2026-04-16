@@ -126,8 +126,11 @@ const global_frets_for_scale16 = {
 	"Diszmp": { "frets":  [2, 2, 4, 4, 7, 7, 9, 9, 11, 11, 14, 14, 16, 16, 19, 19, 21],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
 	},
-	"Em": { "frets":  [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
+	/*"Em": { "frets":  [0, 0, 3, 3, 5, 5, 8, 8, 10, 10, 12, 12, 15, 15, 17, 17, 20, 20, 22],
 			"startindex": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+	},*/
+	"Em": { "frets":  [0, 3, 5, 8, 10, 12, 15, 17, 20, 22],
+			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	},
 	"Emp": { "frets":  [0, 3, 5, 8, 10, 12, 15, 17, 20, 22],
 			"startindex": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1343,7 +1346,7 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 		
 	// item1 and item2 now hold the required td elements if found
 
-	let tdnotespaths = findSequencesOptimized(tdnotes ,item1, item2, 6);
+	let tdnotespaths = findSequencesOptimized(tdnotes ,item1, item2, 8);
 	let tdnotespath = tdnotespaths[Math.floor(Math.random() * tdnotespaths.length)];
 	
 	let divnotespath = $($.map(tdnotespath, function(el) { 
@@ -1381,6 +1384,7 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 	let ms = 250;
 	let intro = "";
 	let patterns = [ 
+					"I-I- I-I- ---- ----",
 					"---- ---I ---- ----",
 					"I-I- -II- ---- ----",
 					"II-- -II- ---- ----",
@@ -1396,7 +1400,7 @@ function practice_ScaleRandomPath(scale, gradescale, fret_from, fret_to, string_
 				];
 	let pattern = patterns[Math.floor(Math.random() * patterns.length)];
 	pattern = patterns[Math.floor(Math.random() * 3)];
-	pattern = patterns[4];
+	pattern = patterns[0];
 
 	$("#infobox5").html(pattern);
 
@@ -2097,20 +2101,40 @@ function schedule_pattern_hangközök_vertical(scale, gradescale, pattern, start
 }
 
 
-function schedule_pattern_roots(rootnote, gradescale, bgchord, bpm, repeat) {
+function schedule_pattern_roots(scale, gradescale, additional_grades, bgchord, bpm, repeat) {
 	tick_bpm = bpm;
 	tick_ms = 60 / tick_bpm * 1000;
 	$("#infobox3").html(bpm + " beat bpm");
 	$("#infobox4").html(tick_bpm + " tick bpm");
-	let divnotes = scale_on_fret2fret(scaleDict[rootnote], gradescale);
+	let divnotes = scale_on_fret2fret(scale, gradescale);
 	
 	//let rootnotes = divnotes.filter(n => $(n).attr("note") === rootnote);
 	let rootnotes = divnotes.filter(n => $(n).attr("grade") === "1" );
-	let fithnotes = divnotes.filter(n => $(n).attr("grade") === "5" );
-	fithnotes.forEach(note => {
+	let foundnotes;
+	//let fithnotes = divnotes.filter(n => $(n).attr("grade") === "5" );
+	//let fourthnotes = divnotes.filter(n => $(n).attr("grade") === "4" );
+	//let r = Math.floor(Math.random() * 6); 
+	//let randomnotes = divnotes.filter(n => $(n).attr("grade") === gradescale[r+1].toString() );
+	//console.log("r", r+1);
+	foundnotes = divnotes.filter(n => additional_grades.includes($(n).attr("grade")));
+
+	foundnotes.forEach(note => {
 		note.css('color', note.attr("gradecolor"));
 		note.text("────" + note.attr("note") + "────");
 	});
+
+	rootnotes.forEach(note => {
+		note.css('color', note.attr("gradecolor"));
+		note.text("────" + note.attr("note") + "────");
+	});
+	/*fithnotes.forEach(note => {
+		note.css('color', note.attr("gradecolor"));
+		note.text("────" + note.attr("note") + "────");
+	});
+	fourthnotes.forEach(note => {
+		note.css('color', note.attr("gradecolor"));
+		note.text("────" + note.attr("note") + "────");
+	})*/;
 
 	let tdnotes = $(rootnotes).map(function() {
     	return $(this).closest('td').get(0);
@@ -2405,8 +2429,9 @@ function updateNoteText(note, newcontent) {
 		note.css("color", "white");
 		note.css("background", "red");
 	} else {
-		note.css("color", "black");
-		note.css("background", "white");
+		// KÖVETÉS KIKAPCSOLVA !!!
+		//note.css("color", "black");
+		//note.css("background", "white");
 	}
 	content_x = 'X';
 	
@@ -2497,7 +2522,8 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 				schedule_noteupdate_and_play(note, period + period * i, half_tick, i, false);				
 			});		
 			
-			if (j % 2 == 0) {
+			if (1) {
+			//if (j % 2 == 0) {
 				mysetTimeout(() => {
 					notes.forEach(note => {
 						note.attr('actual', note.attr('note'));
