@@ -310,7 +310,15 @@ function display_notes_actual_randomly(notes) {
 		
 }
 
-function displayNotes(scale, gradescale) {
+function displayNotes(scale, gradescale, bpm = 0, duration_minute = 0, bgchord = '' ) {
+	let ms = 60 / bpm * 1000;
+	let tick_bpm = 4 * bpm;
+	let bar_bpm = bpm / 4;
+	let bartick_ms = 60 / bar_bpm * 1000;
+	let tick_ms = 60 / tick_bpm * 1000;
+	let interval = 60 / bpm * 1000;
+	set_gbgchord(bgchord);
+
 	let notes = scale_on_fret2fret(scale, gradescale);
 	prepare_notes_actual(scale, gradescale);
 	
@@ -319,6 +327,32 @@ function displayNotes(scale, gradescale) {
 		//updateNoteText(note);
 		display_note_actual(note);
 	});	
+
+	let tmp1 = null;
+	let tmp2 = null;
+
+	if ( bpm != 0 ) {
+		tmp1 = mysetInterval(() => {
+			metronome_tick();
+		}, ms);
+	}
+
+	if ( bar_bpm != 0 ) {
+		tmp2 = mysetInterval(() => {
+			play_chord(bgchord);
+		}, bartick_ms);
+	}
+
+	mysetTimeout(() => {
+		if (tmp1 !== null) clearInterval(tmp1);
+		if (tmp2 !== null) clearInterval(tmp2);
+	}, duration_minute * 60 *1000);
+
+	$("#infobox3").html(bpm + " bpm");
+	if ( duration_minute !=0 ) {
+		timerWatch(duration_minute*60)	;
+	}
+	
 }
 
 function getNoteGradeColor(grade) {
@@ -2522,8 +2556,8 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 				schedule_noteupdate_and_play(note, period + period * i, half_tick, i, false);				
 			});		
 			
-			if (1) {
-			//if (j % 2 == 0) {
+			
+			/*if (j % 2 == 0) {
 				mysetTimeout(() => {
 					notes.forEach(note => {
 						note.attr('actual', note.attr('note'));
@@ -2539,7 +2573,7 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 					});
 					lastnotetext = notes[0].text();
 				}, period / 2);
-			}
+			}*/
 			
 		}, walkTime * j + (global_introcount - 1) * period);
 	}
