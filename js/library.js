@@ -2557,7 +2557,8 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 			});		
 			
 			
-			/*if (j % 2 == 0) {
+			if(1) {
+			//if (j % 2 == 0) {
 				mysetTimeout(() => {
 					notes.forEach(note => {
 						note.attr('actual', note.attr('note'));
@@ -2573,7 +2574,7 @@ function walk_seq_ntimes(notes, repeat = global_walking_repeat, half_tick = glob
 					});
 					lastnotetext = notes[0].text();
 				}, period / 2);
-			}*/
+			}
 			
 		}, walkTime * j + (global_introcount - 1) * period);
 	}
